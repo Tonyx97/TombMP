@@ -1,0 +1,289 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="..\shared\net\net.cpp">
+      <Filter>shared\net</Filter>
+    </ClCompile>
+    <ClCompile Include="game_ms\game_ms.cpp">
+      <Filter>game_ms</Filter>
+    </ClCompile>
+    <ClCompile Include="server\server.cpp">
+      <Filter>server</Filter>
+    </ClCompile>
+    <ClCompile Include="..\shared\scripting\script.cpp">
+      <Filter>shared\scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="..\shared\scripting\resource_system.cpp">
+      <Filter>shared\scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="..\shared\scripting\resource.cpp">
+      <Filter>shared\scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="net\net_player.cpp">
+      <Filter>net</Filter>
+    </ClCompile>
+    <ClCompile Include="..\shared\crypto\sha512.cpp">
+      <Filter>shared\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="scripting\global.cpp">
+      <Filter>scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="..\shared\scripting\functions\shf_resource.cpp">
+      <Filter>shared\scripting\functions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\shared\scripting\functions\shf_util.cpp">
+      <Filter>shared\scripting\functions</Filter>
+    </ClCompile>
+    <ClCompile Include="game\level.cpp">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="scripting\functions\sf_level.cpp">
+      <Filter>scripting\functions</Filter>
+    </ClCompile>
+    <ClCompile Include="game\handlers\hl_player.cpp">
+      <Filter>game\handlers</Filter>
+    </ClCompile>
+    <ClCompile Include="net\handlers\hl_net_player.cpp">
+      <Filter>net\handlers</Filter>
+    </ClCompile>
+    <ClCompile Include="net\handlers\hl_resource.cpp">
+      <Filter>net\handlers</Filter>
+    </ClCompile>
+    <ClCompile Include="game\player.cpp">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="scripting\functions\sf_player.cpp">
+      <Filter>scripting\functions</Filter>
+    </ClCompile>
+    <ClCompile Include="game\handlers\hl_fx.cpp">
+      <Filter>game\handlers</Filter>
+    </ClCompile>
+    <ClCompile Include="game\handlers\hl_audio.cpp">
+      <Filter>game\handlers</Filter>
+    </ClCompile>
+    <ClCompile Include="game\handlers\hl_entity.cpp">
+      <Filter>game\handlers</Filter>
+    </ClCompile>
+    <ClCompile Include="game\entity_base.cpp">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="scripting\functions\sf_server.cpp">
+      <Filter>scripting\functions</Filter>
+    </ClCompile>
+    <ClCompile Include="..\shared\crypto\aes.cpp">
+      <Filter>shared\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="net\handlers\hl_server.cpp">
+      <Filter>net\handlers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\shared\timer_system\timer_system.cpp">
+      <Filter>shared\timer_system</Filter>
+    </ClCompile>
+    <ClCompile Include="game\handlers\hl_projectile.cpp">
+      <Filter>game\handlers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\shared\bug_ripper\bug_ripper.cpp">
+      <Filter>shared\bug_ripper</Filter>
+    </ClCompile>
+    <ClCompile Include="..\shared\scripting\obj_base.cpp">
+      <Filter>shared\scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="scripting\functions\sf_entity.cpp">
+      <Filter>scripting\functions</Filter>
+    </ClCompile>
+    <ClCompile Include="game\handlers\hl_level.cpp">
+      <Filter>game\handlers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\shared\utils\utils.ixx">
+      <Filter>shared\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="..\shared\profiling\prof.ixx">
+      <Filter>shared\profiling</Filter>
+    </ClCompile>
+    <ClCompile Include="game\handlers\hl_sync.cpp">
+      <Filter>game\handlers</Filter>
+    </ClCompile>
+    <ClCompile Include="game\entity.cpp">
+      <Filter>game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\shared\scripting\lua_any_pusher.cpp">
+      <Filter>shared\scripting</Filter>
+    </ClCompile>
+    <ClCompile Include="..\shared\game_net\file_transfer.cpp">
+      <Filter>shared\game_net</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="shared">
+      <UniqueIdentifier>{1ebce923-5c77-466f-850a-d7716b655676}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\net">
+      <UniqueIdentifier>{d0671793-d2d1-400a-8802-57d84076bec8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="game_ms">
+      <UniqueIdentifier>{e8f1cc93-866d-40f1-99c1-e20ca05415cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\profiling">
+      <UniqueIdentifier>{f1b4adb0-4f83-4c17-9da9-ddcb6342a9a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="server">
+      <UniqueIdentifier>{2872cec6-a672-4432-9cdc-7426311ac62f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\game_net">
+      <UniqueIdentifier>{fc107864-109f-4ecd-9657-140d9fba64e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scripting">
+      <UniqueIdentifier>{c09ef6d0-e090-404d-8774-d818f3168fd1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\scripting">
+      <UniqueIdentifier>{d417849a-a339-41ef-8321-0d1fe50ad3bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\utils">
+      <UniqueIdentifier>{85a897e5-b910-45ae-92ba-40cda9641204}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="game">
+      <UniqueIdentifier>{c1a76924-8b4a-4006-9030-de20bdeb2462}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="net">
+      <UniqueIdentifier>{0d94610d-e4fe-4960-8449-1b0e11f061f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\crypto">
+      <UniqueIdentifier>{6fc5a22e-cb1a-4453-84d8-f7f3b064f133}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="game\handlers">
+      <UniqueIdentifier>{1e381fa1-5f42-4263-b63d-adf2cf3f8056}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scripting\functions">
+      <UniqueIdentifier>{0f8f16a4-6d6f-48fb-997e-0fd2e0c89f64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\scripting\functions">
+      <UniqueIdentifier>{2f115e48-c874-4c81-abf3-baa2f6f92081}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="net\handlers">
+      <UniqueIdentifier>{15da540a-c100-49c5-8e03-65e540f496ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\timer_system">
+      <UniqueIdentifier>{14aec629-d081-4911-8f0a-c04afb2635ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\bug_ripper">
+      <UniqueIdentifier>{11946df3-2699-4a9c-a94e-10a25ee1d1b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\game">
+      <UniqueIdentifier>{5c80b6ee-54a5-4242-9414-e7cad9fb224f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\shared\net\net.h">
+      <Filter>shared\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared\net\messages.h">
+      <Filter>shared\net</Filter>
+    </ClInclude>
+    <ClInclude Include="game_ms\game_ms.h">
+      <Filter>game_ms</Filter>
+    </ClInclude>
+    <ClInclude Include="server\server.h">
+      <Filter>server</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared\net\structs.h">
+      <Filter>shared\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared\game_net\bitstream.h">
+      <Filter>shared\game_net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared\game_net\messages.h">
+      <Filter>shared\game_net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared\game_net\structs.h">
+      <Filter>shared\game_net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared\scripting\script.h">
+      <Filter>shared\scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared\scripting\resource_system.h">
+      <Filter>shared\scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared\scripting\resource.h">
+      <Filter>shared\scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared\game_net\file_info.h">
+      <Filter>shared\game_net</Filter>
+    </ClInclude>
+    <ClInclude Include="net\net_player.h">
+      <Filter>net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared\crypto\sha512.h">
+      <Filter>shared\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="scripting\global.h">
+      <Filter>scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared\scripting\functions\shf_defs.h">
+      <Filter>shared\scripting\functions</Filter>
+    </ClInclude>
+    <ClInclude Include="game\level.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="scripting\globals.h">
+      <Filter>scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared\scripting\globals.h">
+      <Filter>shared\scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="net\handlers\hl_net_defs.h">
+      <Filter>net\handlers</Filter>
+    </ClInclude>
+    <ClInclude Include="game\player.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared\game_net\typedefs.h">
+      <Filter>shared\game_net</Filter>
+    </ClInclude>
+    <ClInclude Include="game\entity_base.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared\game_net\entity_type.h">
+      <Filter>shared\game_net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared\crypto\aes.h">
+      <Filter>shared\crypto</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared\scripting\lua_any_pusher.h">
+      <Filter>shared\scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared\timer_system\timer_system.h">
+      <Filter>shared\timer_system</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared\bug_ripper\bug_ripper.h">
+      <Filter>shared\bug_ripper</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared\scripting\obj_base.h">
+      <Filter>shared\scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="scripting\functions\sf_defs.h">
+      <Filter>scripting\functions</Filter>
+    </ClInclude>
+    <ClInclude Include="scripting\events.h">
+      <Filter>scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="game\handlers\hl_defs.h">
+      <Filter>game\handlers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared\game\math.h">
+      <Filter>shared\game</Filter>
+    </ClInclude>
+    <ClInclude Include="game\entity.h">
+      <Filter>game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared\scripting\events.h">
+      <Filter>shared\scripting</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared\game_net\file_transfer.h">
+      <Filter>shared\game_net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared\game\obj_types.h">
+      <Filter>shared\game</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,13 @@
+﻿public enum packet_id : uint
+{
+    PID_OK,
+    PID_FAIL,
+    PID_NONE,
+    PID_MS_CLIENT_TYPE,
+    PID_CLIENT_VER,
+    PID_SERVER_VER,
+    PID_SERVER_INFO,
+    PID_SERVERS_LIST,
+    PID_VERIFY_GAME_OWNERSHIP,
+    PID_UNKNOWN
+};

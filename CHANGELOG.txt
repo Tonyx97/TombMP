@@ -1,0 +1,158 @@
+· v1.0.1 (17-06-21):
+	- Fixed keyholes and puzzles interaction.
+	- Added key mapping (controls) support in launcher.
+	- Fixed a crash in the quad chase level related to fish and division by zero (lol).
+	- Added scripting command parameters support.
+	- Many small additions to scripting system: functions and events.
+
+· v1.0.2 (18-06-21):
+	- Fixed camera not being resetted when killed by Aldwych train.
+	- Improved camera resetting when warping and respawning.
+	- Fixed SqrTable crash in City of Tinnos (only encounter but could happen anywhere).
+	- Added bug ripper (crash handler/logger) to the server to investigate crashes better.
+	- Fixed small problem with localplayer not being properly updated after the second level load.
+	
+· v1.0.3 (20-06-21):
+	- Fixed the server crash when loading a level (not fully tested yet).
+	- Fixed crash when trying to get a player from name with an invalid name (via /tp in this case).
+	- Fixed the crash when blowing up a flamer "enemy" (the ones in RX Mines for example).
+	- Fixed the crash in the antartida when blowing up a sealmute.
+	- Improved hanging logic using tr5 code.
+	- Added friendly fire toggle from server using setServerGameSettingEnabled.
+	- Removed harpoon reload every 4 shots.
+	- Implemented object reference system in scripts to remove all objects (including abstract objects such as timers) when a script is being unloaded or restarted.
+	- Fixed an issue where players could not spawn due to respawn timers not being destroyed properly when restarting the server script.
+	- Fixed a crash when closing the game due to global systems not being destroyed in proper order.
+	- Added scripting functions to set/get sprint (dash), air (underwater breath) and exposure (cold water exposure).
+	- Added flip map sync and toggle. One can enable or disable flip map sync, for example, this should be disabled in maps like area 51 where the starship is a flipmap.
+	- Added basic kill messages for basic testing (via script using events and script functions).
+	
+· v1.0.4 (26-06-21):
+	- Improved localplayer instance to grab updated information using normal scripting player functions.
+	- Added all graphic FX functions to scripting system.
+	- Fixed flares of other players showing up in localplayer.
+	- Added flare sync so other players' flares can be seen (including effects) and they will light up the zone as well.
+	- Improved and refactored audio system so it can be easily used via scripting system.
+	- Fixed looping sound for uzis and HK.
+	- Fixed 3d looped sounds not updating the position of their sources such as quadbike engine sound etc.
+	- Fixed quadbike engine revolution sounds.
+	- Implemented custom audio playing via scripting.
+	- Added sync for players weapons smoke after shooting.
+	- Added sync for players weapons gunshells after shooting.
+	- Fixed remote players torso not being aligned/rotated according to HK shooting anim.
+	
+- v1.0.5 (02-07-21):
+	- Fixed londonsec enemy crash.
+	- Fixed oilred enemy crash.
+	- Implemented entity sync system (still in progress).
+	- Implemented entity streamer sync system.
+	- Implemented weapon muzzle fire light sync.
+	- Official release.
+	
+- v1.0.6 (10-07-21):
+	- Fixed area 51 baton enemy death animation.
+	- Fixed baton enemy crash when pulling a lever (reported by Campo).
+	- Added full sync for movable blocks.
+	- Added full AI sync (enemies etc).
+	- Added full sync for interactive entities (key holes, doors, trapdoors, enemies triggering, switches, push buttons etc.).
+	
+- v1.0.7 (12-07-21):
+	- Fixed crash when killing a wingmute (guardians in City of Tinnos) with explosives.
+	- Fixed crash when entering a room with guardians in City of Tinnos (reported by Campos).
+	- Fixed crashes when loading a level while another level was loaded already.
+	- Fixed an issue where some entities won't be activated when we trigger them (such as boulders in jungle etc).
+	- Highly improved "warpPlayer" (/tp) by removing the temporal freeze when teleporting and properly undrawing the guns.
+	- Added entity sync streaming distance limit to reduce server bandwidth usage.
+	- Improved whole entity sync. The new improved version makes the server store information about all synced entities so if there are no players in the server the entities info would be restored to players from the last info received of all entities.
+	- Improved AI sync.
+	- Improved and fixed blocks sync.
+	- Improved interactive sync.
+	- Fixed the spike walls speed (they were too fast).
+	- Added more sync: puzzle holes, spikes, boulders etc.
+	- Fixed the amount increase of items if the same item is found.
+	- Fixed ammo not being decreased when firing harpoon, rpg and grenade launcher.
+	- Fixed key inventory not being opened when we are using a puzzle or key hole.
+	- Removed debug printing in the engine when compiling in release mode to achieve max performance.
+	
+- v1.0.8 (19-07-21):
+	- Fixed crash when spawning MP Gun baddie.
+	- Fixed crash when the area 51 rocket smoke disappears.
+	- Added customizable lara burn fire color.
+	- Added more scripting functions and events.
+	- Improved player spawning and despawning.
+	- Experimental full sync for most entity types completed (it needs some rework but it should sync nicely now).
+	- Fixed an issue where keys of the same type weren't being accumulated (for example the masks in tinnos).
+	- Changed pistols sound to the original Tomb Raider 1 (experiment).
+	- Changed deagle sound to the original Tomb Raider 1 Magnums (experiment).
+	- Server officially released.
+	- Release of the first public resource (script).
+	
+- v1.0.9 (26-07-21):
+	- Completely removed Winston from the house level.
+	- Improved virus gamemode a bit.
+	- Reworked the resource system to handle proper downloads and synchronization across the players, avoiding crashes during downloads etc (took so long :( ).
+	- Fixed the spectator mode in virus gamemode.
+	
+- v1.1.0 (30-07-21):
+	- Fixed the inventory not showing the items text.
+	- Added scripting functions to handle specific level functionality such as propeller instant death or lara's breath fx.
+	- Fixed issue in cavern where the level will finish when you pick up any artifact.
+	- Removed the level finishing stucking. Now a clientside event will be triggered (onLevelFinish) that can be used as one desires to achieve the wanted results.
+	- Highly reduced the bandwitdh used by the client and the server.
+	- Fixed the camera bug when going inside a swamp.
+	- Improved game performance and network bandwitdh by calculating hair segments locally for all players.
+	- Fixed the bosses collisions being active after killing them.
+	- Fixed the bug where the camera would bounce and flick if the camera collides with the wall while free looking.
+	- Implemented players movement interpolation to improve the visual rendering of remote (non-local) players.
+	- Added silenced HK option (silenced sound and no muzzle flash), use the clientside function 'setSilencedHK' to enable or disable it.
+	- Added pickup items sync (there are options to disable this from the server).
+	- Fixed quadbike idle sound and revolutions sound when exploding.
+	- Added spawning system to spawn any synced entity any time.
+	
+- v1.1.1 (07-08-21):
+	- Fixed all possible crashes from the v1.1.0 version.
+	- Added an scripting function (setEffectsDrawDistance) to set the max draw distance for effects (smoke, fire etc).
+	- Fixed a bug when exploding players that caused players don't explode at all or be collidable after blowing up.
+	- Fixed the bug causing players not able to get in the quadbike.
+	- Reduced the rocket explosion radius by half.
+	- Implemented the ability to spawn AI via scripting.
+	
+- v1.1.2 (27-08-21):
+	- Fixed all crashes players experienced while playing on v1.1.1 version.
+	- Added the missing space bar key for mapping controls in the launcher.
+	- Added large and small medkit controls in the launcher.
+	- Added deathmatch gamemode to the official server.
+	- Fixed a few things.
+	
+- v1.1.3 (04-09-21):
+	- Fixed a crash from v1.1.2 version.
+	- Nerfed the desert eagle damage. It was (21 * 50 * pistol damage) now it's (17 * 50 * pistol damage) and doesn't kill with just 1 shot.
+	- Several improvements to the scripting system to handle more stuff inside the engine (making possible the deathmatch gamemode and many others).
+	
+- v1.1.4 (06-09-21):
+	- Fixed crash when firing a gun outside room bounds.
+	- Fixed crash while an army smg enemy is in the level.
+	- Fixed crash when killing a monkey.
+	- Fixed crash when trying to request the item room of an invalid item.
+	- Fixed crash when player has a bad animation.
+	- Qwop when respawning fixed.
+	- Removed the sprint limitation (now you can sprint after stopping if you still have sprint energy, like TR4 and TR5).
+	- Fixed the ghetto registry edit bypass to connect to hamachi servers. Now you only need to connect to the hamachi network and you can connect by selecting the server in the launcher.
+	- AI is now properly synced across players and they won't die mid air and cause weird animation bugs or AI stuck situations (to be heavily tested).
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

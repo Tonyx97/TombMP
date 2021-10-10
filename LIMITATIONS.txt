@@ -1,0 +1,3 @@
+- Do not destroy a timer while executing a timer function.
+- Do not create a command inside a command function.
+- Do not bind a function inside a binded function.

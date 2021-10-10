@@ -1,0 +1,144 @@
+﻿<Window x:Name="main_window" x:Class="launcher.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:launcher"
+        mc:Ignorable="d"
+        Title="TombMP Launcher" Height="463.752" Width="636.753" FontFamily="Arial" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" Icon="icon.ico">
+    <Grid Background="#FFDCE8B3">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <ListView x:Name="sv_list" HorizontalAlignment="Left" Height="154" Margin="10,50,0,0" VerticalAlignment="Top" Width="470" Background="White" FontWeight="Bold" SelectionChanged="sv_list_SelectionChanged">
+            <ListView.Resources>
+                <Style TargetType="{x:Type GridViewColumnHeader}">
+                    <Setter Property="HorizontalContentAlignment" Value="Left" />
+                </Style>
+            </ListView.Resources>
+            <ListView.Effect>
+                <DropShadowEffect Opacity="0.25"/>
+            </ListView.Effect>
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding name}" Width="200"/>
+                    <GridViewColumn Header="Gamemode" DisplayMemberBinding="{Binding gamemode}" Width="100"/>
+                    <GridViewColumn Header="Map" DisplayMemberBinding="{Binding map}" Width="100"/>
+                    <GridViewColumn Header="Players" DisplayMemberBinding="{Binding players_text}" Width="60"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <ListBox x:Name="players" HorizontalAlignment="Left" Height="154" Margin="492,50,0,0" VerticalAlignment="Top" Width="118" RenderTransformOrigin="0.984,0.442" PreviewMouseDown="players_PreviewMouseDown">
+            <ListBox.Effect>
+                <DropShadowEffect Opacity="0.25"/>
+            </ListBox.Effect>
+        </ListBox>
+        <Image x:Name="refresh_spin" Visibility="Hidden" HorizontalAlignment="Left" Height="35" Margin="10,10,0,0" VerticalAlignment="Top" Width="35" Source="resources/refresh.png" MouseDown="refresh_Click" OpacityMask="Black">
+            <Image.Effect>
+                <DropShadowEffect Opacity="0.1"/>
+            </Image.Effect>
+            <Image.RenderTransform>
+                <RotateTransform x:Name="noFreeze" CenterX="17.5" CenterY="17.5" />
+            </Image.RenderTransform>
+            <Image.Triggers>
+                <EventTrigger RoutedEvent="Loaded">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation
+            Storyboard.TargetProperty="(Image.RenderTransform).(RotateTransform.Angle)"
+            To="360" Duration="0:0:1" RepeatBehavior="Forever" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Image.Triggers>
+        </Image>
+
+        <Image x:Name="refresh" HorizontalAlignment="Left" Height="35" Margin="10,10,0,0" VerticalAlignment="Top" Width="35" Source="resources/refresh.png" MouseDown="refresh_Click" OpacityMask="Black" >
+            <Image.Effect>
+                <DropShadowEffect Opacity="0.1"/>
+            </Image.Effect>
+        </Image>
+        <TextBox x:Name="pass" HorizontalAlignment="Left" Height="23" Margin="85,386,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="171" VerticalContentAlignment="Center" TextChanged="pass_TextChanged">
+            <TextBox.Effect>
+                <DropShadowEffect Opacity="0.25"/>
+            </TextBox.Effect>
+        </TextBox>
+        <Label x:Name="pass_lbl" Content="Password:" HorizontalAlignment="Left" Margin="8,381,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.268,0.33" Height="35" VerticalContentAlignment="Center">
+            <Label.Effect>
+                <DropShadowEffect Opacity="0.25"/>
+            </Label.Effect>
+        </Label>
+        <Button x:Name="connect_btn" Content="Connect" HorizontalAlignment="Left" Margin="492,393,0,0" VerticalAlignment="Top" Width="118" Height="23" Click="connect_btn_Click">
+            <Button.Effect>
+                <DropShadowEffect Opacity="0.25"/>
+            </Button.Effect>
+        </Button>
+        <TextBox x:Name="nickname" HorizontalAlignment="Left" Height="23" Margin="143,15,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="171" VerticalContentAlignment="Center" TextChanged="nickname_TextChanged">
+            <TextBox.Effect>
+                <DropShadowEffect Opacity="0.25"/>
+            </TextBox.Effect>
+        </TextBox>
+        <Label x:Name="nickname_lbl" Content="Nickname:" HorizontalAlignment="Left" Margin="71,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.268,0.33" Height="35" VerticalContentAlignment="Center">
+            <Label.Effect>
+                <DropShadowEffect Opacity="0.25"/>
+            </Label.Effect>
+        </Label>
+        <Label x:Name="last_sv_lbl" Content="Last server:" HorizontalAlignment="Left" Margin="8,346,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.268,0.33" Height="35" VerticalContentAlignment="Center">
+            <Label.Effect>
+                <DropShadowEffect Opacity="0.25"/>
+            </Label.Effect>
+        </Label>
+        <Label x:Name="last_sv" Content="None" HorizontalAlignment="Left" Margin="79,346,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.268,0.33" Height="35" VerticalContentAlignment="Center">
+            <Label.Effect>
+                <DropShadowEffect Opacity="0.25"/>
+            </Label.Effect>
+        </Label>
+        <CheckBox x:Name="fullscreen" Content="Fullscreen" Margin="223,215,0,0" VerticalAlignment="Top" Height="20" HorizontalAlignment="Left" VerticalContentAlignment="Center" Click="fullscreen_Click">
+            <CheckBox.Effect>
+                <DropShadowEffect Opacity="0.25"/>
+            </CheckBox.Effect>
+        </CheckBox>
+        <ComboBox x:Name="resolution" HorizontalAlignment="Left" Margin="85,217,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="resolution_SelectionChanged">
+            <ComboBox.Effect>
+                <DropShadowEffect Opacity="0.25"/>
+            </ComboBox.Effect>
+        </ComboBox>
+        <Label x:Name="resolution_lbl" Content="Resolution:" HorizontalAlignment="Left" Margin="10,210,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.268,0.33" Height="35" VerticalContentAlignment="Center" Width="75">
+            <Label.Effect>
+                <DropShadowEffect Opacity="0.25"/>
+            </Label.Effect>
+        </Label>
+        <Label x:Name="aspect_lbl" Content="Aspect:" HorizontalAlignment="Left" Margin="10,242,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.268,0.33" Height="35" VerticalContentAlignment="Center" Width="75">
+            <Label.Effect>
+                <DropShadowEffect Opacity="0.25"/>
+            </Label.Effect>
+        </Label>
+        <ComboBox x:Name="aspect" HorizontalAlignment="Left" Margin="85,250,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="aspect_SelectionChanged">
+            <ComboBox.Effect>
+                <DropShadowEffect Opacity="0.25"/>
+            </ComboBox.Effect>
+        </ComboBox>
+        <Label x:Name="fov_lbl" Content="FOV:" HorizontalAlignment="Left" Margin="10,275,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.268,0.33" Height="35" VerticalContentAlignment="Center" Width="75">
+            <Label.Effect>
+                <DropShadowEffect Opacity="0.25"/>
+            </Label.Effect>
+        </Label>
+        <Slider x:Name="fov" HorizontalAlignment="Left" Margin="85,282,0,0" VerticalAlignment="Top" Width="120" Minimum="30" Maximum="170" SmallChange="1" ValueChanged="fov_ValueChanged" Value="30"/>
+        <ComboBox x:Name="key_control" HorizontalAlignment="Left" Margin="85,316,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="key_control_SelectionChanged">
+            <ComboBox.Effect>
+                <DropShadowEffect Opacity="0.25"/>
+            </ComboBox.Effect>
+        </ComboBox>
+        <ComboBox x:Name="key_key" HorizontalAlignment="Left" Margin="210,316,0,0" VerticalAlignment="Top" Width="120" SelectionChanged="key_key_SelectionChanged">
+            <ComboBox.Effect>
+                <DropShadowEffect Opacity="0.25"/>
+            </ComboBox.Effect>
+        </ComboBox>
+        <Label x:Name="key_lbl" Content="Controls:" HorizontalAlignment="Left" Margin="8,310,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.268,0.33" Height="35" VerticalContentAlignment="Center" Width="75">
+            <Label.Effect>
+                <DropShadowEffect Opacity="0.25"/>
+            </Label.Effect>
+        </Label>
+
+    </Grid>
+</Window>

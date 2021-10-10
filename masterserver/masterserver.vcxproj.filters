@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="..\shared\net\net.cpp">
+      <Filter>shared\net</Filter>
+    </ClCompile>
+    <ClCompile Include="ms\ms.cpp">
+      <Filter>ms</Filter>
+    </ClCompile>
+    <ClCompile Include="clients\clients.cpp">
+      <Filter>clients</Filter>
+    </ClCompile>
+    <ClCompile Include="..\shared\crypto\sha512.cpp">
+      <Filter>shared\crypto</Filter>
+    </ClCompile>
+    <ClCompile Include="..\shared\profiling\prof.ixx">
+      <Filter>shared\profiling</Filter>
+    </ClCompile>
+    <ClCompile Include="..\shared\utils\utils.ixx">
+      <Filter>shared\utils</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="shared">
+      <UniqueIdentifier>{8750a5ac-e004-4dcb-9404-5e5166980446}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\net">
+      <UniqueIdentifier>{cdfc8bc7-3426-4538-91c4-a2affa9b4133}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\thread_safe">
+      <UniqueIdentifier>{eb4e6ba9-31b4-4b3e-b67f-ae5882ea1dac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ms">
+      <UniqueIdentifier>{1e126406-0819-4079-bd41-d9726a105f6c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\profiling">
+      <UniqueIdentifier>{ba71fcb5-698e-4aaa-99c1-fdc0906280ad}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="clients">
+      <UniqueIdentifier>{4cd46cc8-e287-44e3-9694-94277089931b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\crypto">
+      <UniqueIdentifier>{0789a9a6-b091-4b9f-a5fc-e46cf534b89c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="shared\utils">
+      <UniqueIdentifier>{47c1c4ba-ec57-458a-a86a-475a986ea050}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\shared\net\net.h">
+      <Filter>shared\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared\defs.h">
+      <Filter>shared</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared\net\messages.h">
+      <Filter>shared\net</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared\thread_safe\vector.h">
+      <Filter>shared\thread_safe</Filter>
+    </ClInclude>
+    <ClInclude Include="ms\ms.h">
+      <Filter>ms</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared\net\structs.h">
+      <Filter>shared\net</Filter>
+    </ClInclude>
+    <ClInclude Include="clients\clients.h">
+      <Filter>clients</Filter>
+    </ClInclude>
+    <ClInclude Include="..\shared\crypto\sha512.h">
+      <Filter>shared\crypto</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

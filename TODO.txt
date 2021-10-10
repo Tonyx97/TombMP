@@ -1,0 +1,18 @@
+- General bugs & issues:
+	· Load/unload of audios when starting/stopping a resource that register them.
+	· Fix memory leak when loading a level? maybe the custom audio buffers?
+	· Fix inventory by removing depth for items.
+	· Add a field in the launcher to connect to specific IP.
+	· Fix the side flames.
+	· Detonator usage doesn't work.
+	
+- Features & implementations:
+	· Remove all the linked lists for effects and items, also rooms. Then implement a simple list containing the corresponding items and effects (haha xd greetings).
+
+- ThinkAbouts:
+	· 
+
+- v1.0.6:
+	· Sometimes the AI death anim aren't fully synced and they get stuck in the middle.
+	
+- v1.1.x:
