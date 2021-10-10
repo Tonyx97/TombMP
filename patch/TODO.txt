@@ -1,2 +1,0 @@
-· Fix lara entering water, for some reason I fucked it up and it doesn't work properly.
-· Fix gay enemies who are rotated oddly by the hip.
