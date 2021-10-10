@@ -1,2 +1,0 @@
-cd /d "C:\X Stuff [FAST]\[Proyectos & Utilidades]\TR3MP\TR3" &msbuild "TR3.vcxproj" /t:sdvViewer /p:configuration="Debug" /p:platform="Win32" /p:SolutionDir="C:\X Stuff [FAST]\[Proyectos & Utilidades]\TR3MP" 
-exit %errorlevel% 
