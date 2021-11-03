@@ -5,6 +5,7 @@
 	· Add a field in the launcher to connect to specific IP.
 	· Fix the side flames.
 	· Detonator usage doesn't work.
+	· Block the flying while in vehicles.
 	
 - Features & implementations:
 	· Remove all the linked lists for effects and items, also rooms. Then implement a simple list containing the corresponding items and effects (haha xd greetings).
