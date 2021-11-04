@@ -6,6 +6,7 @@
 	· Fix the side flames.
 	· Detonator usage doesn't work.
 	· Block the flying while in vehicles.
+	· Try to add instant backwards camera look.
 	
 - Features & implementations:
 	· Remove all the linked lists for effects and items, also rooms. Then implement a simple list containing the corresponding items and effects (haha xd greetings).
