@@ -69,6 +69,7 @@ void entity_handlers::on_entity_explode()
 
 			if (entity->get_type() == ENTITY_TYPE_PLAYER)
 			{
+				entity->add_entity_flags(ENTITY_FLAG_INVISIBLE);
 				entity->set_health(DONT_TARGET);
 				entity->set_collidable(0);
 

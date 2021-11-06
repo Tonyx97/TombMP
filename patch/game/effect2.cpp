@@ -2257,6 +2257,43 @@ void TriggerBreath(long x, long y, long z, long xv, long yv, long zv)
 	sptr->dHeight = size;
 }
 
+void TriggerElectricSparks(long x, long y, long z)
+{
+	int dx = lara_item->pos.x_pos - x,
+		dz = lara_item->pos.z_pos - z;
+
+	auto sptr = &spark[GetFreeSpark()];
+
+	sptr->On = 1;
+	sptr->sB = (GetRandomControl() & 63) + 192;
+	sptr->sR = sptr->sB;
+	sptr->sG = sptr->sB;
+	sptr->dB = (GetRandomControl() & 63) + 192;
+	sptr->dR = sptr->sB >> 2;
+	sptr->dG = sptr->sB >> 1;
+	sptr->ColFadeSpeed = 8;
+	sptr->FadeToBlack = 8;
+	sptr->sLife = sptr->Life = 20 + (GetRandomControl() & 7);
+	sptr->TransType = COLADD;
+	sptr->Dynamic = -1;
+	sptr->x = x;
+	sptr->y = y;
+	sptr->z = z;
+	sptr->Xvel = ((GetRandomControl() & 255) - 128) << 2;
+	sptr->Yvel = (GetRandomControl() & 7) - 4;
+	sptr->Zvel = ((GetRandomControl() & 255) - 128) << 2;
+	sptr->Friction = 4;
+	sptr->Flags = SP_SCALE | SP_ITEM | SP_NODEATTATCH;
+	sptr->FxObj = NO_ITEM;
+	sptr->Scalar = 1;
+	sptr->Width = sptr->sWidth = (GetRandomControl() & 3) + 4;
+	sptr->dWidth = sptr->sWidth >> 1;
+	sptr->Height = sptr->sHeight = sptr->Width;
+	sptr->dHeight = sptr->dWidth;
+	sptr->Gravity = 4 + (GetRandomControl() & 3);
+	sptr->MaxYvel = 0;
+}
+
 void TriggerDynamicLight(long x, long y, long z, long falloff, long r, long g, long b)
 {
 	if (number_dynamics == MAX_DYNAMIC2)

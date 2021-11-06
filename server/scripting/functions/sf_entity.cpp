@@ -5,6 +5,7 @@
 
 #include <server/server.h>
 
+#include <game/entity.h>
 #include <game/player.h>
 #include <game/level.h>
 #include <game/entity.h>
@@ -18,6 +19,11 @@ void sf_entity::register_functions(sol::state* vm)
 		return sol::as_table(g_level->get_instanced_players());
 	});
 
+	vm->set_function("getItemsTable", [&]()
+	{
+		return sol::as_table(g_level->get_instanced_level_entities());
+	});
+
 	vm->set_function("getPlayerSpawns", [&]()
 	{
 		return sol::as_table(g_level->get_player_spawns());
@@ -29,7 +35,9 @@ void sf_entity::register_functions(sol::state* vm)
 	});
 
 	vm->set_function("asPlayer", [&](game_entity_base* base) { return utils::rtti::safe_cast<game_player>(base); });
+	vm->set_function("isEntity", [&](game_entity* entity) { return g_level->has_entity(entity); });
 
+	vm->set_function("asEntity", [&](game_entity_base* base) { return utils::rtti::safe_cast<game_entity>(base); });
 	vm->set_function("isEntity", [&](game_entity* entity) { return g_level->has_entity(entity); });
 
 	vm->set_function("spawnEntity", [&](int16_t obj_id, int x, int y, int z, int16_t room, int16_t rx, int16_t ry, int16_t rz) -> game_entity*

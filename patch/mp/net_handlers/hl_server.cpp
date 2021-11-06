@@ -57,6 +57,15 @@ void server_handlers::on_trigger_client_event()
 
 				break;
 			}
+			case ENTITY_TYPE_LEVEL:
+			{
+				SYNC_ID sid; bs->Read(sid);
+
+				if (auto entity = reinterpret_cast<game_entity*>(g_level->get_entity_by_sid(sid)))
+					args.push_back(entity);
+
+				break;
+			}
 			}
 
 			break;

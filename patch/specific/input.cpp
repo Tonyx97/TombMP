@@ -18,6 +18,7 @@ import prof;
 #include <game/gameflow.h>
 #include <game/laraanim.h>
 #include <game/game.h>
+#include <game/effect2.h>
 
 #include <main.h>
 
@@ -164,8 +165,8 @@ int get_general_input()
 
 		// madubu blades
 		
-		lara_item->pos = { 46912, -12032, 18790, 0, 0, 0 };
-		lara_item->room_number = 9;
+		//lara_item->pos = { 46912, -12032, 18790, 0, 0, 0 };
+		//lara_item->room_number = 9;
 
 		camera.target = { 46912, -12032, 18790, 0, 0 };
 
@@ -174,6 +175,12 @@ int get_general_input()
 
 	if (g_keycode->is_key_down(KEY_J) && lara_item)
 	{
+		CreatureDie(lara.item_number, true, true, true);
+		//Sleep(100);
+
+		//for (int i = 0; i < 2; ++i)
+		//	TriggerExplosionSparks(old_x, old_y, old_z, 3, -1, 0, item->room_number);
+
 		// boat 2
 
 		//lara_item->pos = { 26108, -6400, 11365, 0, 0, 0 };
@@ -343,8 +350,8 @@ int get_general_input()
 	{
 		camera.type = TARGET_CAMERA;
 		camera.item = nullptr;
-		camera.pos = { 56199, -256, 63053, 2 };
-		camera.target = { 57998, -954, 64730, 2 };
+		camera.pos = { 50035, -1024, 45275, 2 };
+		camera.target = { lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.y_pos, 2 };
 	}
 
 	if (g_keycode->is_key_down(KEY_C)) linput |= IN_C;

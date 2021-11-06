@@ -11,7 +11,7 @@
 
 uint8_t elecspark[3] = { 0, 0, 0 };
 
-void TriggerElectricSparks(PHD_VECTOR* pos, int16_t item_number, int16_t Node);
+void TriggerElectricSparksCleaner(PHD_VECTOR* pos, int16_t item_number, int16_t Node);
 
 void InitialiseCleaner(int16_t item_number)
 {
@@ -286,7 +286,7 @@ void CleanerControl(int16_t item_number)
 		PHD_VECTOR pos { -160, -8, 16 };
 
 		GetJointAbsPosition(item, &pos, 5);
-		TriggerElectricSparks(&pos, item_number, SPN_CLEANER5);
+		TriggerElectricSparksCleaner(&pos, item_number, SPN_CLEANER5);
 
 		pos.x += (GetRandomControl() & 31) - 16;
 		pos.y += (GetRandomControl() & 31) - 16;
@@ -308,7 +308,7 @@ void CleanerControl(int16_t item_number)
 		PHD_VECTOR pos { -160, -8, 16 };
 
 		GetJointAbsPosition(item, &pos, 9);
-		TriggerElectricSparks(&pos, item_number, SPN_CLEANER9);
+		TriggerElectricSparksCleaner(&pos, item_number, SPN_CLEANER9);
 
 		pos.x += (GetRandomControl() & 31) - 16;
 		pos.y += (GetRandomControl() & 31) - 16;
@@ -330,7 +330,7 @@ void CleanerControl(int16_t item_number)
 		PHD_VECTOR pos { -160, -8, 16 };
 
 		GetJointAbsPosition(item, &pos, 13);
-		TriggerElectricSparks(&pos, item_number, SPN_CLEANER13);
+		TriggerElectricSparksCleaner(&pos, item_number, SPN_CLEANER13);
 
 		pos.x += (GetRandomControl() & 31) - 16;
 		pos.y += (GetRandomControl() & 31) - 16;
@@ -344,7 +344,7 @@ void CleanerControl(int16_t item_number)
 	}
 }
 
-void TriggerElectricSparks(PHD_VECTOR* pos, int16_t item_number, int16_t Node)
+void TriggerElectricSparksCleaner(PHD_VECTOR* pos, int16_t item_number, int16_t Node)
 {
 	int dx = lara_item->pos.x_pos - pos->x,
 		dz = lara_item->pos.z_pos - pos->z;

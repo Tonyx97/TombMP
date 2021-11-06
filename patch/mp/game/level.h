@@ -120,6 +120,7 @@ public:
 	
 	bool is_change_requested() const							{ return change; }
 	bool is_loaded() const										{ return loaded; }
+	bool has_entity(game_entity* entity) const;
 	bool has_player(game_player* player) const;
 	bool has_player(PLAYER_ID id) const;
 	bool has_player(ITEM_INFO* player_item);

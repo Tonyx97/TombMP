@@ -9,6 +9,9 @@
 #include <specific/drawprimitive.h>
 #include <specific/hwrender.h>
 
+#include <mp/game/player.h>
+#include <mp/game/level.h>
+
 void cf_item::register_functions(sol::state* vm)
 {
 	vm->set_function("getItemObjectID", [&](ITEM_INFO* item) { return item->object_number; });
@@ -83,6 +86,13 @@ void cf_item::register_functions(sol::state* vm)
 		get_lara_bone_pos(item, &vec, bone);
 
 		return { vec.x, vec.y, vec.z };
+	});
+
+	vm->set_function("killCreature", [&](ITEM_INFO* item, bool explode, bool sync_explosion)
+	{
+		if (g_level->get_player_by_item(item) || (lara_item && game_level::LOCALPLAYER()->get_item() == lara_item))
+			CreatureDie(item->id, explode, true, sync_explosion);
+		else CreatureDie(item->id, explode, false, sync_explosion);
 	});
 
 	vm->set_function("setItemGravityStatus", [&](ITEM_INFO* item, bool v) { item->gravity_status = v; });

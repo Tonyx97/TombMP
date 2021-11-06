@@ -5,6 +5,7 @@
 
 #include <net/net_player.h>
 
+#include <game/entity.h>
 #include <game/player.h>
 #include <game/level.h>
 
@@ -44,6 +45,14 @@ void sf_server::register_functions(sol::state* vm)
 						{
 							bs->Write(int(player->get_type()));
 							bs->Write(player->get_id());
+						}
+					}
+					else if (v.is<game_entity*>())
+					{
+						if (auto entity = v.as<game_entity*>(); g_level->has_entity(entity))
+						{
+							bs->Write(int(entity->get_type()));
+							bs->Write(entity->get_sync_id());
 						}
 					}
 

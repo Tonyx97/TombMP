@@ -801,7 +801,13 @@ void CreatureDie(int16_t item_number, bool explode, bool is_player, bool sync_ex
 			if (!g_level->get_entity_by_item(item))
 				KillItem(item_number, false);
 		}
-		else item->flags = NOT_VISIBLE;
+		else
+		{
+			if (auto localplayer = game_level::LOCALPLAYER(); localplayer->get_item() == item)
+				localplayer->add_entity_flags(ENTITY_FLAG_INVISIBLE);
+
+			item->flags = NOT_VISIBLE;
+		}
 	}
 	else RemoveActiveItem(item_number);
 

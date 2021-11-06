@@ -296,5 +296,6 @@ void TriggerUnderwaterBloodD(long x, long y, long z, long size);
 void TriggerBubble(long x, long y, long z, long size, long sizerange, short itemnum);
 void TriggerDynamicLight(long x, long y, long z, long falloff, long r, long g, long b);
 void TriggerBreath(long x, long y, long z, long xv, long yv, long zv);
+void TriggerElectricSparks(long x, long y, long z);
 void KillEverything();
 void ClearDynamics();

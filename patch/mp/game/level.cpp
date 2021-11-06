@@ -278,6 +278,11 @@ game_player* game_level::get_player_by_name(const std::string& name)
 	return nullptr;
 }
 
+bool game_level::has_entity(game_entity* entity) const
+{
+	return instances.level_entities.contains(entity);
+}
+
 bool game_level::has_player(game_player* player) const
 {
 	return instances.players.contains(player);

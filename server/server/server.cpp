@@ -83,7 +83,7 @@ bool server::init_settings()
 	prof::printt(CYAN, "IP: '{}'", info.ip.c_str());
 	prof::printt(CYAN, "Server name: '{}'", info.name.c_str());
 	prof::printt(CYAN, "Gamemode: '{}'", info.gamemode.c_str());
-	prof::printt(CYAN, "Refresh rte: {}", info.ticks);
+	prof::printt(CYAN, "Refresh rate: {}", info.ticks);
 
 	for (const auto& rsrc : info.startup_resources)
 		prof::printt(CYAN, "Startup resource: '{}'", rsrc.c_str());

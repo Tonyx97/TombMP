@@ -142,7 +142,22 @@
 	
 - v1.1.5 (06-11-21):
 	- Fixed bug when trying to fly while in vehicle, flying in vehicles are blocked so there won't be any more bugs.
-	
+	- Fixed player explosion not being synced properly with players.
+	- Added new several client and server scripting functions:
+		· setCameraPosition.
+		· getCameraRoom.
+		· setCameraRoom.
+		· getCameraType.
+		· setCameraType.
+		· getCameraItem.
+		· setCameraItem.
+		· getCameraTarget.
+		· setCameraTarget.
+		· getItemFromEntity.
+		· getItemsTable (client and server).
+		· asEntity (client and server).
+		· isEntity (client and server).
+		· killCreature.
 	
 	
 	

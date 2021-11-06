@@ -2,8 +2,10 @@
 
 #ifdef GAME_SERVER
 #include <game/player.h>
+#include <game/entity.h>
 #else
 #include <mp/game/player.h>
+#include <mp/game/entity.h>
 #endif
 
 int sol_lua_push(const sol::types<std::any>&, lua_State* L, const std::any& v)
@@ -17,6 +19,7 @@ int sol_lua_push(const sol::types<std::any>&, lua_State* L, const std::any& v)
 	else if (v.type() == typeid(const char*))	amount = sol::stack::push(L, std::any_cast<const char*>(v));
 	else if (v.type() == typeid(float))			amount = sol::stack::push(L, std::any_cast<float>(v));
 	else if (v.type() == typeid(game_player*))	amount = sol::stack::push(L, std::any_cast<game_player*>(v));
+	else if (v.type() == typeid(game_entity*))	amount = sol::stack::push(L, std::any_cast<game_entity*>(v));
 	else if (v.type() == typeid(uint32_t))		amount = sol::stack::push(L, std::any_cast<uint32_t>(v));
 	else if (v.type() == typeid(uint8_t))		amount = sol::stack::push(L, std::any_cast<uint8_t>(v));
 	else if (v.type() == typeid(int8_t))		amount = sol::stack::push(L, std::any_cast<int8_t>(v));
