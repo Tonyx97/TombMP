@@ -5,6 +5,8 @@ import prof;
 #include <shared/scripting/resource_system.h>
 #include <shared/scripting/resource.h>
 
+#include <scripting/events.h>
+
 #include <mp/client.h>
 
 #include "hl_net_defs.h"
@@ -69,6 +71,12 @@ void resource_handlers::on_resource_sync_all_status()
 		}
 
 		prof::print(YELLOW, "Resource {} sync status: {}", *info.name, info.action);
+	}
+
+	if (g_client->level_was_loaded())
+	{
+		g_resource->trigger_event(events::level::ON_LEVEL_LOAD);
+		g_client->set_level_loaded(false);
 	}
 
 	g_client->clear_rsrcs_file_list();

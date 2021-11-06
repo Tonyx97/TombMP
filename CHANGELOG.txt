@@ -140,7 +140,8 @@
 	- Fixed the ghetto registry edit bypass to connect to hamachi servers. Now you only need to connect to the hamachi network and you can connect by selecting the server in the launcher.
 	- AI is now properly synced across players and they won't die mid air and cause weird animation bugs or AI stuck situations (to be heavily tested).
 	
-	
+- v1.1.5 (06-11-21):
+	- Fixed bug when trying to fly while in vehicle, flying in vehicles are blocked so there won't be any more bugs.
 	
 	
 	

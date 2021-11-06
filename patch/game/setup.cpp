@@ -1549,7 +1549,7 @@ bool InitialiseLevel(int level_number)
 
 	fix_skybox = true;
 
-	g_resource->trigger_event(events::level::ON_LEVEL_LOAD);
+	g_client->set_level_loaded(true);
 
 	return 1;
 }

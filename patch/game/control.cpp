@@ -170,38 +170,41 @@ int32_t ControlPhase(int32_t nframes)
 
 	auto localplayer = game_level::LOCALPLAYER();
 
-	if (lara.water_status != LARA_CHEAT && (localplayer->get_entity_flags() & ENTITY_FLAG_FLY_CHEAT))
+	if (lara.skidoo == NO_ITEM)
 	{
-		lara_item->pos.y_pos -= STEP_L * 2;
-
-		if (lara.water_status != LARA_CHEAT)
+		if (lara.water_status != LARA_CHEAT && (localplayer->get_entity_flags() & ENTITY_FLAG_FLY_CHEAT))
 		{
-			lara.water_status = LARA_CHEAT;
-			lara_item->frame_number = SWIMGLIDE_F;
-			lara_item->anim_number = SWIMGLIDE_A;
-			lara_item->current_anim_state = AS_SWIM;
-			lara_item->goal_anim_state = AS_SWIM;
-			lara_item->gravity_status = 0;
-			lara_item->pos.x_rot = 30 * ONE_DEGREE;
-			lara_item->fallspeed = 30;
-			lara.air = LARA_AIR;
+			lara_item->pos.y_pos -= STEP_L * 2;
+
+			if (lara.water_status != LARA_CHEAT)
+			{
+				lara.water_status = LARA_CHEAT;
+				lara_item->frame_number = SWIMGLIDE_F;
+				lara_item->anim_number = SWIMGLIDE_A;
+				lara_item->current_anim_state = AS_SWIM;
+				lara_item->goal_anim_state = AS_SWIM;
+				lara_item->gravity_status = 0;
+				lara_item->pos.x_rot = 30 * ONE_DEGREE;
+				lara_item->fallspeed = 30;
+				lara.air = LARA_AIR;
+				lara.torso_x_rot = lara.torso_y_rot = 0;
+				lara.head_x_rot = lara.head_y_rot = 0;
+			}
+		}
+		else if (lara.water_status == LARA_CHEAT && !(localplayer->get_entity_flags() & ENTITY_FLAG_FLY_CHEAT))
+		{
+			lara_item->frame_number = STOP_F;
+			lara_item->anim_number = STOP_A;
+			lara_item->pos.x_rot = lara_item->pos.z_rot = 0;
+
+			lara.water_status = LARA_ABOVEWATER;
 			lara.torso_x_rot = lara.torso_y_rot = 0;
 			lara.head_x_rot = lara.head_y_rot = 0;
+			lara.gun_status = LG_ARMLESS;
+			lara.mesh_effects = 0;
+
+			LaraInitialiseMeshes();
 		}
-	}
-	else if (lara.water_status == LARA_CHEAT && !(localplayer->get_entity_flags() & ENTITY_FLAG_FLY_CHEAT))
-	{
-		lara_item->frame_number = STOP_F;
-		lara_item->anim_number = STOP_A;
-		lara_item->pos.x_rot = lara_item->pos.z_rot = 0;
-
-		lara.water_status = LARA_ABOVEWATER;
-		lara.torso_x_rot = lara.torso_y_rot = 0;
-		lara.head_x_rot = lara.head_y_rot = 0;
-		lara.gun_status = LG_ARMLESS;
-		lara.mesh_effects = 0;
-
-		LaraInitialiseMeshes();
 	}
 
 	g_resource->trigger_event(events::engine::ON_CONTROL_PHASE);

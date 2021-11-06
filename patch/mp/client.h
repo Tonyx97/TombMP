@@ -64,7 +64,8 @@ private:
 	std::atomic_bool connected = false,
 					 ready = false,
 					 game_initialized = false,
-					 wait_to_load = true;
+					 wait_to_load = true,
+					 was_level_loaded = false;
 
 public:
 
@@ -88,6 +89,7 @@ public:
 	void cancel_wait()											{ wait_to_load = false; }
 	void set_net_stats(int level)								{ net_stat_level = level; }
 	void set_last_error(conn_err err)							{ last_err = err; }
+	void set_level_loaded(bool v)								{ was_level_loaded = v; }
 
 	void sync_with_players();
 	void sync_level_entities(const std::vector<std::pair<int, int16_t>>& level_entities);
@@ -105,6 +107,7 @@ public:
 	bool can_load() const										{ return !wait_to_load; }
 	bool has_id(PLAYER_ID v) const								{ return v == id; }
 	bool has_sync_id(SYNC_ID v) const							{ return v == sync_id; }
+	bool level_was_loaded() const								{ return was_level_loaded; }
 
 	int get_net_stat() const									{ return net_stat_level; }
 	int get_ping();
