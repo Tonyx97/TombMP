@@ -173,7 +173,7 @@ bool audio_system::load_audio(const std::string& filename)
 
 	delete[] sample_data;
 
-	if (alGetError() != AL_NO_ERROR)
+	if (auto err = alGetError(); err != AL_NO_ERROR)
 		return error("An OpenAL error ocurred");
 
 	free_buffers.pop();
@@ -195,10 +195,6 @@ bool audio_system::unload_audio(const std::string& filename)
 	
 	if (auto it = buffers.find(hash); it != buffers.end())
 	{
-		uint8_t dummy;
-
-		alBufferData(it->second, AL_FORMAT_STEREO16, &dummy, 1, 1);
-
 		free_buffers.push(it->second);
 
 		buffers.erase(it);
