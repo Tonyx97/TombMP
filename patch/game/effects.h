@@ -19,6 +19,7 @@ struct FX_INFO
 	int16_t shade;
 	int16_t flag1;
 	int16_t flag2;
+	int16_t flag3;
 	int16_t item;
 };
 

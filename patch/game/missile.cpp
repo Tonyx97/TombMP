@@ -1,3 +1,5 @@
+import utils;
+
 #include <specific/standard.h>
 
 #include "objects.h"
@@ -146,10 +148,10 @@ int ExplodingDeath(int16_t item_number, int32_t mesh_bits, int16_t damage)
 
 	if ((bit & mesh_bits) && (bit & item->mesh_bits))
 	{
-		if ((GetRandomControl() & 3) == 0 || item->object_number == SMASH_WINDOW ||
-											 item->object_number == SMASH_OBJECT1 ||
-											 item->object_number == SMASH_OBJECT2 ||
-											 item->object_number == SMASH_OBJECT3)
+		if (item->object_number == SMASH_WINDOW ||
+			item->object_number == SMASH_OBJECT1 ||
+			item->object_number == SMASH_OBJECT2 ||
+			item->object_number == SMASH_OBJECT3)
 		{
 			if (auto fx_number = CreateEffect(item->room_number); fx_number != NO_ITEM)
 			{
@@ -162,6 +164,7 @@ int ExplodingDeath(int16_t item_number, int32_t mesh_bits, int16_t damage)
 				fx->pos.y_rot = (GetRandomControl() - 0x4000) << 1;
 				fx->speed = (int16_t)GetRandomControl() >> 8;
 				fx->fallspeed = (int16_t)-GetRandomControl() >> 8;
+				fx->flag3 = 0;
 
 				if (item->object_number == SMASH_WINDOW ||
 					item->object_number == SMASH_OBJECT1 ||
@@ -210,8 +213,8 @@ int ExplodingDeath(int16_t item_number, int32_t mesh_bits, int16_t damage)
 				fx->pos.z_pos = (*(phd_mxptr + M23) >> W2V_SHIFT) + item->pos.z_pos;
 				fx->room_number = item->room_number;
 				fx->pos.y_rot = (GetRandomControl() - 0x4000) << 1;
-				fx->speed = (int16_t)GetRandomControl() >> 8;
-				fx->fallspeed = (int16_t)-GetRandomControl() >> 8;
+				fx->speed = -(50 + (utils::mt() % 100));
+				fx->fallspeed = -(50 + (utils::mt() % 100));
 
 				if (item->object_number == SMASH_WINDOW ||
 					item->object_number == SMASH_OBJECT1 ||
@@ -220,7 +223,11 @@ int ExplodingDeath(int16_t item_number, int32_t mesh_bits, int16_t damage)
 					item->object_number == MUTANT2 ||
 					item->object_number == QUADBIKE)
 					fx->counter = 0;
-				else fx->counter = (damage << 2) | (GetRandomControl() & 3);
+				else
+				{
+					fx->flag3 = 1;
+					fx->counter = (damage << 2) | (GetRandomControl() & 3);
+				}
 
 				fx->frame_number = object->mesh_index + i;
 				fx->object_number = BODY_PART;
@@ -257,7 +264,10 @@ void ControlBodyPart(int16_t fx_number)
 	auto floor = GetFloor(fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos, &room_number);
 	auto ceiling = GetCeiling(floor, fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos);
 
-	DoBloodSplatEx(fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos, fx->speed, fx->pos.y_rot, room_number, 1);
+	const bool is_alive = fx->flag3;
+
+	if (is_alive)
+		DoBloodSplatEx(fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos, fx->speed, fx->pos.y_rot, room_number, 1);
 
 	if (fx->pos.y_pos < ceiling)
 	{
@@ -269,7 +279,7 @@ void ControlBodyPart(int16_t fx_number)
 
 	if (fx->pos.y_pos >= height)
 	{
-		if (fx->counter & 3)
+		if (is_alive && (fx->counter & 3))
 			g_audio->play_sound(AUDIO_FOOTSTEPS_MUD, { fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos });
 
 		KillEffect(fx_number);
@@ -282,7 +292,7 @@ void ControlBodyPart(int16_t fx_number)
 		lara_item->hit_points -= fx->counter >> 2;
 		lara_item->hit_status = 1;
 
-		if (fx->counter & 3)
+		if (is_alive && (fx->counter & 3))
 		{
 			g_audio->play_sound(AUDIO_FOOTSTEPS_MUD, { fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos });
 

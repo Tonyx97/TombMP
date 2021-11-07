@@ -144,6 +144,7 @@
 	- Fixed bug when trying to fly while in vehicle, flying in vehicles are blocked so there won't be any more bugs.
 	- Fixed player explosion not being synced properly with players.ç
 	- Fixed a crash related to lara's hair.
+	- Fixed bleeding windows when destroying them.
 	- Added new several client and server scripting functions:
 		· setCameraPosition.
 		· getCameraRoom.
