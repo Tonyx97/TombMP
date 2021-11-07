@@ -93,6 +93,11 @@ int get_general_input()
 		printf_s("{ %i, %i, %i %i } -> %.2f %.2f %.2f\n", lara_item->pos.x_pos, lara_item->pos.y_pos, lara_item->pos.z_pos, lara_item->room_number, x, y, z);
 	}
 
+	//if (g_keycode->is_key_down(KEY_F2))
+	{
+		printf_s("%i\n", lara_item->current_anim_state);
+	}
+
 	if (g_keycode->is_key_down(KEY_O) && lara_item)
 	{
 		PHD_VECTOR pelvis;

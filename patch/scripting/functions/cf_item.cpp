@@ -95,11 +95,18 @@ void cf_item::register_functions(sol::state* vm)
 		else CreatureDie(item->id, explode, false, sync_explosion);
 	});
 
+	vm->set_function("getItemGravityStatus", [&](ITEM_INFO* item) { return bool(item->gravity_status); });
 	vm->set_function("setItemGravityStatus", [&](ITEM_INFO* item, bool v) { item->gravity_status = v; });
 
+	vm->set_function("getItemGoalAnim", [&](ITEM_INFO* item) { return item->goal_anim_state; });
 	vm->set_function("setItemGoalAnim", [&](ITEM_INFO* item, int16_t v) { item->goal_anim_state = v; });
+
+	vm->set_function("getItemCurrentAnim", [&](ITEM_INFO* item) { return item->current_anim_state; });
 	vm->set_function("setItemCurrentAnim", [&](ITEM_INFO* item, int16_t v) { item->current_anim_state = v; });
 
+	vm->set_function("getItemAnimID", [&](ITEM_INFO* item) { return item->anim_number; });
 	vm->set_function("setItemAnimID", [&](ITEM_INFO* item, int16_t v) { item->anim_number = v; });
+
+	vm->set_function("getItemAnimFrame", [&](ITEM_INFO* item) { return item->frame_number; });
 	vm->set_function("setItemAnimFrame", [&](ITEM_INFO* item, int16_t v) { item->frame_number = v; });
 }

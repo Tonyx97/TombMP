@@ -160,6 +160,11 @@
 		· isEntity (client and server).
 		· destroyEntity (added in server too).
 		· killCreature.
+		· getItemGravityStatus.
+		· getItemGoalAnim.
+		· getItemCurrentAnim.
+		· getItemAnimID.
+		· getItemAnimFrame.
 	
 	
 	
