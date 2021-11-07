@@ -10,6 +10,11 @@
 
 void cf_camera::register_functions(sol::state* vm)
 {
+	vm->set_function("resetCamera", [&]()
+	{
+		InitialiseResetCamera();
+	});
+
 	vm->set_function("getCameraPosition", [&]() -> std::tuple<int, int, int, uint16_t>
 	{
 		return { camera.pos.x, camera.pos.y, camera.pos.z, camera.pos.room_number };

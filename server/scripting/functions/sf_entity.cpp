@@ -40,6 +40,8 @@ void sf_entity::register_functions(sol::state* vm)
 	vm->set_function("asEntity", [&](game_entity_base* base) { return utils::rtti::safe_cast<game_entity>(base); });
 	vm->set_function("isEntity", [&](game_entity* entity) { return g_level->has_entity(entity); });
 
+	vm->set_function("destroyEntity", [&](game_entity* entity) { return g_level->destroy_entity(entity); });
+
 	vm->set_function("spawnEntity", [&](int16_t obj_id, int x, int y, int z, int16_t room, int16_t rx, int16_t ry, int16_t rz) -> game_entity*
 	{
 		if (!obj_id)

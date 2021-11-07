@@ -131,6 +131,13 @@ void game_level::remove_entity(game_entity_base* base)
 	delete base;
 }
 
+void game_level::destroy_entity(game_entity* entity)
+{
+	g_server->send_packet(ID_SYNC_KILL, entity->get_sync_id());
+
+	g_level->remove_entity(entity);
+}
+
 void game_level::remove_all_level_entities()
 {
 	for (auto entity : instances.level_entities)

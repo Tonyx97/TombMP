@@ -54,7 +54,7 @@ bool d2d1_ui::build_swapchain()
 	if (FAILED(dxgi_factory->CreateSwapChainForComposition(device, &description, nullptr, &swapchain)))
 		return false;
 
-	return init_imgui_renderer(swapchain, "inconsolata.ttf", float(description.Width), float(description.Height));
+	return init_imgui_renderer(swapchain, "play.ttf", float(description.Width), float(description.Height));
 }
 
 bool d2d1_ui::build_composition()

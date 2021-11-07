@@ -157,6 +157,7 @@
 		· getItemsTable (client and server).
 		· asEntity (client and server).
 		· isEntity (client and server).
+		· destroyEntity (added in server too).
 		· killCreature.
 	
 	

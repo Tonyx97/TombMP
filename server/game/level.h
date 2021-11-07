@@ -55,6 +55,7 @@ public:
 	game_entity* add_level_entity(int subtype, int16_t item_id = -1);
 	game_entity* spawn_level_entity(int16_t obj_id, const game_vec3d& vec);
 
+	void destroy_entity(game_entity* entity);
 	void remove_entity(game_entity_base* base);
 	void remove_all_level_entities();
 	void reset_level_data();
