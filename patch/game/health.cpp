@@ -268,7 +268,5 @@ void FinishLevel()
 	if (level_complete)
 		return;
 
-	level_complete = true;
-
-	g_resource->trigger_event(events::level::ON_LEVEL_FINISH);
+	level_complete = g_resource->trigger_event(events::level::ON_LEVEL_FINISH);
 }
