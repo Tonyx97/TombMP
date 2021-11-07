@@ -143,6 +143,7 @@ void player_handlers::on_player_info()
 		player->set_meshes_offsets(info.meshes_offsets);
 		player->set_fire_color(info.fire_r, info.fire_g, info.fire_b);
 		player->set_ping(info.ping);
+		player->set_collidable(info.collidable);
 
 		if (info.vehicle != 0)
 		{
@@ -158,7 +159,6 @@ void player_handlers::on_player_info()
 		if (info.respawn)
 		{
 			player->set_flags(0);
-			player->set_collidable(1);
 
 			if (lara.target == player->get_item())
 				lara.target = nullptr;

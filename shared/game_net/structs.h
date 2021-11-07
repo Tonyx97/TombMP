@@ -304,7 +304,8 @@ namespace gns
 				 burning,
 				 electric,
 				 respawn,
-				 flare_in_hand;
+				 flare_in_hand,
+				 collidable;
 		};
 	}
 

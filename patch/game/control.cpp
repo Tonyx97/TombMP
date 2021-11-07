@@ -245,6 +245,7 @@ int32_t ControlPhase(int32_t nframes)
 	info.speed = lara_item->speed;
 	info.fallspeed = lara_item->fallspeed;
 	info.health = lara_item->hit_points;
+	info.collidable = !!lara_item->collidable;
 	info.back_gun = lara.back_gun;
 	info.hit_direction = lara.hit_direction;
 	info.hit_frame = lara.hit_frame;

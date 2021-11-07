@@ -709,7 +709,7 @@ void InitialiseLara()
 	auto item = lara_item;
 
 	item->data = (void*)&lara;
-	item->collidable = 0;
+	item->collidable = 1;
 	item->hit_points = LARA_HITPOINTS;
 	item->carried_item = NO_ITEM;
 

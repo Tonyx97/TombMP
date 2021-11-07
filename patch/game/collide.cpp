@@ -725,7 +725,7 @@ void LaraBaddieCollision(ITEM_INFO* laraitem, COLL_INFO* coll)
 
 	laraitem->hit_status = 0;
 
-	if (laraitem->hit_points <= 0)
+	if (laraitem->hit_points <= 0 || !laraitem->collidable)
 		return;
 
 	int16_t roomies[20];
@@ -862,6 +862,9 @@ void TrapCollision(int16_t item_num, ITEM_INFO* laraitem, COLL_INFO* coll)
 
 void ItemPushLara(ITEM_INFO* item, ITEM_INFO* laraitem, COLL_INFO* coll, int spazon, int bigpush)
 {
+	if (!item->collidable)
+		return;
+
 	if (!g_resource->trigger_event(events::physics::ON_PLAYER_ITEM_COLLIDE, game_level::LOCALPLAYER(), item, coll))
 		return;
 

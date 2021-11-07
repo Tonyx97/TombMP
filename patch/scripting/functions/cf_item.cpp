@@ -38,7 +38,7 @@ void cf_item::register_functions(sol::state* vm)
 	vm->set_function("setItemCarriedItem", [&](ITEM_INFO* item, int16_t val) { item->carried_item = val; });
 
 	vm->set_function("isItemCollidable", [&](ITEM_INFO* item)			 { return !!item->collidable; });
-	vm->set_function("setItemCollidable", [&](ITEM_INFO* item, bool val) { item->collidable = val; });
+	vm->set_function("setItemCollidable", [&](ITEM_INFO* item, bool val) { item->collidable = uint16_t(val); });
 
 	vm->set_function("getItemPosition", [&](ITEM_INFO* item) -> std::tuple<int, int, int>
 	{
