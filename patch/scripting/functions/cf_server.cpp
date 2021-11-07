@@ -5,6 +5,7 @@
 #include <shared/scripting/script.h>
 
 #include <mp/client.h>
+#include <mp/game/entity.h>
 #include <mp/game/player.h>
 #include <mp/game/level.h>
 
@@ -36,6 +37,14 @@ void cf_server::register_functions(sol::state* vm)
 					{
 						bs->Write(int(player->get_type()));
 						bs->Write(player->get_id());
+					}
+				}
+				else if (v.is<game_entity*>())
+				{
+					if (auto entity = v.as<game_entity*>(); g_level->has_entity(entity))
+					{
+						bs->Write(int(entity->get_type()));
+						bs->Write(entity->get_sync_id());
 					}
 				}
 

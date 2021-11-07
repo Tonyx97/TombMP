@@ -131,6 +131,14 @@ void game_level::remove_entity(game_entity_base* base)
 	delete base;
 }
 
+void game_level::sync_entity(game_entity_base* entity_base)
+{
+	if (auto entity = utils::rtti::safe_cast<game_entity>(entity_base))
+	{
+		// TODO?
+	}
+}
+
 void game_level::destroy_entity(game_entity* entity)
 {
 	g_server->send_packet(ID_SYNC_KILL, entity->get_sync_id());

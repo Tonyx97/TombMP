@@ -1,10 +1,12 @@
 import utils;
+import prof;
 
 #include <shared/defs.h>
 #include <shared/scripting/resource_system.h>
 #include <shared/scripting/resource.h>
 
 #include <mp/client.h>
+#include <mp/game/entity.h>
 #include <mp/game/player.h>
 #include <mp/game/level.h>
 
@@ -61,7 +63,7 @@ void server_handlers::on_trigger_client_event()
 			{
 				SYNC_ID sid; bs->Read(sid);
 
-				if (auto entity = reinterpret_cast<game_entity*>(g_level->get_entity_by_sid(sid)))
+				if (auto entity = utils::rtti::safe_cast<game_entity>(g_level->get_entity_by_sid(sid)))
 					args.push_back(entity);
 
 				break;

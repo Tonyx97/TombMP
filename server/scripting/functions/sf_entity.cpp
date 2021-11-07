@@ -14,25 +14,10 @@
 
 void sf_entity::register_functions(sol::state* vm)
 {
-	vm->set_function("getPlayersTable", [&]()
-	{
-		return sol::as_table(g_level->get_instanced_players());
-	});
-
-	vm->set_function("getItemsTable", [&]()
-	{
-		return sol::as_table(g_level->get_instanced_level_entities());
-	});
-
-	vm->set_function("getPlayerSpawns", [&]()
-	{
-		return sol::as_table(g_level->get_player_spawns());
-	});
-
-	vm->set_function("getRandomPlayer", [&](bool joined)
-	{
-		return g_level->get_random_player(joined);
-	});
+	vm->set_function("getPlayersTable", [&]() { return sol::as_table(g_level->get_instanced_players()); });
+	vm->set_function("getItemsTable", [&]() { return sol::as_table(g_level->get_instanced_level_entities()); });
+	vm->set_function("getPlayerSpawns", [&]() { return sol::as_table(g_level->get_player_spawns()); });
+	vm->set_function("getRandomPlayer", [&](bool joined) { return g_level->get_random_player(joined); });
 
 	vm->set_function("asPlayer", [&](game_entity_base* base) { return utils::rtti::safe_cast<game_player>(base); });
 	vm->set_function("isEntity", [&](game_entity* entity) { return g_level->has_entity(entity); });
