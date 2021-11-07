@@ -689,7 +689,7 @@ int load_level_file(const char* filename)
 	if (!LoadTexturePages(file))
 		return false;
 
-	// mow load level number and see if it is correct
+	// now load level number and see if it is correct
 
 	MyReadFile(file, &level_dummy, sizeof(int), &read, nullptr);
 
