@@ -167,6 +167,7 @@
 		· getItemAnimFrame.
 		· getPlayerHeadRotation.
 		· getPlayerTorsoRotation.
+		· getPlayerArmFrameNumber.
 	
 	
 	

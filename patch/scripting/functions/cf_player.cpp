@@ -135,6 +135,14 @@ void cf_player::register_functions(sol::state* vm)
 		return { rot.x, rot.y, rot.z };
 	});
 
+	vm->set_function("getPlayerArmFrameNumber", [&](game_player* player, int arm)
+	{
+		if (arm == 0)		return player->get_left_arm_info().frame;
+		else if (arm == 1)	return player->get_right_arm_info().frame;
+
+		return 0i16;
+	});
+
 	vm->set_function("getPlayerID", [&](game_player* player)
 	{
 		return player->get_id();
