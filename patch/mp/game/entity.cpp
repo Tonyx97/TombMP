@@ -42,7 +42,7 @@ game_entity::game_entity(int16_t obj_id, int stype, SYNC_ID sid, const game_vec3
 
 		BasicSetupItem(item_id);
 
-		const bool intelligent = objects[obj_id].intelligent;
+		const bool intelligent = objects[obj_id].intelligent || obj_id == SAVEGAME_CRYSTAL_ITEM;
 
 		if (intelligent)
 			set_new_active(true);
