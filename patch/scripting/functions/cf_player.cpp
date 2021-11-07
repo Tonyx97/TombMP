@@ -123,6 +123,18 @@ void cf_player::register_functions(sol::state* vm)
 		return nullptr;
 	});
 
+	vm->set_function("getPlayerHeadRotation", [&](game_player* player) -> std::tuple<PHD_ANGLE, PHD_ANGLE, PHD_ANGLE>
+	{
+		const auto& rot = player->get_head_rotation();
+		return { rot.x, rot.y, rot.z };
+	});
+
+	vm->set_function("getPlayerTorsoRotation", [&](game_player* player) -> std::tuple<PHD_ANGLE, PHD_ANGLE, PHD_ANGLE>
+	{
+		const auto& rot = player->get_torso_rotation();
+		return { rot.x, rot.y, rot.z };
+	});
+
 	vm->set_function("getPlayerID", [&](game_player* player)
 	{
 		return player->get_id();

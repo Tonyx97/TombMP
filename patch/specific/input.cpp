@@ -95,7 +95,7 @@ int get_general_input()
 
 	//if (g_keycode->is_key_down(KEY_F2))
 	{
-		printf_s("%i\n", lara_item->current_anim_state);
+		printf_s("%i %i %i\n", lara_item->current_anim_state, lara.left_arm.anim_number, lara.right_arm.anim_number);
 	}
 
 	if (g_keycode->is_key_down(KEY_O) && lara_item)
