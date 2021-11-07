@@ -218,7 +218,6 @@ void BasicSetupItem(int16_t item_num)
 	item->frame_number = anims[item->anim_number].frame_base;
 	item->current_anim_state = item->goal_anim_state = anims[item->anim_number].current_anim_state;
 	item->required_anim_state = 0;
-	item->pos.x_rot = item->pos.z_rot = 0;
 	item->speed = item->fallspeed = 0;
 	item->status = NOT_ACTIVE;
 	item->active = 0;
