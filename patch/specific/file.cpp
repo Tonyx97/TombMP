@@ -192,9 +192,9 @@ bool LoadRooms(HANDLE file)
 
 	// load in 'floor_data' part of wad
 
-	MyReadFile(file, &size, sizeof(int32_t), &read, nullptr);
-	floor_data = (int16_t*)game_malloc(size * sizeof(int16_t), FLOOR_DATA);
-	MyReadFile(file, floor_data, sizeof(int16_t) * size, &read, nullptr);
+	MyReadFile(file, &floor_data_count, sizeof(int32_t), &read, nullptr);
+	floor_data = (int16_t*)game_malloc(floor_data_count * sizeof(int16_t), FLOOR_DATA);
+	MyReadFile(file, floor_data, sizeof(int16_t) * floor_data_count, &read, nullptr);
 
 	return true;
 }

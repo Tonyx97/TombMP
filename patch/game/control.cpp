@@ -1575,6 +1575,9 @@ int16_t GetDoor(FLOOR_INFO* floor)
 	if (!floor->index)
 		return NO_ROOM;
 
+	if (floor->index < 0 || floor->index >= floor_data_count)
+		return NO_ROOM;
+
 	auto data = &floor_data[floor->index];
 	auto type = *(data++);
 

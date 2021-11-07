@@ -99,3 +99,4 @@ inline ROOM_INFO* room = nullptr;
 inline int16_t number_rooms = 0;
 
 inline int16_t* floor_data;
+inline int32_t floor_data_count = 0;
