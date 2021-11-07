@@ -7,6 +7,11 @@ import utils;
 
 #include "audio.h"
 
+audio::~audio()
+{
+	alSourcei(id, AL_BUFFER, 0);
+}
+
 bool audio::init(const int_vec3& pos, float master_vol, float pitch, audio_info* ai)
 {
 	if (ai)

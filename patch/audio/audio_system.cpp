@@ -172,7 +172,7 @@ bool audio_system::load_audio(const std::string& filename)
 	alBufferData(buffer, wav.channels > 1 ? AL_FORMAT_STEREO16 : AL_FORMAT_MONO16, sample_data, (int)wav.dataChunkDataSize, wav.sampleRate);
 
 	delete[] sample_data;
-
+	
 	if (auto err = alGetError(); err != AL_NO_ERROR)
 		return error("An OpenAL error ocurred");
 
@@ -195,6 +195,20 @@ bool audio_system::unload_audio(const std::string& filename)
 	
 	if (auto it = buffers.find(hash); it != buffers.end())
 	{
+		// remove audios using this buffer
+
+		std::erase_if(audios, [&](audio* a)
+		{
+			if (a->get_buffer() != it->second)
+				return false;
+
+			destroy_audio(a);
+
+			return true;
+		});
+
+		// free the buffer
+
 		free_buffers.push(it->second);
 
 		buffers.erase(it);
@@ -462,8 +476,8 @@ void audio_system::destroy()
 	for (const auto& [audio_id, ai] : audios_info)
 		delete ai;
 
-	alDeleteSources(sizeof(audio_sources), audio_sources);
-	alDeleteBuffers(sizeof(audio_buffers), audio_buffers);
+	alDeleteSources(sizeof(audio_sources) / sizeof(*audio_buffers), audio_sources);
+	alDeleteBuffers(sizeof(audio_buffers) / sizeof(*audio_buffers), audio_buffers);
 
 	alcMakeContextCurrent(nullptr);
 	alcDestroyContext(context);

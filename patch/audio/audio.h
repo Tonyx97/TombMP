@@ -65,6 +65,7 @@ public:
 	static constexpr buf_src_id INVALID_ID()	{ return ~(0l); }
 
 	audio(audio_id hash, buf_src_id src, buf_src_id buffer) : hash(hash), id(src), buffer(buffer) { obj_type = OBJ_TYPE_AUDIO; }
+	~audio();
 
 	bool init(const int_vec3& pos, float master_vol, float pitch, audio_info* ai);
 
