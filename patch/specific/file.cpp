@@ -229,6 +229,30 @@ void AdjustTextureUVs(bool tNew)
 
 bool LoadObjects(HANDLE file)
 {
+	struct TMP_ANIM_STRUCT
+	{
+		int16_t* frame_ptr;
+		int16_t interpolation;
+		int16_t current_anim_state;
+		int32_t velocity;
+		int32_t acceleration;
+		int16_t frame_base;
+		int16_t frame_end;
+		int16_t jump_anim_num;
+		int16_t jump_frame_num;
+		int16_t number_changes;
+		int16_t change_ptr;
+		int16_t number_commands;
+		int16_t command_ptr;
+	};
+
+	struct TMP_CHANGE_STRUCT
+	{
+		int16_t goal_anim_state;
+		int16_t number_ranges;
+		int16_t range_ptr;
+	};
+
 	int32_t number, size;
 	DWORD read;
 
@@ -348,22 +372,41 @@ bool LoadObjects(HANDLE file)
 	}
 
 	// testing new custom animations
-	/*{
-		auto target_anim = &anims[336];
-		auto last_anim = &anims[number_anims - 2];
-		auto custom_anim = &anims[1714];
-		auto last_anim_len = last_anim->frame_end - last_anim->frame_base;
-		auto size_of_frame = sizeof(ANIM_FRAME) + (objects[LARA].nmeshes * sizeof(int16_t) * 2) - 2;
-		auto size_of_last_obj_frame = sizeof(ANIM_FRAME) + (objects[objects_count - 1].nmeshes * sizeof(int16_t));
-		auto start_of_new_frame_data = (frames_count * 2);
+	{
+		++number_anim_changes;
 
-		memcpy(custom_anim, &anims[336], sizeof(ANIM_STRUCT));
-		memcpy((uint8_t*)frames + start_of_new_frame_data, target_anim->frame_ptr, size_of_frame * (target_anim->frame_end - target_anim->frame_base));
+		anims = (ANIM_STRUCT*)realloc(anims, number_anim_changes * sizeof(ANIM_STRUCT));
 
-		custom_anim->frame_ptr = (int16_t*)((uint8_t*)frames + start_of_new_frame_data);
+		std::ifstream test("default.anim", std::ios::binary);
 
-		//DebugBreak();
-	}*/
+		TMP_ANIM_STRUCT tmp_anim_info;
+
+		int16_t size_of_frame, anim_len;
+
+		test.read((char*)& tmp_anim_info, sizeof(tmp_anim_info));
+		test.read((char*)&size_of_frame, sizeof(size_of_frame));
+		test.read((char*)&anim_len, sizeof(anim_len));
+
+		auto anim_frame_data = new char[anim_len * size_of_frame];
+
+		test.read(anim_frame_data, size_of_frame * anim_len);
+
+		auto anim = &anims[number_anim_changes - 1];
+
+		anim->frame_ptr = (int16_t*)anim_frame_data;
+		anim->change_ptr = (int16_t*)&changes[(int16_t)tmp_anim_info.change_ptr];
+		anim->command_ptr = (int16_t*)&commands[(int16_t)tmp_anim_info.command_ptr];
+		anim->interpolation = tmp_anim_info.interpolation;
+		anim->current_anim_state = tmp_anim_info.current_anim_state;
+		anim->velocity = tmp_anim_info.velocity;
+		anim->acceleration = tmp_anim_info.acceleration;
+		anim->frame_base = tmp_anim_info.frame_base;
+		anim->frame_end = tmp_anim_info.frame_end;
+		anim->jump_anim_num = tmp_anim_info.jump_anim_num;
+		anim->jump_frame_num = tmp_anim_info.jump_frame_num;
+		anim->number_changes = tmp_anim_info.number_changes;
+		anim->number_commands = tmp_anim_info.acceleration;
+	}
 
 	// initialise objects: must come after bones have been set up, but before items loaded
 

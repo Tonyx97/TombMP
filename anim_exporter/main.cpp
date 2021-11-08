@@ -57,6 +57,8 @@ struct ANIM_FRAME
 };
 
 std::ifstream g_level;
+std::ofstream g_out_anim;
+
 uint32_t g_offset = 0;
 
 template <typename T>
@@ -78,9 +80,14 @@ void read(void* data, int elements, uint32_t off = g_offset)
 	g_offset += size;
 }
 
+void write(void* data, int size)
+{
+	g_out_anim.write((char*)data, size);
+}
+
 int main()
 {
-	std::string anim_name;
+	std::string anim_name = "default.anim";
 
 	int16_t obj_id = -1,
 			anim_id = -1;
@@ -223,7 +230,10 @@ int main()
 
 	// read tr_model here
 
-	int nmeshes[1000];
+	struct
+	{
+		int16_t num_meshes;
+	} objects[1000];
 
 	for (int i = 0; i < NumModels; ++i)
 	{
@@ -235,14 +245,36 @@ int main()
 		auto size = read<int32_t>();
 		auto anim_index = read<int16_t>();
 
-		nmeshes[id] = num_meshes;
+		objects[id] = { .num_meshes = num_meshes };
 	}
 
-	//std::ofstream out_anim(anim_name, std::ios::binary);
-
-	//out_anim.write();
+	// close level and create anim file
 
 	g_level.close();
+
+	{
+		// remap anim pointers
+
+		for (int i = 0; i < NumAnimations; ++i)
+		{
+			auto anim = &animations[i];
+
+			anim->frame_ptr = (int16_t*)((uintptr_t)frames + (uintptr_t)anim->frame_ptr);
+		}
+
+		g_out_anim = std::ofstream(anim_name, std::ios::binary | std::ios::trunc);
+
+		auto anim = &animations[336];
+		auto size_of_frame = sizeof(ANIM_STRUCT) + (objects[0].num_meshes * sizeof(int16_t) * 2) - sizeof(int16_t);
+		auto anim_len = (anim->frame_end - anim->frame_base);
+
+		write(anim, sizeof(ANIM_STRUCT));					// write info
+		write(&size_of_frame, sizeof(size_of_frame));		// write size of frame
+		write(&anim_len, sizeof(anim_len));					// write anim length
+		write(anim->frame_ptr, anim_len * size_of_frame);	// write frame data 
+
+		g_out_anim.close();
+	}
 
 	return 0;
 }
