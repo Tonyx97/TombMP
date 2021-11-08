@@ -253,21 +253,36 @@ bool LoadObjects(HANDLE file)
 
 	MyReadFile(file, &number_anims, sizeof(int32_t), &read, nullptr);
 	anims = (ANIM_STRUCT*)game_malloc(number_anims * sizeof(ANIM_STRUCT), ANIMS);
-	MyReadFile(file, anims, sizeof(ANIM_STRUCT) * number_anims, &read, nullptr);
 
-	MyReadFile(file, &number, sizeof(int32_t), &read, nullptr);
-	changes = (CHANGE_STRUCT*)game_malloc(number * sizeof(CHANGE_STRUCT), STRUCTS);
-	MyReadFile(file, changes, sizeof(CHANGE_STRUCT) * number, &read, nullptr);
+	for (int i = 0; i < number_anims; ++i)
+	{
+		auto anim = &anims[i];
 
-	MyReadFile(file, &number, sizeof(int32_t), &read, nullptr);
-	ranges = (RANGE_STRUCT*)game_malloc(number * sizeof(RANGE_STRUCT), RANGES);
-	MyReadFile(file, ranges, sizeof(RANGE_STRUCT) * number, &read, nullptr);
+		MyReadFile(file, anim, offsetof(ANIM_STRUCT, change_ptr) - 2, &read, nullptr);
+
+		uint16_t change_index;
+
+		MyReadFile(file, &change_index, sizeof(int16_t), &read, nullptr);
+
+		anim->change_ptr = (int16_t*)change_index;
+
+		MyReadFile(file, &anim->number_commands, sizeof(int16_t), &read, nullptr);
+		MyReadFile(file, &anim->command_index, sizeof(int16_t), &read, nullptr);
+	}
+
+	MyReadFile(file, &number_anim_changes, sizeof(int32_t), &read, nullptr);
+	changes = (CHANGE_STRUCT*)game_malloc(number_anim_changes * sizeof(CHANGE_STRUCT), STRUCTS);
+	MyReadFile(file, changes, sizeof(CHANGE_STRUCT) * number_anim_changes, &read, nullptr);
+
+	MyReadFile(file, &number_anim_ranges, sizeof(int32_t), &read, nullptr);
+	ranges = (RANGE_STRUCT*)game_malloc(number_anim_ranges * sizeof(RANGE_STRUCT), RANGES);
+	MyReadFile(file, ranges, sizeof(RANGE_STRUCT) * number_anim_ranges, &read, nullptr);
 
 	// load in animation data wodges
 
-	MyReadFile(file, &size, sizeof(int32_t), &read, nullptr);
-	commands = (int16_t*)game_malloc(size * sizeof(int16_t), COMMANDS);
-	MyReadFile(file, commands, sizeof(int16_t) * size, &read, nullptr);
+	MyReadFile(file, &number_anim_commands, sizeof(int32_t), &read, nullptr);
+	commands = (int16_t*)game_malloc(number_anim_commands * sizeof(int16_t), COMMANDS);
+	MyReadFile(file, commands, sizeof(int16_t) * number_anim_commands, &read, nullptr);
 
 	// bones
 
@@ -277,39 +292,69 @@ bool LoadObjects(HANDLE file)
 
 	// frames
 
-	MyReadFile(file, &size, sizeof(int32_t), &read, nullptr);
-	frames = (int16_t*)game_malloc(size * sizeof(int16_t), FRAMES);
-	MyReadFile(file, frames, sizeof(int16_t) * size, &read, nullptr);
+	MyReadFile(file, &number_anim_frames, sizeof(int32_t), &read, nullptr);
+	frames = (int16_t*)game_malloc(number_anim_frames * sizeof(int16_t), FRAMES);
+	MyReadFile(file, frames, sizeof(int16_t) * number_anim_frames, &read, nullptr);
 
 	// remap anim pointers
+	// what this does is basically assign the actual frame pointer without
+	// any offset calculation to avoid the calculation in the future
 
 	for (int i = 0; i < number_anims; ++i)
-		anims[i].frame_ptr = (int16_t*)((long)anims[i].frame_ptr + (long)frames);
+	{
+		auto anim = &anims[i];
 
-	// load in Normal animating objects
+		anim->frame_ptr = (int16_t*)((uintptr_t)frames + (uintptr_t)anim->frame_ptr);
 
-	MyReadFile(file, &number, sizeof(int32_t), &read, nullptr);
+		// remap change pointer
 
-	for (int i = 0; i < number; ++i)
+		anim->change_ptr = (int16_t*)&changes[(int16_t)anim->change_ptr];
+	}
+
+	// load in normal animating objects (NumModels)
+
+	int32_t objects_count;
+
+	MyReadFile(file, &objects_count, sizeof(int32_t), &read, nullptr);
+
+	for (int i = 0; i < objects_count; ++i)
 	{
 		int j;
 
 		MyReadFile(file, &j, sizeof(int32_t), &read, nullptr);						// read normal object number
-		MyReadFile(file, &objects[j].nmeshes, sizeof(int16_t), &read, nullptr);
+		MyReadFile(file, &objects[j].nmeshes, sizeof(int16_t), &read, nullptr);		// NumMeshes
 		MyReadFile(file, &objects[j].mesh_index, sizeof(int16_t), &read, nullptr);
 		MyReadFile(file, &objects[j].bone_index, sizeof(int32_t), &read, nullptr);
 		MyReadFile(file, &size, sizeof(int32_t), &read, nullptr);
 		MyReadFile(file, &objects[j].anim_index, sizeof(int16_t), &read, nullptr);
 
-		objects[j].frame_base = (int16_t*)((long)size + (long)frames);
+		objects[j].frame_base = (int16_t*)((uintptr_t)frames + (uintptr_t)size);
 		objects[j].loaded = 1;														// flag object as loaded
 	}
+
+	// testing new custom animations
+	/*{
+		auto target_anim = &anims[336];
+		auto last_anim = &anims[number_anims - 2];
+		auto custom_anim = &anims[1714];
+		auto last_anim_len = last_anim->frame_end - last_anim->frame_base;
+		auto size_of_frame = sizeof(ANIM_FRAME) + (objects[LARA].nmeshes * sizeof(int16_t) * 2) - 2;
+		auto size_of_last_obj_frame = sizeof(ANIM_FRAME) + (objects[objects_count - 1].nmeshes * sizeof(int16_t));
+		auto start_of_new_frame_data = (frames_count * 2);
+
+		memcpy(custom_anim, &anims[336], sizeof(ANIM_STRUCT));
+		memcpy((uint8_t*)frames + start_of_new_frame_data, target_anim->frame_ptr, size_of_frame * (target_anim->frame_end - target_anim->frame_base));
+
+		custom_anim->frame_ptr = (int16_t*)((uint8_t*)frames + start_of_new_frame_data);
+
+		//DebugBreak();
+	}*/
 
 	// initialise objects: must come after bones have been set up, but before items loaded
 
 	InitialiseObjects();
 
-	// load in Static Objects
+	// load in static objects
 
 	MyReadFile(file, &number, sizeof(int32_t), &read, nullptr);
 

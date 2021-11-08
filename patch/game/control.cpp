@@ -469,7 +469,7 @@ int GetChange(ITEM_INFO* item, ANIM_STRUCT* anim)
 	if (item->current_anim_state == item->goal_anim_state)
 		return 0;
 
-	auto change = &changes[anim->change_index];
+	auto change = (CHANGE_STRUCT*)anim->change_ptr;
 
 	for (int i = 0; i < anim->number_changes; ++i, ++change)
 	{

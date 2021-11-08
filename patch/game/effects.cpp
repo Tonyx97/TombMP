@@ -706,8 +706,8 @@ void LaraWakeUpEffect(ITEM_INFO* item)
 	{
 		lara_item->current_anim_state = AS_STOP;
 		lara_item->goal_anim_state = AS_STOP;
-		lara_item->anim_number = 336;
-		lara_item->frame_number = GF(336, 0);
+		lara_item->anim_number = 1714;
+		lara_item->frame_number = GF(1714, 0);
 		test = false;
 	}
 

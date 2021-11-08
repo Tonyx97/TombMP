@@ -45,7 +45,7 @@ struct ANIM_STRUCT
 	int16_t jump_anim_num;
 	int16_t jump_frame_num;
 	int16_t number_changes;
-	int16_t change_index;
+	int16_t* change_ptr;
 	int16_t number_commands;
 	int16_t command_index;
 };
@@ -63,6 +63,18 @@ struct RANGE_STRUCT
 	int16_t end_frame;
 	int16_t link_anim_num;
 	int16_t link_frame_num;
+};
+
+struct BOUNDING_BOX
+{
+	int16_t MinX, MaxX, MinY, MaxY, MinZ, MaxZ;
+};
+
+struct ANIM_FRAME
+{
+	BOUNDING_BOX box;
+	int16_t off_x, off_y, off_z;
+	//uint16_t* angle_sets;
 };
 
 struct OBJECT_INFO
@@ -109,4 +121,8 @@ inline int16_t** meshes,
 			  * commands,
 			  * frames;
 
-inline int32_t number_anims = 0;
+inline int32_t number_anims = 0,
+			   number_anim_changes = 0,
+			   number_anim_ranges = 0,
+			   number_anim_commands = 0,
+			   number_anim_frames = 0;
