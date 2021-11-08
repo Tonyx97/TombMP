@@ -453,7 +453,7 @@ void AnimateLara(ITEM_INFO* item)
 	{
 		if (anim->number_commands > 0)
 		{
-			auto command = &commands[anim->command_index];
+			auto command = anim->command_ptr;
 
 			for (int i = anim->number_commands; i > 0; --i)
 			{
@@ -502,7 +502,7 @@ void AnimateLara(ITEM_INFO* item)
 
 	if (anim->number_commands > 0)
 	{
-		auto command = &commands[anim->command_index];
+		auto command = anim->command_ptr;
 
 		for (int i = anim->number_commands; i > 0; --i)
 		{

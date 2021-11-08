@@ -47,14 +47,14 @@ struct ANIM_STRUCT
 	int16_t number_changes;
 	int16_t* change_ptr;
 	int16_t number_commands;
-	int16_t command_index;
+	int16_t* command_ptr;
 };
 
 struct CHANGE_STRUCT
 {
 	int16_t goal_anim_state;
 	int16_t number_ranges;
-	int16_t range_index;
+	int16_t* range_ptr;
 };
 
 struct RANGE_STRUCT

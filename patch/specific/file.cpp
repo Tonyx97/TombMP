@@ -258,21 +258,31 @@ bool LoadObjects(HANDLE file)
 	{
 		auto anim = &anims[i];
 
-		MyReadFile(file, anim, offsetof(ANIM_STRUCT, change_ptr) - 2, &read, nullptr);
+		int16_t change_index, command_index;
 
-		uint16_t change_index;
-
+		MyReadFile(file, anim, offsetof(ANIM_STRUCT, change_ptr) - sizeof(change_index), &read, nullptr);
 		MyReadFile(file, &change_index, sizeof(int16_t), &read, nullptr);
+		MyReadFile(file, &anim->number_commands, sizeof(int16_t), &read, nullptr);
+		MyReadFile(file, &command_index, sizeof(int16_t), &read, nullptr);
 
 		anim->change_ptr = (int16_t*)change_index;
-
-		MyReadFile(file, &anim->number_commands, sizeof(int16_t), &read, nullptr);
-		MyReadFile(file, &anim->command_index, sizeof(int16_t), &read, nullptr);
+		anim->command_ptr = (int16_t*)command_index;
 	}
 
 	MyReadFile(file, &number_anim_changes, sizeof(int32_t), &read, nullptr);
 	changes = (CHANGE_STRUCT*)game_malloc(number_anim_changes * sizeof(CHANGE_STRUCT), STRUCTS);
-	MyReadFile(file, changes, sizeof(CHANGE_STRUCT) * number_anim_changes, &read, nullptr);
+
+	for (int i = 0; i < number_anim_changes; ++i)
+	{
+		auto change = &changes[i];
+
+		int16_t range_index;
+		
+		MyReadFile(file, change, offsetof(CHANGE_STRUCT, range_ptr), &read, nullptr);
+		MyReadFile(file, &range_index, sizeof(int16_t), &read, nullptr);
+
+		change->range_ptr = (int16_t*)range_index;
+	}
 
 	MyReadFile(file, &number_anim_ranges, sizeof(int32_t), &read, nullptr);
 	ranges = (RANGE_STRUCT*)game_malloc(number_anim_ranges * sizeof(RANGE_STRUCT), RANGES);
@@ -305,10 +315,15 @@ bool LoadObjects(HANDLE file)
 		auto anim = &anims[i];
 
 		anim->frame_ptr = (int16_t*)((uintptr_t)frames + (uintptr_t)anim->frame_ptr);
-
-		// remap change pointer
-
 		anim->change_ptr = (int16_t*)&changes[(int16_t)anim->change_ptr];
+		anim->command_ptr = (int16_t*)&commands[(int16_t)anim->command_ptr];
+	}
+
+	for (int i = 0; i < number_anim_changes; ++i)
+	{
+		auto change = &changes[i];
+
+		change->range_ptr = (int16_t*)&ranges[(int16_t)change->range_ptr];
 	}
 
 	// load in normal animating objects (NumModels)
