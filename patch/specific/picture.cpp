@@ -249,6 +249,7 @@ void FadePictureUp()
 void FadePictureDown()
 {
 #if defined(_DEBUG) || defined(LEVEL_EDITOR)
+	FreePictureTextures();
 	return;
 #endif
 

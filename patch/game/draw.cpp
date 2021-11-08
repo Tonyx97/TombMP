@@ -747,6 +747,7 @@ void draw_rooms(int16_t current_room)
 		S_DrawSparks();
 		S_DrawSplashes();
 		S_DrawBat();
+		//DoRain();
 
 		if (enable_footprints)
 			S_DrawFootPrints();

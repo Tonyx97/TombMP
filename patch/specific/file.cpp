@@ -372,7 +372,7 @@ bool LoadObjects(HANDLE file)
 	}
 
 	// testing new custom animations
-	{
+	/*{
 		++number_anim_changes;
 
 		anims = (ANIM_STRUCT*)realloc(anims, number_anim_changes * sizeof(ANIM_STRUCT));
@@ -406,7 +406,7 @@ bool LoadObjects(HANDLE file)
 		anim->jump_frame_num = tmp_anim_info.jump_frame_num;
 		anim->number_changes = tmp_anim_info.number_changes;
 		anim->number_commands = tmp_anim_info.acceleration;
-	}
+	}*/
 
 	// initialise objects: must come after bones have been set up, but before items loaded
 
@@ -866,7 +866,6 @@ bool load_level()
 	if (!std::filesystem::is_regular_file(loading_pic_path))
 		prof::critical_error("Invalid loading picture!");
 
-	LoadPicture(loading_pic_path.c_str(), App.lpPictureBuffer, 1);
 	FadePictureUp();
 
 	auto dispatch_input_and_net = [&]()

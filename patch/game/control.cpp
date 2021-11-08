@@ -35,6 +35,7 @@ import prof;
 #include "fish.h"
 #include "game.h"
 #include "physics.h"
+#include "rain.h"
 
 #define DEATH_WAIT		(10 * 30)
 #define SIGN_BIT		0x80000000

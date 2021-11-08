@@ -3,6 +3,7 @@
 	· Fix memory leak when loading a level? maybe the custom audio buffers?
 	· Fix the side flames.
 	· Detonator usage doesn't work.
+	· Fix rain maybe.
 
 - v1.0.6:
 	· Sometimes the AI death anim aren't fully synced and they get stuck in the middle.
