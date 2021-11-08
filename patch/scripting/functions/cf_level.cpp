@@ -7,6 +7,7 @@
 #include <mp/game/level.h>
 
 #include <game/game.h>
+#include <game/minecart.h>
 
 #include "cf_defs.h"
 
@@ -50,4 +51,5 @@ void cf_level::register_functions(sol::state* vm)
 
 		enable_engine_extended_features = enabled;
 	});
+	vm->set_function("setMinecartTurnModifier", [&](int v) { minecart_turn_extra_blocks = v; });
 }

@@ -11,6 +11,7 @@
 #include "effect2.h"
 #include "minecart.h"
 #include "game.h"
+#include "physics.h"
 
 #include <specific/init.h>
 
@@ -44,7 +45,6 @@
 #define CART_FWD_GRAD			-128
 #define CART_BACK_GRAD			128
 #define CART_JUMP_VEL			0xfc00
-#define CART_GRAVITY			0x401
 #define MAX_CART_YVEL			0x3f00
 #define TERMINAL_ANGLE			4096
 #define TARGET_DIST				(WALL_L * 2)
@@ -259,40 +259,41 @@ void MoveCart(ITEM_INFO* v, ITEM_INFO* l, CARTINFO* cart)
 	if ((lara.mine_l || lara.mine_r) && (!(lara.mine_l && lara.mine_r)) && !cart->StopDelay && !(cart->Flags & (CF_TURNINGL | CF_TURNINGR)))
 	{
 		auto rot = (((uint16_t)v->pos.y_rot) >> 14) | (lara.mine_l << 2);
+		auto turn_modified_angle = (4096 + (minecart_turn_extra_blocks * 1024));
 
 		switch (rot)
 		{
 		case 0:
-			cart->TurnX = (v->pos.x_pos + 4096) & ~1023;
+			cart->TurnX = (v->pos.x_pos + turn_modified_angle) & ~1023;
 			cart->TurnZ = v->pos.z_pos & ~1023;
 			break;
 		case 1:
 			cart->TurnX = v->pos.x_pos & ~1023;
-			cart->TurnZ = (v->pos.z_pos - 4096) | 1023;
+			cart->TurnZ = (v->pos.z_pos - turn_modified_angle) | 1023;
 			break;
 		case 2:
-			cart->TurnX = (v->pos.x_pos - 4096) | 1023;
+			cart->TurnX = (v->pos.x_pos - turn_modified_angle) | 1023;
 			cart->TurnZ = v->pos.z_pos | 1023;
 			break;
 		case 3:
 			cart->TurnX = v->pos.x_pos | 1023;
-			cart->TurnZ = (v->pos.z_pos + 4096) & ~1023;
+			cart->TurnZ = (v->pos.z_pos + turn_modified_angle) & ~1023;
 			break;
 		case 4:
-			cart->TurnX = (v->pos.x_pos - 4096) | 1023;
+			cart->TurnX = (v->pos.x_pos - turn_modified_angle) | 1023;
 			cart->TurnZ = v->pos.z_pos & ~1023;
 			break;
 		case 5:
 			cart->TurnX = v->pos.x_pos & ~1023;
-			cart->TurnZ = (v->pos.z_pos + 4096) & ~1023;
+			cart->TurnZ = (v->pos.z_pos + turn_modified_angle) & ~1023;
 			break;
 		case 6:
-			cart->TurnX = (v->pos.x_pos + 4096) & ~1023;
+			cart->TurnX = (v->pos.x_pos + turn_modified_angle) & ~1023;
 			cart->TurnZ = v->pos.z_pos | 1023;
 			break;
 		case 7:
 			cart->TurnX = v->pos.x_pos | 1023;
-			cart->TurnZ = (v->pos.z_pos - 4096) | 1023;
+			cart->TurnZ = (v->pos.z_pos - turn_modified_angle) | 1023;
 			break;
 		}
 
@@ -311,7 +312,7 @@ void MoveCart(ITEM_INFO* v, ITEM_INFO* l, CARTINFO* cart)
 			cart->TurnLen = ang;
 		}
 
-		cart->Flags |= (lara.mine_l) ? CF_TURNINGL : CF_TURNINGR;
+		cart->Flags |= lara.mine_l ? CF_TURNINGL : CF_TURNINGR;
 	}
 
 	if (cart->Speed < CART_MIN_SPEED)
@@ -340,7 +341,13 @@ void MoveCart(ITEM_INFO* v, ITEM_INFO* l, CARTINFO* cart)
 
 	if (cart->Flags & (CF_TURNINGL | CF_TURNINGR))
 	{
-		if ((cart->TurnLen += (v->speed * 3)) > (ONE_DEGREE * 90))
+		auto turn_len_modifier = (3 + -minecart_turn_extra_blocks);
+
+		turn_len_modifier = turn_len_modifier == 0 ? 2 : turn_len_modifier;
+
+		cart->TurnLen += (v->speed * turn_len_modifier);
+
+		if (cart->TurnLen > (ONE_DEGREE * 90))
 		{
 			if (cart->Flags & CF_TURNINGL)
 				v->pos.y_rot = cart->TurnRot - 16384;
@@ -388,8 +395,10 @@ void MoveCart(ITEM_INFO* v, ITEM_INFO* l, CARTINFO* cart)
 				z = -z;
 			}
 
-			v->pos.x_pos = cart->TurnX + ((x * 3584) >> W2V_SHIFT);
-			v->pos.z_pos = cart->TurnZ + ((z * 3584) >> W2V_SHIFT);
+			auto rot_angle = (4096 + (minecart_turn_extra_blocks * 1024) - 512);
+
+			v->pos.x_pos = cart->TurnX + ((x * rot_angle) >> W2V_SHIFT);
+			v->pos.z_pos = cart->TurnZ + ((z * rot_angle) >> W2V_SHIFT);
 		}
 	}
 	else
@@ -419,7 +428,7 @@ void MoveCart(ITEM_INFO* v, ITEM_INFO* l, CARTINFO* cart)
 		}
 		else
 		{
-			cart->YVel += CART_GRAVITY;
+			cart->YVel += GRAVITY * 171;
 
 			if (cart->YVel > MAX_CART_YVEL)
 				cart->YVel = MAX_CART_YVEL;

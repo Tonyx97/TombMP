@@ -27,3 +27,5 @@ struct CARTINFO
 void MineCartInitialise(int16_t item_number);
 void MineCartCollision(int16_t item_number, ITEM_INFO* l, COLL_INFO* coll);
 int MineCartControl();
+
+inline int minecart_turn_extra_blocks = 0;
