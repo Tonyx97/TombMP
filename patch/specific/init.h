@@ -2,11 +2,10 @@
 
 void* game_malloc(int size, int type);
 void game_free(void* ptr, int type);
-void S_InitialiseSystem();
 void free_game_memory();
-void init_game_malloc();
+
+void S_InitialiseSystem();
 void CalculateWibbleTable();
-void show_game_malloc_totals();
 
 void refresh_gamma_ramp();
 void InitZTable();
