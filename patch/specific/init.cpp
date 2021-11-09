@@ -183,11 +183,6 @@ void free_game_memory()
 
 	g_game_mem.clear();
 }
-
-void init_game_malloc()
-{
-}
-
 void* game_malloc(int size, int type)
 {
 	size = (size + 3) & ~3;
@@ -207,10 +202,6 @@ void game_free(void* ptr, int type)
 
 		g_game_mem.erase(it);
 	}
-}
-
-void show_game_malloc_totals()
-{
 }
 
 void CalculateWibbleTable()
