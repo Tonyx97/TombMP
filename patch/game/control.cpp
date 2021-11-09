@@ -256,11 +256,11 @@ int32_t ControlPhase(int32_t nframes)
 	info.smoke_count_l = smoke_count_l;
 	info.smoke_count_r = smoke_count_r;
 	info.left_arm.anim = lara.left_arm.anim_number;
-	info.left_arm.frame_base = (uint32_t)lara.left_arm.frame_base - (uint32_t)anims;
+	info.left_arm.frame_base = (uint32_t)lara.left_arm.frame_base - (uint32_t)frames;
 	info.left_arm.frame = lara.left_arm.frame_number;
 	info.left_arm.flash_gun = lara.left_arm.flash_gun;
 	info.right_arm.anim = lara.right_arm.anim_number;
-	info.right_arm.frame_base = (uint32_t)lara.right_arm.frame_base - (uint32_t)anims;
+	info.right_arm.frame_base = (uint32_t)lara.right_arm.frame_base - (uint32_t)frames;
 	info.right_arm.frame = lara.right_arm.frame_number;
 	info.right_arm.flash_gun = lara.right_arm.flash_gun;
 	info.ducked = lara.is_ducked;

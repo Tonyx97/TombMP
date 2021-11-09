@@ -567,11 +567,11 @@ void draw_rooms(int16_t current_room)
 				lara.gun_status = player->get_gun_status();
 				lara.is_ducked = player->is_ducked();
 				lara.water_status = player->get_water_status();
-				lara.left_arm.frame_base = (int16_t*)((uint32_t)anims + left_arm.frame_base);
+				lara.left_arm.frame_base = (int16_t*)((uint32_t)frames + left_arm.frame_base);
 				lara.left_arm.anim_number = left_arm.anim;
 				lara.left_arm.frame_number = left_arm.frame;
 				lara.left_arm.flash_gun = left_arm.flash_gun;
-				lara.right_arm.frame_base = (int16_t*)((uint32_t)anims + right_arm.frame_base);
+				lara.right_arm.frame_base = (int16_t*)((uint32_t)frames + right_arm.frame_base);
 				lara.right_arm.anim_number = right_arm.anim;
 				lara.right_arm.frame_number = right_arm.frame;
 				lara.right_arm.flash_gun = right_arm.flash_gun;
