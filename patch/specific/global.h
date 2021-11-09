@@ -149,11 +149,6 @@ inline double screen_sizer = 1.0,
 
 inline int16_t* anim_tex_ranges = nullptr;
 
-inline char* malloc_buffer = nullptr;
-inline int malloc_size;
-inline int malloc_free, malloc_used;
-inline char* malloc_ptr;
-
 inline D3DRENDERSTATETYPE LnAlphaEnableRenderState;
 
 inline MESH_INFO* CurrentMesh;
