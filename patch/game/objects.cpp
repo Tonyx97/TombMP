@@ -280,7 +280,8 @@ void InitialiseDoor(int16_t item_number)
 		box_number = b->floor[(((item->pos.z_pos - b->z) >> WALL_SHIFT) + dx) + (((item->pos.x_pos - b->x) >> WALL_SHIFT) + dy) * b->x_size].box;
 	}
 
-	door->d1.block = (boxes[box_number].overlap_index & BLOCKABLE) ? box_number : NO_BOX;
+	if (box_number != NO_BOX)
+		door->d1.block = (boxes[box_number].overlap_index & BLOCKABLE) ? box_number : NO_BOX;
 
 	memcpy(&door->d1.data, door->d1.floor, sizeof(FLOOR_INFO));
 
