@@ -257,17 +257,6 @@
 
 // TR IV/V additions
 
-// corner grabbing
-
-#define EXTCORNERL_A	312
-#define EXTCORNERL_F	GF(EXTCORNERL_A, 0)
-#define INTCORNERL_A	314
-#define INTCORNERL_F	GF(INTCORNERL_A, 0)
-#define EXTCORNERR_A	316
-#define EXTCORNERR_F	GF(EXTCORNERR_A, 0)
-#define INTCORNERR_A	318
-#define INTCORNERR_F	GF(INTCORNERR_A, 0)
-
 // polerope
 
 #define STAT2POLE_A		321
@@ -285,6 +274,10 @@
 enum lara_extended_animation
 {
 	CRAWL_JUMP_DOWN,
+	CORNER_LEFT_OUTER,
+	CORNER_LEFT_INNER,
+	CORNER_RIGHT_OUTER,
+	CORNER_RIGHT_INNER,
 	MAX_LARA_EXTENDED_ANIMS,
 };
 
@@ -293,7 +286,7 @@ struct extended_anim_info
 	int16_t id = -1,
 			frame = -1;
 
-	operator bool() { return (id != -1 && frame != -1); }
+	operator bool() const { return (id != -1 && frame != -1); }
 } inline g_extended_anim_info[MAX_LARA_EXTENDED_ANIMS];
 
 enum lara_water_states

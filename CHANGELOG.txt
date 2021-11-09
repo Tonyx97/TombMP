@@ -184,6 +184,7 @@
 		· getAnimFrameBase.
 		· setEngineExtendedAnimID.
 		· setEngineExtendedVehicleAnimIDs.
+		· setAnimNextAnim.
 	
 	
 	

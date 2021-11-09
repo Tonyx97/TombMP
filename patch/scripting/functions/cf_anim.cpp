@@ -22,4 +22,19 @@ void cf_anim::register_functions(sol::state* vm)
 	{
 		return GF(anim, offset);
 	});
+
+	vm->set_function("setAnimNextAnim", [&](int16_t id, int16_t next_id, int16_t next_offset) -> int16_t
+	{
+		if (id >= 0 && id < number_anims + number_custom_anims)
+		{
+			auto anim = &anims[id];
+
+			anim->jump_anim_num = next_id;
+			anim->jump_frame_num = GF(next_id, next_offset);
+
+			return true;
+		}
+
+		return false;
+	});
 }

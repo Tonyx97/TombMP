@@ -1414,7 +1414,7 @@ void lara_as_all4s(ITEM_INFO* item, COLL_INFO* coll)
 		return;
 	}
 
-	auto crawl_jump_down_info = g_extended_anim_info[CRAWL_JUMP_DOWN];
+	const auto& crawl_jump_down_info = g_extended_anim_info[CRAWL_JUMP_DOWN];
 
 	if (crawl_jump_down_info && enable_engine_extended_features && (input & IN_JUMP))
 	{
@@ -4146,10 +4146,7 @@ void lara_col_hangleft(ITEM_INFO* item, COLL_INFO* coll)
 
 	lara.move_angle = item->pos.y_rot - 16384;
 
-	if (!enable_engine_extended_features)
-		return;
-
-	if ((item->anim_number == HANG_A) && (item->frame_number == HANG_F))
+	if (enable_engine_extended_features && (item->anim_number == HANG_A) && (item->frame_number == HANG_F))
 	{
 		if (input & (IN_LEFT | IN_STEPL))
 		{
@@ -4157,15 +4154,21 @@ void lara_col_hangleft(ITEM_INFO* item, COLL_INFO* coll)
 			{
 				if (flag > 0)
 				{
-					item->anim_number = EXTCORNERL_A;
-					item->frame_number = EXTCORNERL_F;
-					item->current_anim_state = item->goal_anim_state = AS_CORNEREXTL;
+					if (const auto& corner_left_outer_info = g_extended_anim_info[CORNER_LEFT_OUTER])
+					{
+						item->anim_number = corner_left_outer_info.id;
+						item->frame_number = corner_left_outer_info.frame;
+						item->current_anim_state = item->goal_anim_state = AS_CORNEREXTL;
+					}
 				}
 				else
 				{
-					item->anim_number = INTCORNERL_A;
-					item->frame_number = INTCORNERL_F;
-					item->current_anim_state = item->goal_anim_state = AS_CORNERINTL;
+					if (const auto& corner_left_inner_info = g_extended_anim_info[CORNER_LEFT_INNER])
+					{
+						item->anim_number = corner_left_inner_info.id;
+						item->frame_number = corner_left_inner_info.frame;
+						item->current_anim_state = item->goal_anim_state = AS_CORNERINTL;
+					}
 				}
 			}
 		}
@@ -4180,10 +4183,7 @@ void lara_col_hangright(ITEM_INFO* item, COLL_INFO* coll)
 
 	lara.move_angle = item->pos.y_rot + 16384;
 
-	if (!enable_engine_extended_features)
-		return;
-
-	if ((item->anim_number == HANG_A) && (item->frame_number == HANG_F))
+	if (enable_engine_extended_features && item->anim_number == HANG_A && item->frame_number == HANG_F)
 	{
 		if (input & (IN_RIGHT | IN_STEPR))
 		{
@@ -4191,15 +4191,21 @@ void lara_col_hangright(ITEM_INFO* item, COLL_INFO* coll)
 			{
 				if (flag > 0)
 				{
-					item->anim_number = EXTCORNERR_A;
-					item->frame_number = GF(EXTCORNERR_A, 0);
-					item->current_anim_state = item->goal_anim_state = AS_CORNEREXTR;
+					if (const auto& corner_right_outer_info = g_extended_anim_info[CORNER_RIGHT_OUTER])
+					{
+						item->anim_number = corner_right_outer_info.id;
+						item->frame_number = corner_right_outer_info.frame;
+						item->current_anim_state = item->goal_anim_state = AS_CORNEREXTR;
+					}
 				}
 				else
 				{
-					item->anim_number = INTCORNERR_A;
-					item->frame_number = GF(INTCORNERR_A, 0);
-					item->current_anim_state = item->goal_anim_state = AS_CORNERINTR;
+					if (const auto& corner_right_inner_info = g_extended_anim_info[CORNER_RIGHT_INNER])
+					{
+						item->anim_number = corner_right_inner_info.id;
+						item->frame_number = corner_right_inner_info.frame;
+						item->current_anim_state = item->goal_anim_state = AS_CORNERINTR;
+					}
 				}
 			}
 		}
@@ -4477,30 +4483,41 @@ void lara_col_deathslide(ITEM_INFO* item, COLL_INFO* coll) {}
 
 void lara_as_extcornerl(ITEM_INFO* item, COLL_INFO* coll)
 {
-	camera.target_elevation = -(6 * WALL_L);
-
-	SetCornerAnim(item, coll, 0x4000, item->anim_number == EXTCORNERL_A + 1);
+	if (const auto& corner_left_outer_info = g_extended_anim_info[CORNER_LEFT_OUTER])
+	{
+		camera.target_elevation = -(6 * WALL_L);
+		SetCornerAnim(item, coll, 0x4000, item->anim_number == corner_left_outer_info.id + 1);
+	}
 }
 
 void lara_as_intcornerl(ITEM_INFO* item, COLL_INFO* coll)
 {
-	camera.target_elevation = -(6 * WALL_L);
+	if (const auto& corner_left_inner_info = g_extended_anim_info[CORNER_LEFT_INNER])
+	{
+		camera.target_elevation = -(6 * WALL_L);
 
-	SetCornerAnim(item, coll, -0x4000, item->anim_number == INTCORNERL_A + 1);
+		SetCornerAnim(item, coll, -0x4000, item->anim_number == corner_left_inner_info.id + 1);
+	}
 }
 
 void lara_as_extcornerr(ITEM_INFO* item, COLL_INFO* coll)
 {
-	camera.target_elevation = -(6 * WALL_L);
+	if (const auto& corner_right_outer_info = g_extended_anim_info[CORNER_RIGHT_OUTER])
+	{
+		camera.target_elevation = -(6 * WALL_L);
 
-	SetCornerAnim(item, coll, -0x4000, item->anim_number == EXTCORNERR_A + 1);
+		SetCornerAnim(item, coll, -0x4000, item->anim_number == corner_right_outer_info.id + 1);
+	}
 }
 
 void lara_as_intcornerr(ITEM_INFO* item, COLL_INFO* coll)
 {
-	camera.target_elevation = -(6 * WALL_L);
+	if (const auto& corner_right_inner_info = g_extended_anim_info[CORNER_RIGHT_INNER])
+	{
+		camera.target_elevation = -(6 * WALL_L);
 
-	SetCornerAnim(item, coll, 0x4000, item->anim_number == INTCORNERR_A + 1);
+		SetCornerAnim(item, coll, 0x4000, item->anim_number == corner_right_inner_info.id + 1);
+	}
 }
 
 void lara_as_controlled(ITEM_INFO* item, COLL_INFO* coll)
