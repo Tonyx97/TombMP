@@ -765,6 +765,7 @@ bool load_level()
 	if (!std::filesystem::is_regular_file(loading_pic_path))
 		prof::critical_error("Invalid loading picture!");
 
+	LoadPicture(loading_pic_path.c_str(), App.lpPictureBuffer, 1);
 	FadePictureUp();
 
 	auto dispatch_input_and_net = [&]()
