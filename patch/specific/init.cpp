@@ -176,8 +176,6 @@ void S_InitialiseSystem()
 
 void free_game_memory()
 {
-	// free everything we can think of
-
 	for (auto ptr : g_game_mem)
 		free(ptr);
 
@@ -186,35 +184,18 @@ void free_game_memory()
 
 void* game_malloc(int size, int type)
 {
-	size = (size + 3) & ~3;
-
-	auto ptr = calloc(1, size);
+	auto ptr = calloc(1, size * alloc_multiplier);
 
 	g_game_mem.insert(ptr);
 
 	return ptr;
 }
 
-void* game_realloc(void* ptr, int size)
-{
-	if (auto it = g_game_mem.find(ptr); it != g_game_mem.end())
-	{
-		auto old_ptr = *it;
-
-		auto ptr = realloc(*it, size);
-
-		g_game_mem.erase(it);
-		g_game_mem.insert(ptr);
-	}
-
-	return nullptr;
-}
-
 void game_free(void* ptr, int type)
 {
 	if (auto it = g_game_mem.find(ptr); it != g_game_mem.end())
 	{
-		free(*it);
+		free(ptr);
 
 		g_game_mem.erase(it);
 	}

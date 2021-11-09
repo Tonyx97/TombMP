@@ -85,35 +85,11 @@ void write(void* data, int size)
 	g_out_anim.write((char*)data, size);
 }
 
-int main()
+int main(int argc, char** argv)
 {
-	std::string anim_name = "default.anim";
-
-	int16_t obj_id = -1,
-			anim_id = -1;
-
-	std::cout << "Insert the object id where the anim is located: ";
-
-	std::cin >> obj_id;
-
-	if (obj_id == -1)
-		return 0;
-
-	std::cout << "Insert the anim id to export: ";
-
-	std::cin >> anim_id;
-
-	if (anim_id == -1)
-		return 0;
-
-	std::cout << "Insert the output file name: ";
-
-	//std::cin >> anim_name;
-
-	//if (anim_name.empty())
-	//	return 0;
-
-	g_level = std::ifstream("level.tr2", std::ios::binary);
+	g_level = std::ifstream(argc > 1 ? argv[1] : "level.tr2", std::ios::binary);
+	if (!g_level)
+		return MessageBoxA(nullptr, "Could not open level file", "Error", MB_ICONERROR);
 
 	g_offset += 4;		// Version
 	g_offset += 768;	// Palette
@@ -234,6 +210,7 @@ int main()
 	{
 		int16_t num_meshes;
 		int16_t anim_index;
+		int16_t frame_base;
 	} objects[1000];
 
 	for (int i = 0; i < NumModels; ++i)
@@ -246,36 +223,88 @@ int main()
 		auto size = read<int32_t>();
 		auto anim_index = read<int16_t>();
 
-		objects[id] = { .num_meshes = num_meshes, .anim_index = anim_index };
+		objects[id] = { .num_meshes = num_meshes, .anim_index = anim_index, .frame_base = int16_t(size) };
+	}
+
+	// remap anim pointers
+
+	for (int i = 0; i < NumAnimations; ++i)
+	{
+		auto anim = &animations[i];
+
+		anim->frame_ptr = (int16_t*)((uintptr_t)frames + (uintptr_t)anim->frame_ptr);
 	}
 
 	// close level and create anim file
 
 	g_level.close();
 
+	char option = 'y';
+
+	while (option == 'y')
 	{
-		// remap anim pointers
+		int16_t obj_id = -1,
+				obj_target_id = -1,
+				anim_id = -1;
 
-		for (int i = 0; i < NumAnimations; ++i)
-		{
-			auto anim = &animations[i];
+		std::cout << "Anim Object Location: ";
 
-			anim->frame_ptr = (int16_t*)((uintptr_t)frames + (uintptr_t)anim->frame_ptr);
-		}
+		std::cin >> obj_id;
 
-		g_out_anim = std::ofstream("..\\patch\\" + anim_name, std::ios::binary | std::ios::trunc);
+		if (obj_id == -1)
+			return 0;
 
-		auto anim = &animations[objects[obj_id].anim_index + anim_id];
+		std::cout << "To Relative Object: ";
+
+		std::cin >> obj_target_id;
+
+		if (obj_target_id == -1)
+			return 0;
+
+		std::cout << "Anim ID: ";
+
+		std::cin >> anim_id;
+
+		if (anim_id == -1)
+			return 0;
+
+		std::cout << "Output File Name: ";
+
+		std::string anim_name;
+
+		std::cin >> anim_name;
+
+		if (anim_name.empty())
+			anim_name = "default";
+
+		anim_name += ".anim";
+
+		g_out_anim = std::ofstream(anim_name, std::ios::binary | std::ios::trunc);
+
+		auto obj_anim_index = objects[obj_id].anim_index;
+		auto target_obj_anim_index = objects[obj_target_id].anim_index;
+		auto anim = &animations[obj_anim_index + anim_id];
 		auto size_of_frame = int16_t(sizeof(ANIM_STRUCT) + (objects[obj_id].num_meshes * sizeof(int16_t) * 2) - sizeof(int16_t));
 		auto anim_len = int16_t((anim->frame_end - anim->frame_base) + 1);
+		auto next_command_index = anim_id == NumAnimations - 1 ? NumAnimCommands : animations[anim_id + 1].command_index;
+		auto commands_len = int16_t((next_command_index - animations[anim_id].command_index) + 1);
 
-		write(anim, sizeof(ANIM_STRUCT));												// write info
-		write(&size_of_frame, sizeof(size_of_frame));									// write size of frame
-		write(&anim_len, sizeof(anim_len));												// write anim length
-		write(anim->frame_ptr, anim_len * size_of_frame);								// write frame data
-		write(&commands[anim->command_index], anim->number_commands * sizeof(int16_t));	// write command data
+		anim->jump_anim_num = target_obj_anim_index + (anim->jump_anim_num - obj_anim_index);
+		anim->jump_frame_num = objects[obj_target_id].frame_base + anim->jump_frame_num;
+
+		write(anim, sizeof(ANIM_STRUCT));							// write info
+		write(&size_of_frame, sizeof(size_of_frame));				// write size of frame
+		write(&anim_len, sizeof(anim_len));							// write anim length
+		write(&commands_len, sizeof(commands_len));					// write command length
+		write(anim->frame_ptr, anim_len * size_of_frame);			// write frame data
+		write(&commands[anim->command_index], commands_len);		// write command data
 
 		g_out_anim.close();
+
+		std::cout << "Animation " << anim_id << " exported to file " << anim_name << std::endl;
+		std::cout << "Export more? (y/n)" << std::endl;
+
+		std::cin >> option;
 	}
 
 	return 0;

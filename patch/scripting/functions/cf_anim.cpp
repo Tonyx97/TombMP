@@ -13,9 +13,9 @@
 
 void cf_anim::register_functions(sol::state* vm)
 {
-	vm->set_function("loadAnimation", [&](const char* filename)
+	vm->set_function("loadAnimation", [&](sol::this_state s, const char* filename)
 	{
-		return load_animation(filename);
+		return load_animation(resource_system::RESOURCES_PATH + script::get_global_string(s, scripting::globals::RESOURCE_NAME) + '\\' + filename);
 	});
 
 	vm->set_function("getAnimFrameBase", [&](int16_t anim, int16_t offset) -> int16_t

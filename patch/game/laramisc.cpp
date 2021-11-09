@@ -460,7 +460,7 @@ void AnimateLara(ITEM_INFO* item)
 				switch (*(command++))
 				{
 				case COMMAND_MOVE_ORIGIN:
-					TranslateItem(item, (int32_t) * (command), (int32_t) * (command + 1), (int32_t) * (command + 2));
+					TranslateItem(item, (int32_t)*(command), (int32_t)*(command + 1), (int32_t)*(command + 2));
 					command += 3;
 					break;
 				case COMMAND_JUMP_VELOCITY:

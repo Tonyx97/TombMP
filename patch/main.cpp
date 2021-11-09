@@ -48,7 +48,7 @@ int __stdcall WinMain(HINSTANCE instance, HINSTANCE prev_instance, char* _cmd_li
 	if (cmd_line.empty())
 		return 0;
 #endif
-	
+
 	prof::init("TombMP Client");
 
 	// systems initialization

@@ -39,7 +39,7 @@ uint8_t LabTextureUVFlag[MAX_TEXTURES];
 
 int16_t LGF_offsets[200];
 
-int LnTextureInfos;
+int texture_infos;
 
 BOOL MyReadFile(HANDLE hFile, void* pBuffer, DWORD nNumberOfBytesToRead, DWORD* pNumberOfBytesRead = nullptr, OVERLAPPED* pOverlapped = nullptr)
 {
@@ -205,7 +205,7 @@ void AdjustTextureUVs(bool tNew)
 	auto pTS = phdtextinfo;
 	auto pUVF = LabTextureUVFlag;
 
-	int nTI = LnTextureInfos,
+	int nTI = texture_infos,
 		nAdd = 128 - App.nUVAdd;;
 
 	for (; --nTI; ++pTS)
@@ -354,17 +354,20 @@ bool LoadObjects(HANDLE file)
 
 	MyReadFile(file, &number_static_objects, sizeof(int32_t));
 
-	static_objects = (STATIC_INFO*)game_malloc(number_static_objects * sizeof(STATIC_INFO));
+	static_objects = (STATIC_INFO*)game_malloc((NUMBER_STATIC_OBJECTS + number_static_objects) * sizeof(STATIC_INFO));
 
 	for (int i = 0; i < number_static_objects; ++i)
 	{
 		int j;
 
-		MyReadFile(file, &j, sizeof(int32_t));								// read static object number
-		MyReadFile(file, &static_objects[j].mesh_number, sizeof(int16_t));
-		MyReadFile(file, &static_objects[j].x_minp, sizeof(int16_t) * 6);	// read physical bound info
-		MyReadFile(file, &static_objects[j].x_minc, sizeof(int16_t) * 6);	// read collide bound info
-		MyReadFile(file, &static_objects[j].flags, sizeof(int16_t));
+		MyReadFile(file, &j, sizeof(int32_t));					// read static object number
+
+		auto obj = &static_objects[j];
+
+		MyReadFile(file, &obj->mesh_number, sizeof(int16_t));
+		MyReadFile(file, &obj->x_minp, sizeof(int16_t) * 6);	// read physical bound info
+		MyReadFile(file, &obj->x_minc, sizeof(int16_t) * 6);	// read collide bound info
+		MyReadFile(file, &obj->flags, sizeof(int16_t));
 	}
 
 	return true;
@@ -521,10 +524,10 @@ bool LoadPalette(HANDLE file)
 
 bool LoadCameras(HANDLE file)
 {
-	// load all the stuff to do with camera positions and the like
-
 	DWORD number_cameras;
+
 	MyReadFile(file, &number_cameras, sizeof(int32_t));
+
 	if (number_cameras == 0)
 		return true;
 
@@ -619,9 +622,9 @@ bool LoadAnimatedTextures(HANDLE file)
 	MyReadFile(file, &num_obj_textures, sizeof(int32_t));
 	MyReadFile(file, phdtextinfo, sizeof(PHDTEXTURESTRUCT) * num_obj_textures);
 
-	LnTextureInfos = num_obj_textures;
+	texture_infos = num_obj_textures;
 
-	for (int i = 0; i < LnTextureInfos; ++i)
+	for (int i = 0; i < texture_infos; ++i)
 	{
 		auto pUV = (uint16_t*)&(phdtextinfo[i].u1);
 
@@ -659,8 +662,6 @@ int load_level_file(const char* filename)
 
 		return false;
 	}
-
-	DWORD read;
 
 	// check version number
 
@@ -811,9 +812,10 @@ void unload_level()
 
 	HWR_FreeTexturePages();
 
-	LnTextureInfos = 0;
+	texture_infos = 0;
+	number_custom_anims = 0;
 
-	free_game_memory();
+	//free_game_memory();
 }
 
 int	Read_Strings(int num_strings, char** strings, char** buffer, DWORD* read, HANDLE file)
@@ -846,7 +848,7 @@ int	Read_Strings(int num_strings, char** strings, char** buffer, DWORD* read, HA
 	return true;
 }
 
-bool S_LoadGameFlow(const char* filename)
+bool load_gameflow(const char* filename)
 {
 	DWORD read;
 	int16_t number, size;
@@ -1082,7 +1084,7 @@ bool S_LoadGameFlow(const char* filename)
 	return true;
 }
 
-int16_t load_animation(const char* filename)
+int16_t load_animation(const std::string& filename)
 {
 	struct TMP_ANIM_STRUCT
 	{
@@ -1108,21 +1110,28 @@ int16_t load_animation(const char* filename)
 		int16_t range_ptr;
 	};
 
-	std::ifstream test(filename, std::ios::binary);
+	auto anim_file = std::ifstream(filename, std::ios::binary);
+	if (!anim_file)
+		return -1;
 
 	TMP_ANIM_STRUCT tmp_anim_info;
 
-	int16_t size_of_frame, anim_len;
+	int16_t size_of_frame,
+			anim_len,
+			commands_len;
 
-	test.read((char*)&tmp_anim_info, sizeof(tmp_anim_info));
-	test.read((char*)&size_of_frame, sizeof(size_of_frame));
-	test.read((char*)&anim_len, sizeof(anim_len));
+	anim_file.read((char*)&tmp_anim_info, sizeof(tmp_anim_info));
+	anim_file.read((char*)&size_of_frame, sizeof(size_of_frame));
+	anim_file.read((char*)&anim_len, sizeof(anim_len));
+	anim_file.read((char*)&commands_len, sizeof(commands_len));
 
 	auto anim_frame_data = (char*)game_malloc(anim_len * size_of_frame);
-	auto anim_command_data = (int16_t*)game_malloc(tmp_anim_info.number_commands * sizeof(int16_t));
+	auto anim_command_data = (int16_t*)game_malloc(commands_len);
 
-	test.read(anim_frame_data, size_of_frame * anim_len);
-	test.read((char*)anim_command_data, tmp_anim_info.number_commands * sizeof(int16_t));
+	anim_file.read(anim_frame_data, size_of_frame * anim_len);
+	anim_file.read((char*)anim_command_data, commands_len);
+
+	anim_file.close();
 
 	auto anim_id = number_anims + number_custom_anims++;
 	auto anim = &anims[anim_id];
@@ -1136,10 +1145,8 @@ int16_t load_animation(const char* filename)
 	anim->acceleration = tmp_anim_info.acceleration;
 	anim->frame_base = tmp_anim_info.frame_base;
 	anim->frame_end = tmp_anim_info.frame_end;
-	anim->jump_anim_num = 11;
-	anim->jump_frame_num = anims[11].frame_base;
-	//anim->jump_anim_num = tmp_anim_info.jump_anim_num;
-	//anim->jump_frame_num = tmp_anim_info.jump_frame_num;
+	anim->jump_anim_num = tmp_anim_info.jump_anim_num;
+	anim->jump_frame_num = tmp_anim_info.jump_frame_num;
 	anim->number_changes = tmp_anim_info.number_changes;
 	anim->number_commands = tmp_anim_info.number_commands;
 

@@ -1414,7 +1414,9 @@ void lara_as_all4s(ITEM_INFO* item, COLL_INFO* coll)
 		return;
 	}
 
-	if (enable_engine_extended_features && (input & IN_JUMP))
+	auto crawl_jump_down_info = g_extended_anim_info[CRAWL_JUMP_DOWN];
+
+	if (crawl_jump_down_info && enable_engine_extended_features && (input & IN_JUMP))
 	{
 		 int16_t height = LaraFloorFront(item, item->pos.y_rot, 768),
 				 ceiling = LaraCeilingFront(item, item->pos.y_rot, 768, 512);
@@ -1438,8 +1440,8 @@ void lara_as_all4s(ITEM_INFO* item, COLL_INFO* coll)
 
 			if (LOS(&s, &d))
 			{
-				item->anim_number = CRAWLJUMP_A;
-				item->frame_number = CRAWLJUMP_F;
+				item->anim_number = crawl_jump_down_info.id;
+				item->frame_number = crawl_jump_down_info.frame;
 				item->goal_anim_state = AS_CONTROLLED;
 				item->current_anim_state = AS_CONTROLLED;
 			}

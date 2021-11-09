@@ -268,11 +268,6 @@
 #define INTCORNERR_A	318
 #define INTCORNERR_F	GF(INTCORNERR_A, 0)
 
-// crawl jump down
-
-#define CRAWLJUMP_A		320
-#define CRAWLJUMP_F		GF(CRAWLJUMP_A, 0)
-
 // polerope
 
 #define STAT2POLE_A		321
@@ -286,6 +281,20 @@
 
 #define JUMP2POLE_A 	335
 #define JUMP2POLE_F 	GF(JUMP2POLE_A, 0)
+
+enum lara_extended_animation
+{
+	CRAWL_JUMP_DOWN,
+	MAX_LARA_EXTENDED_ANIMS,
+};
+
+struct extended_anim_info
+{
+	int16_t id = -1,
+			frame = -1;
+
+	operator bool() { return (id != -1 && frame != -1); }
+} inline g_extended_anim_info[MAX_LARA_EXTENDED_ANIMS];
 
 enum lara_water_states
 {

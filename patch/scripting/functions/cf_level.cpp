@@ -8,6 +8,7 @@
 
 #include <game/game.h>
 #include <game/minecart.h>
+#include <game/laraanim.h>
 
 #include "cf_defs.h"
 
@@ -28,7 +29,16 @@ void cf_level::register_functions(sol::state* vm)
 	vm->set_function("setPunksFriendly",				[&](bool enabled) { enable_punks_friendly = enabled; });
 	vm->set_function("enableAIPatrolDestruction",		[&](bool enabled) { enable_killable_ai_patrol = enabled; });
 	vm->set_function("enableFootprints",				[&](bool enabled) { enable_footprints = enabled; });
-	vm->set_function("enableEngineExtendedFeatures",	[&](bool enabled)
+	vm->set_function("enableEngineExtendedFeatures",	[&](bool enabled) { enable_engine_extended_features = enabled; });
+	vm->set_function("setMinecartTurnModifier",			[&](int v)		  { minecart_turn_extra_blocks = v; });
+
+	vm->set_function("setEngineExtendedAnimID", [&](int extended_anim_id, int16_t anim_id, int16_t frame_offset)
+	{
+		if (extended_anim_id >= 0 && extended_anim_id < MAX_LARA_EXTENDED_ANIMS)
+			g_extended_anim_info[extended_anim_id] = { .id = anim_id, .frame = int16_t(GF(anim_id, frame_offset)) };
+	});
+
+	vm->set_function("setEngineExtendedVehicleAnimIDs", [&](bool enabled)
 	{
 		if (enabled)
 		{
@@ -48,8 +58,5 @@ void cf_level::register_functions(sol::state* vm)
 			minecart_anim_obj = VEHICLE_ANIM;
 			kayak_anim_obj = VEHICLE_ANIM;
 		}
-
-		enable_engine_extended_features = enabled;
 	});
-	vm->set_function("setMinecartTurnModifier", [&](int v) { minecart_turn_extra_blocks = v; });
 }

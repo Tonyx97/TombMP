@@ -1,5 +1,7 @@
 #pragma once
 
+inline int alloc_multiplier = 1;
+
 void* game_malloc(int size, int type = 0);
 void* game_realloc(void* ptr, int size);
 void game_free(void* ptr, int type = 0);

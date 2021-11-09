@@ -29,7 +29,7 @@ int GF_LoadScriptFile(const char* fname)
 {
 	GF_SunsetEnabled = 0;
 
-	if (!S_LoadGameFlow(fname))
+	if (!load_gameflow(fname))
 		return 0;
 
 #ifdef _DEBUG
