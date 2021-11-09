@@ -691,6 +691,7 @@
     <ClCompile Include="mp\net_handlers\hl_net_player.cpp" />
     <ClCompile Include="mp\net_handlers\hl_server.cpp" />
     <ClCompile Include="scripting\debugger.cpp" />
+    <ClCompile Include="scripting\functions\cf_anim.cpp" />
     <ClCompile Include="scripting\functions\cf_audio.cpp" />
     <ClCompile Include="scripting\functions\cf_camera.cpp" />
     <ClCompile Include="scripting\functions\cf_entity.cpp" />

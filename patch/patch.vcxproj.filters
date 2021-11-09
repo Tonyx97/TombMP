@@ -628,6 +628,9 @@
     <ClCompile Include="mp\net_handlers\hl_file.cpp">
       <Filter>mp\net_handlers</Filter>
     </ClCompile>
+    <ClCompile Include="scripting\functions\cf_anim.cpp">
+      <Filter>scripting\functions</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resources\resource.rc" />

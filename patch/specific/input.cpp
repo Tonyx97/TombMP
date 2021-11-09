@@ -96,6 +96,13 @@ int get_general_input()
 	if (g_keycode->is_key_down(KEY_F2))
 	{
 		printf_s("%i %i %i\n", lara_item->current_anim_state, lara.left_arm.frame_number, lara.right_arm.frame_number);
+
+		lara_item->current_anim_state = AS_STOP;
+		lara_item->goal_anim_state = AS_STOP;
+		//lara_item->anim_number = 1714;
+		//lara_item->frame_number = GF(1714, 0);
+		lara_item->anim_number = 642;
+		lara_item->frame_number = GF(642, 0);
 	}
 
 	if (g_keycode->is_key_down(KEY_O) && lara_item)

@@ -2244,7 +2244,7 @@ void CalculateObjectLightingLara()
 
 int GetFrames(ITEM_INFO* item, int16_t* frmptr[], int* rate)
 {
-	if (item->anim_number < 0 || item->anim_number >= number_anims)
+	if (item->anim_number < 0 || item->anim_number >= number_anims + number_custom_anims)
 		return 0;
 	
 	auto anim = &anims[item->anim_number];

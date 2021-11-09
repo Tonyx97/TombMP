@@ -147,6 +147,8 @@
 	- Fixed bleeding windows when destroying them.
 	- Implemented TR4/TR5 sprint to crouch (this feature is available in all tr3 original and custom levels since the animation is in all .tr2 files).
 	- Implemented setMinecartTurnModifier to modify the block length of the minecart turn angle, for example you can set it to 1 and it will take 4 blocks instead of 3 to complete a turn.
+	- Released "anim_exporter" tool to export animations from .tr2 files in binary format compatible with TombMP.
+	- Implemented loadAnimation which will allow people to load their own exported animations (using anim_exporter) to ANY TR3 level they want.
 	- Added new several client and server scripting functions:
 		· setCameraPosition.
 		· getCameraRoom.
@@ -172,7 +174,7 @@
 		· getPlayerTorsoRotation.
 		· getPlayerArmFrameNumber.
 		· setMinecartTurnModifier.
-	
+		· loadAnimation.
 	
 	
 	

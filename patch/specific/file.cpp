@@ -229,34 +229,10 @@ void AdjustTextureUVs(bool tNew)
 
 bool LoadObjects(HANDLE file)
 {
-	struct TMP_ANIM_STRUCT
-	{
-		int16_t* frame_ptr;
-		int16_t interpolation;
-		int16_t current_anim_state;
-		int32_t velocity;
-		int32_t acceleration;
-		int16_t frame_base;
-		int16_t frame_end;
-		int16_t jump_anim_num;
-		int16_t jump_frame_num;
-		int16_t number_changes;
-		int16_t change_ptr;
-		int16_t number_commands;
-		int16_t command_ptr;
-	};
-
-	struct TMP_CHANGE_STRUCT
-	{
-		int16_t goal_anim_state;
-		int16_t number_ranges;
-		int16_t range_ptr;
-	};
-
 	int32_t number, size;
 	DWORD read;
 
-	// load Actual mesh data
+	// load actual mesh data
 
 	MyReadFile(file, &size, sizeof(int32_t), &read, nullptr);
 	auto mesh_base = (int16_t*)game_malloc(size * sizeof(int16_t), MESHES);
@@ -275,8 +251,10 @@ bool LoadObjects(HANDLE file)
 
 	// load in animation arrays
 
+	max_number_custom_anims = 1024;
+
 	MyReadFile(file, &number_anims, sizeof(int32_t), &read, nullptr);
-	anims = (ANIM_STRUCT*)game_malloc(number_anims * sizeof(ANIM_STRUCT), ANIMS);
+	anims = (ANIM_STRUCT*)game_malloc((number_anims + max_number_custom_anims) * sizeof(ANIM_STRUCT), ANIMS);
 
 	for (int i = 0; i < number_anims; ++i)
 	{
@@ -339,15 +317,15 @@ bool LoadObjects(HANDLE file)
 		auto anim = &anims[i];
 
 		anim->frame_ptr = (int16_t*)((uintptr_t)frames + (uintptr_t)anim->frame_ptr);
-		anim->change_ptr = (int16_t*)&changes[(int16_t)anim->change_ptr];
-		anim->command_ptr = (int16_t*)&commands[(int16_t)anim->command_ptr];
+		anim->change_ptr = (int16_t*)&changes[reinterpret_cast<int16_t>(anim->change_ptr)];
+		anim->command_ptr = (int16_t*)&commands[reinterpret_cast<int16_t>(anim->command_ptr)];
 	}
 
 	for (int i = 0; i < number_anim_changes; ++i)
 	{
 		auto change = &changes[i];
 
-		change->range_ptr = (int16_t*)&ranges[(int16_t)change->range_ptr];
+		change->range_ptr = (int16_t*)&ranges[reinterpret_cast<int16_t>(change->range_ptr)];
 	}
 
 	// load in normal animating objects (NumModels)
@@ -370,43 +348,6 @@ bool LoadObjects(HANDLE file)
 		objects[j].frame_base = (int16_t*)((uintptr_t)frames + (uintptr_t)size);
 		objects[j].loaded = 1;														// flag object as loaded
 	}
-
-	// testing new custom animations
-	/*{
-		++number_anim_changes;
-
-		anims = (ANIM_STRUCT*)realloc(anims, number_anim_changes * sizeof(ANIM_STRUCT));
-
-		std::ifstream test("default.anim", std::ios::binary);
-
-		TMP_ANIM_STRUCT tmp_anim_info;
-
-		int16_t size_of_frame, anim_len;
-
-		test.read((char*)& tmp_anim_info, sizeof(tmp_anim_info));
-		test.read((char*)&size_of_frame, sizeof(size_of_frame));
-		test.read((char*)&anim_len, sizeof(anim_len));
-
-		auto anim_frame_data = new char[anim_len * size_of_frame];
-
-		test.read(anim_frame_data, size_of_frame * anim_len);
-
-		auto anim = &anims[number_anim_changes - 1];
-
-		anim->frame_ptr = (int16_t*)anim_frame_data;
-		anim->change_ptr = (int16_t*)&changes[(int16_t)tmp_anim_info.change_ptr];
-		anim->command_ptr = (int16_t*)&commands[(int16_t)tmp_anim_info.command_ptr];
-		anim->interpolation = tmp_anim_info.interpolation;
-		anim->current_anim_state = tmp_anim_info.current_anim_state;
-		anim->velocity = tmp_anim_info.velocity;
-		anim->acceleration = tmp_anim_info.acceleration;
-		anim->frame_base = tmp_anim_info.frame_base;
-		anim->frame_end = tmp_anim_info.frame_end;
-		anim->jump_anim_num = tmp_anim_info.jump_anim_num;
-		anim->jump_frame_num = tmp_anim_info.jump_frame_num;
-		anim->number_changes = tmp_anim_info.number_changes;
-		anim->number_commands = tmp_anim_info.acceleration;
-	}*/
 
 	// initialise objects: must come after bones have been set up, but before items loaded
 
@@ -1180,4 +1121,66 @@ bool S_LoadGameFlow(const char* filename)
 	CloseHandle(file);
 
 	return true;
+}
+
+int16_t load_animation(const char* filename)
+{
+	struct TMP_ANIM_STRUCT
+	{
+		int16_t* frame_ptr;
+		int16_t interpolation;
+		int16_t current_anim_state;
+		int32_t velocity;
+		int32_t acceleration;
+		int16_t frame_base;
+		int16_t frame_end;
+		int16_t jump_anim_num;
+		int16_t jump_frame_num;
+		int16_t number_changes;
+		int16_t change_ptr;
+		int16_t number_commands;
+		int16_t command_ptr;
+	};
+
+	struct TMP_CHANGE_STRUCT
+	{
+		int16_t goal_anim_state;
+		int16_t number_ranges;
+		int16_t range_ptr;
+	};
+
+	std::ifstream test(filename, std::ios::binary);
+
+	TMP_ANIM_STRUCT tmp_anim_info;
+
+	int16_t size_of_frame, anim_len;
+
+	test.read((char*)&tmp_anim_info, sizeof(tmp_anim_info));
+	test.read((char*)&size_of_frame, sizeof(size_of_frame));
+	test.read((char*)&anim_len, sizeof(anim_len));
+
+	auto anim_frame_data = (char*)game_malloc(anim_len * size_of_frame, 0);
+	auto anim_command_data = (int16_t*)game_malloc(tmp_anim_info.number_commands * sizeof(int16_t), 0);
+
+	test.read(anim_frame_data, size_of_frame * anim_len);
+	test.read((char*)anim_command_data, tmp_anim_info.number_commands * sizeof(int16_t));
+
+	auto anim_id = number_anims + number_custom_anims++;
+	auto anim = &anims[anim_id];
+
+	anim->frame_ptr = (int16_t*)anim_frame_data;
+	anim->change_ptr = (int16_t*)&changes[(int16_t)tmp_anim_info.change_ptr];
+	anim->command_ptr = anim_command_data;
+	anim->interpolation = tmp_anim_info.interpolation;
+	anim->current_anim_state = tmp_anim_info.current_anim_state;
+	anim->velocity = tmp_anim_info.velocity;
+	anim->acceleration = tmp_anim_info.acceleration;
+	anim->frame_base = tmp_anim_info.frame_base;
+	anim->frame_end = tmp_anim_info.frame_end;
+	anim->jump_anim_num = tmp_anim_info.jump_anim_num;
+	anim->jump_frame_num = tmp_anim_info.jump_frame_num;
+	anim->number_changes = tmp_anim_info.number_changes;
+	anim->number_commands = tmp_anim_info.number_commands;
+
+	return anim_id;
 }

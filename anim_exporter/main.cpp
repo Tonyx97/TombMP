@@ -94,17 +94,17 @@ int main()
 
 	std::cout << "Insert the object id where the anim is located: ";
 
-	//std::cin >> obj_id;
+	std::cin >> obj_id;
 
-	//if (obj_id == -1)
-	//	return 0;
+	if (obj_id == -1)
+		return 0;
 
 	std::cout << "Insert the anim id to export: ";
 
-	//std::cin >> anim_id;
+	std::cin >> anim_id;
 
-	//if (anim_id == -1)
-	//	return 0;
+	if (anim_id == -1)
+		return 0;
 
 	std::cout << "Insert the output file name: ";
 
@@ -233,6 +233,7 @@ int main()
 	struct
 	{
 		int16_t num_meshes;
+		int16_t anim_index;
 	} objects[1000];
 
 	for (int i = 0; i < NumModels; ++i)
@@ -245,7 +246,7 @@ int main()
 		auto size = read<int32_t>();
 		auto anim_index = read<int16_t>();
 
-		objects[id] = { .num_meshes = num_meshes };
+		objects[id] = { .num_meshes = num_meshes, .anim_index = anim_index };
 	}
 
 	// close level and create anim file
@@ -262,16 +263,17 @@ int main()
 			anim->frame_ptr = (int16_t*)((uintptr_t)frames + (uintptr_t)anim->frame_ptr);
 		}
 
-		g_out_anim = std::ofstream(anim_name, std::ios::binary | std::ios::trunc);
+		g_out_anim = std::ofstream("..\\patch\\" + anim_name, std::ios::binary | std::ios::trunc);
 
-		auto anim = &animations[336];
-		auto size_of_frame = sizeof(ANIM_STRUCT) + (objects[0].num_meshes * sizeof(int16_t) * 2) - sizeof(int16_t);
-		auto anim_len = (anim->frame_end - anim->frame_base);
+		auto anim = &animations[objects[obj_id].anim_index + anim_id];
+		auto size_of_frame = int16_t(sizeof(ANIM_STRUCT) + (objects[obj_id].num_meshes * sizeof(int16_t) * 2) - sizeof(int16_t));
+		auto anim_len = int16_t((anim->frame_end - anim->frame_base) + 1);
 
-		write(anim, sizeof(ANIM_STRUCT));					// write info
-		write(&size_of_frame, sizeof(size_of_frame));		// write size of frame
-		write(&anim_len, sizeof(anim_len));					// write anim length
-		write(anim->frame_ptr, anim_len * size_of_frame);	// write frame data 
+		write(anim, sizeof(ANIM_STRUCT));												// write info
+		write(&size_of_frame, sizeof(size_of_frame));									// write size of frame
+		write(&anim_len, sizeof(anim_len));												// write anim length
+		write(anim->frame_ptr, anim_len * size_of_frame);								// write frame data
+		write(&commands[anim->command_index], anim->number_commands * sizeof(int16_t));	// write command data
 
 		g_out_anim.close();
 	}

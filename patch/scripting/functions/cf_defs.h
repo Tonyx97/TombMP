@@ -2,6 +2,11 @@
 
 namespace sol { class state; }
 
+namespace cf_anim
+{
+	void register_functions(sol::state* vm);
+}
+
 namespace cf_audio
 {
 	void register_functions(sol::state* vm);

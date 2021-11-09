@@ -18,6 +18,7 @@ void scripting::init_functions_and_globals(sol::state* vm)
 	vm->set(globals::LOCALPLAYER_ITEM, localplayer->get_item());
 	vm->set(globals::LOCALPLAYER, localplayer);
 
+	cf_anim::register_functions(vm);
 	cf_key::register_functions(vm);
 	cf_physics::register_functions(vm);
 	cf_dx::register_functions(vm);

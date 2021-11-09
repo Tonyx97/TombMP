@@ -122,6 +122,8 @@ inline int16_t** meshes,
 			  * frames;
 
 inline int32_t number_anims = 0,
+			   number_custom_anims = 0,
+			   max_number_custom_anims = 0,
 			   number_anim_changes = 0,
 			   number_anim_ranges = 0,
 			   number_anim_commands = 0,
