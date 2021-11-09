@@ -157,14 +157,10 @@
 	- Increased active AI limit from 5 (for lot AI) and 12 (for non-lot AI) to 256 (more than enough).
 	- Added new several client and server scripting functions:
 		· setCameraPosition.
-		· getCameraRoom.
-		· setCameraRoom.
-		· getCameraType.
-		· setCameraType.
-		· getCameraItem.
-		· setCameraItem.
-		· getCameraTarget.
-		· setCameraTarget.
+		· g/setCameraRoom.
+		· g/setCameraType.
+		· g/setCameraItem.
+		· g/setCameraTarget.
 		· getItemFromEntity.
 		· getItemsTable (client and server).
 		· asEntity (client and server).
