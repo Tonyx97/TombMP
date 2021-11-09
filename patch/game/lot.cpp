@@ -135,8 +135,8 @@ int EnableBaddieAI(int16_t item_number, int Always)
 	if (worstslot >= 0)
 	{
 		items[baddie_slots[worstslot].item_num].status = INVISIBLE;
-		//DisableBaddieAI(baddie_slots[worstslot].item_num);
-		//InitialiseSlot(item_number, worstslot);
+		DisableBaddieAI(baddie_slots[worstslot].item_num);
+		InitialiseSlot(item_number, worstslot);
 
 		return acquire_entity_control();
 	}

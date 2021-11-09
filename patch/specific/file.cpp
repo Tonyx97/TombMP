@@ -1118,8 +1118,8 @@ int16_t load_animation(const char* filename)
 	test.read((char*)&size_of_frame, sizeof(size_of_frame));
 	test.read((char*)&anim_len, sizeof(anim_len));
 
-	auto anim_frame_data = (char*)game_malloc(anim_len * size_of_frame, 0);
-	auto anim_command_data = (int16_t*)game_malloc(tmp_anim_info.number_commands * sizeof(int16_t), 0);
+	auto anim_frame_data = (char*)game_malloc(anim_len * size_of_frame);
+	auto anim_command_data = (int16_t*)game_malloc(tmp_anim_info.number_commands * sizeof(int16_t));
 
 	test.read(anim_frame_data, size_of_frame * anim_len);
 	test.read((char*)anim_command_data, tmp_anim_info.number_commands * sizeof(int16_t));

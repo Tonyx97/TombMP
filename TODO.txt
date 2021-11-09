@@ -5,7 +5,7 @@
 	· Detonator usage doesn't work.
 	· Fix rain maybe.
 	· Fix boat sound.
-	· Rebuild the game allocation trash system.
+	· Remove max custom animation limitation.
 
 - v1.0.6:
 	· Sometimes the AI death anim aren't fully synced and they get stuck in the middle.

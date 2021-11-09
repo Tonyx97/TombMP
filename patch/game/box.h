@@ -5,8 +5,8 @@
 
 #define MAX_EXPANSION 5
 
-#define NUM_SLOTS			5
-#define NUM_NONLOT_SLOTS	12
+#define NUM_SLOTS			256
+#define NUM_NONLOT_SLOTS	256
 #define NO_BOX 				0x7ff
 #define BOX_NUMBER			0x7ff
 #define BOX_END_BIT			0x8000

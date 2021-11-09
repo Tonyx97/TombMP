@@ -150,6 +150,7 @@
 	- Released "anim_exporter" tool to export animations from .tr2 files in binary format compatible with TombMP.
 	- Implemented loadAnimation which will allow people to load their own exported animations (using anim_exporter) to ANY TR3 level they want.
 	- Removed the limit of 50 static objects per level. It will load as many objects as the level file contains.
+	- Increased active AI limit from 5 (for lot AI) and 12 (for non-lot AI) to 256 (more than enough).
 	- Added new several client and server scripting functions:
 		· setCameraPosition.
 		· getCameraRoom.
