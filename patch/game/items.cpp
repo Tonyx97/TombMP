@@ -66,6 +66,9 @@ void KillItem(int16_t item_num, bool sync)
 {
 	auto item = &items[item_num];
 
+	if (!item->really_active && !item->active && item->status == INVISIBLE)
+		return;
+
 	if (sync)
 		if (auto entity = g_level->get_entity_by_item(item))
 		{

@@ -537,7 +537,7 @@ void draw_rooms(int16_t current_room)
 				auto player_pos = player->get_position();
 				auto player_rot = player->get_rotation();
 				auto health = player->get_health();
-				auto meshes_offset = player->get_meshes_offsets();
+				auto meshes_offsets = player->get_meshes_offsets();
 				auto hair_data = player->get_hair_data();
 				auto hair_vel = player->get_hair_vel();
 
@@ -556,7 +556,7 @@ void draw_rooms(int16_t current_room)
 				utils::mem::move(lara.right_arm.y_rot, right_arm.rotation);
 
 				for (int i = 0; i < MAX_LARA_MESHES; ++i)
-					lara.mesh_ptrs[i] = (int16_t*)((uint32_t)meshes + meshes_offset[i]);
+					lara.mesh_ptrs[i] = (int16_t*)(meshes_base + meshes_offsets[i]);
 				
 				lara.flare_age = player->get_flare_age();
 				lara.flare_control_left = player->is_flare_in_hand();

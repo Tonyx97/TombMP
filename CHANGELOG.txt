@@ -141,6 +141,7 @@
 	- AI is now properly synced across players and they won't die mid air and cause weird animation bugs or AI stuck situations (to be heavily tested).
 	
 - v1.1.5 (06-11-21):
+	- Fixed onLevelLoaded not being called properly.
 	- Fixed bug when trying to fly while in vehicle, flying in vehicles are blocked so there won't be any more bugs.
 	- Fixed player explosion not being synced properly with players.
 	- Fixed a crash related to lara's hair.

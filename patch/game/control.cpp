@@ -279,8 +279,8 @@ int32_t ControlPhase(int32_t nframes)
 	lara.respawned = false;
 
 	for (int i = 0; i < MAX_LARA_MESHES; ++i)
-		info.meshes_offsets[i] = (uint32_t)lara.mesh_ptrs[i] - (uint32_t)meshes;
-	
+		info.meshes_offsets[i] = uint32_t(lara.mesh_ptrs[i] - meshes_base);
+
 	g_client->send_packet_reliability(ID_PLAYER_INFO, UNRELIABLE_SEQUENCED, info);
 
 	localplayer->set_ping(g_client->get_ping());

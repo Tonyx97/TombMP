@@ -183,6 +183,7 @@ void free_game_memory()
 
 	g_game_mem.clear();
 }
+
 void* game_malloc(int size, int type)
 {
 	size = (size + 3) & ~3;
@@ -192,6 +193,21 @@ void* game_malloc(int size, int type)
 	g_game_mem.insert(ptr);
 
 	return ptr;
+}
+
+void* game_realloc(void* ptr, int size)
+{
+	if (auto it = g_game_mem.find(ptr); it != g_game_mem.end())
+	{
+		auto old_ptr = *it;
+
+		auto ptr = realloc(*it, size);
+
+		g_game_mem.erase(it);
+		g_game_mem.insert(ptr);
+	}
+
+	return nullptr;
 }
 
 void game_free(void* ptr, int type)

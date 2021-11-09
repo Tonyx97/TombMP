@@ -232,8 +232,8 @@ bool LoadObjects(HANDLE file)
 	int32_t mesh_base_size = 0;
 
 	MyReadFile(file, &mesh_base_size, sizeof(int32_t));
-	auto mesh_base = (int16_t*)game_malloc(mesh_base_size * sizeof(int16_t), MESHES);
-	MyReadFile(file, mesh_base, sizeof(int16_t) * mesh_base_size);
+	meshes_base = (int16_t*)game_malloc(mesh_base_size * sizeof(int16_t), MESHES);
+	MyReadFile(file, meshes_base, sizeof(int16_t) * mesh_base_size);
 
 	// load meshes (offset pointers first)
 
@@ -244,7 +244,7 @@ bool LoadObjects(HANDLE file)
 	// adjust mesh offsets using base pointer
 
 	for (int i = 0; i < number_meshes; ++i)
-		meshes[i] = mesh_base + (int)meshes[i] / 2;
+		meshes[i] = meshes_base + (int)meshes[i] / 2;
 
 	// load in animation arrays
 
