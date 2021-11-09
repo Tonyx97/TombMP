@@ -127,7 +127,7 @@ void DrawAmmoInfo()
 {
 	char ammostring[64] { 0 };
 
-	if (items[lara.skidoo].object_number == UPV)
+	if (lara.skidoo != NO_ITEM && items[lara.skidoo].object_number == UPV)
 		sprintf_s(ammostring, "%5d", lara.harpoon.ammo);
 	else
 	{

@@ -365,7 +365,7 @@ void LaraControl()
 				}
 			}
 		}
-		else if (lara.skidoo == NO_ITEM && items[lara.skidoo].object_number != UPV)
+		else if (lara.skidoo != NO_ITEM && items[lara.skidoo].object_number != UPV)
 			lara.air = LARA_AIR;
 
 		LaraAboveWater(item, coll);
