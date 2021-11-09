@@ -41,17 +41,16 @@ int16_t LGF_offsets[200];
 
 int LnTextureInfos;
 
-BOOL MyReadFile(HANDLE hFile, void* pBuffer, DWORD nNumberOfBytesToRead, DWORD* pNumberOfBytesRead, OVERLAPPED* pOverlapped)
+BOOL MyReadFile(HANDLE hFile, void* pBuffer, DWORD nNumberOfBytesToRead, DWORD* pNumberOfBytesRead = nullptr, OVERLAPPED* pOverlapped = nullptr)
 {
 	return ReadFile(hFile, pBuffer, nNumberOfBytesToRead, pNumberOfBytesRead, pOverlapped);
 }
 
 bool LoadTexturePages(HANDLE file)
 {
-	int read,
-		num_pages;
+	int num_pages;
 	
-	MyReadFile(file, &num_pages, sizeof(int), (DWORD*)&read, nullptr);
+	MyReadFile(file, &num_pages, sizeof(int));
 
 	int nBytesPerPage = 0x20000,
 		nAllocAmount = num_pages * nBytesPerPage;
@@ -61,7 +60,7 @@ bool LoadTexturePages(HANDLE file)
 	SetFilePointer(file, num_pages * 65536, 0, FILE_CURRENT);
 
 	for (int i = 0; i < num_pages; ++i)
-		MyReadFile(file, base + (i * nBytesPerPage), nBytesPerPage, (DWORD*)&read, nullptr);
+		MyReadFile(file, base + (i * nBytesPerPage), nBytesPerPage);
 
 	HWR_LoadTexturePages(num_pages, base);
 
@@ -76,11 +75,10 @@ bool LoadRooms(HANDLE file)
 
 	int16_t ndoors;
 	int32_t size;
-	DWORD read;
 
 	// read in actual room data
 
-	MyReadFile(file, &number_rooms, sizeof(number_rooms), &read, nullptr);
+	MyReadFile(file, &number_rooms, sizeof(number_rooms));
 
 	if (number_rooms < 0 || number_rooms > MAX_ROOMS)
 	{
@@ -102,81 +100,81 @@ bool LoadRooms(HANDLE file)
 	{
 		// room position
 
-		MyReadFile(file, &r->x, sizeof(int32_t), &read, nullptr);
+		MyReadFile(file, &r->x, sizeof(int32_t));
 		r->y = 0;
-		MyReadFile(file, &r->z, sizeof(int32_t), &read, nullptr);
+		MyReadFile(file, &r->z, sizeof(int32_t));
 
 		// room floor/ceiling bounds
 
-		MyReadFile(file, &r->minfloor, sizeof(int32_t), &read, nullptr);
-		MyReadFile(file, &r->maxceiling, sizeof(int32_t), &read, nullptr);
+		MyReadFile(file, &r->minfloor, sizeof(int32_t));
+		MyReadFile(file, &r->maxceiling, sizeof(int32_t));
 
 		// room mesh
 
-		MyReadFile(file, &size, sizeof(int32_t), &read, nullptr);
+		MyReadFile(file, &size, sizeof(int32_t));
 		r->data = (int16_t*)game_malloc(size * sizeof(int16_t), ROOM_MESH);
-		MyReadFile(file, r->data, sizeof(int16_t) * size, &read, nullptr);
+		MyReadFile(file, r->data, sizeof(int16_t) * size);
 
 		// doors
 
-		MyReadFile(file, &ndoors, sizeof(int16_t), &read, nullptr);
+		MyReadFile(file, &ndoors, sizeof(int16_t));
 		if (ndoors)
 		{
 			r->door = (int16_t*)game_malloc((ndoors * 16 + 1) * sizeof(int16_t), ROOM_DOOR);
 			r->door[0] = ndoors;
 
-			MyReadFile(file, &r->door[1], sizeof(int16_t) * ndoors * 16, &read, nullptr);
+			MyReadFile(file, &r->door[1], sizeof(int16_t) * ndoors * 16);
 		}
 		else r->door = nullptr;
 
 		// floor data
 
-		MyReadFile(file, &r->x_size, sizeof(int16_t), &read, nullptr);
-		MyReadFile(file, &r->y_size, sizeof(int16_t), &read, nullptr);
+		MyReadFile(file, &r->x_size, sizeof(int16_t));
+		MyReadFile(file, &r->y_size, sizeof(int16_t));
 		size = (int)r->x_size * r->y_size;
 		r->floor = (FLOOR_INFO*)game_malloc(size * sizeof(FLOOR_INFO), ROOM_FLOOR);
-		MyReadFile(file, r->floor, sizeof(FLOOR_INFO) * size, &read, nullptr);
+		MyReadFile(file, r->floor, sizeof(FLOOR_INFO) * size);
 
 		// light data
 
-		MyReadFile(file, &r->ambient, sizeof(int16_t), &read, nullptr);
-		MyReadFile(file, &r->lighting, sizeof(int16_t), &read, nullptr);
-		MyReadFile(file, &r->num_lights, sizeof(int16_t), &read, nullptr);
+		MyReadFile(file, &r->ambient, sizeof(int16_t));
+		MyReadFile(file, &r->lighting, sizeof(int16_t));
+		MyReadFile(file, &r->num_lights, sizeof(int16_t));
 
 		if (r->num_lights)
 		{
 			r->light = (LIGHT_INFO*)game_malloc(r->num_lights * sizeof(LIGHT_INFO), ROOM_LIGHTS);
 
-			MyReadFile(file, r->light, sizeof(LIGHT_INFO) * r->num_lights, &read, nullptr);
+			MyReadFile(file, r->light, sizeof(LIGHT_INFO) * r->num_lights);
 		}
 		else r->light = nullptr;
 
 		// static mesh objects
 
-		MyReadFile(file, &r->num_meshes, sizeof(int16_t), &read, nullptr);
+		MyReadFile(file, &r->num_meshes, sizeof(int16_t));
 		if (r->num_meshes)
 		{
 			r->mesh = (MESH_INFO*)game_malloc(r->num_meshes * sizeof(MESH_INFO), ROOM_STATIC_MESH_INFOS);
-			MyReadFile(file, r->mesh, sizeof(MESH_INFO) * r->num_meshes, &read, nullptr);
+			MyReadFile(file, r->mesh, sizeof(MESH_INFO) * r->num_meshes);
 		}
 		else r->mesh = nullptr;
 
 		// load in flipped room
 
-		MyReadFile(file, &r->flipped_room, sizeof(int16_t), &read, nullptr);
+		MyReadFile(file, &r->flipped_room, sizeof(int16_t));
 
 		// load in flags (for underwater etc)
 
-		MyReadFile(file, &r->flags, sizeof(uint16_t), &read, nullptr);
+		MyReadFile(file, &r->flags, sizeof(uint16_t));
 
 		// load Mesh Effect
 
-		MyReadFile(file, &r->MeshEffect, sizeof(char), &read, nullptr);
+		MyReadFile(file, &r->MeshEffect, sizeof(char));
 
 		char unused = 0;
 
-		MyReadFile(file, &unused, sizeof(char), &read, nullptr);
-		MyReadFile(file, &unused, sizeof(char), &read, nullptr);
+		MyReadFile(file, &unused, sizeof(char));
+		MyReadFile(file, &unused, sizeof(char));
 
 		// initialise room variables
 
@@ -192,9 +190,9 @@ bool LoadRooms(HANDLE file)
 
 	// load in 'floor_data' part of wad
 
-	MyReadFile(file, &floor_data_count, sizeof(int32_t), &read, nullptr);
+	MyReadFile(file, &floor_data_count, sizeof(int32_t));
 	floor_data = (int16_t*)game_malloc(floor_data_count * sizeof(int16_t), FLOOR_DATA);
-	MyReadFile(file, floor_data, sizeof(int16_t) * floor_data_count, &read, nullptr);
+	MyReadFile(file, floor_data, sizeof(int16_t) * floor_data_count);
 
 	return true;
 }
@@ -229,31 +227,30 @@ void AdjustTextureUVs(bool tNew)
 
 bool LoadObjects(HANDLE file)
 {
-	int32_t number, size;
-	DWORD read;
-
 	// load actual mesh data
 
-	MyReadFile(file, &size, sizeof(int32_t), &read, nullptr);
-	auto mesh_base = (int16_t*)game_malloc(size * sizeof(int16_t), MESHES);
-	MyReadFile(file, mesh_base, sizeof(int16_t) * size, &read, nullptr);
+	int32_t mesh_base_size = 0;
+
+	MyReadFile(file, &mesh_base_size, sizeof(int32_t));
+	auto mesh_base = (int16_t*)game_malloc(mesh_base_size * sizeof(int16_t), MESHES);
+	MyReadFile(file, mesh_base, sizeof(int16_t) * mesh_base_size);
 
 	// load meshes (offset pointers first)
 
-	MyReadFile(file, &number, sizeof(int32_t), &read, nullptr);
-	meshes = (int16_t**)game_malloc(number * sizeof(int16_t*), MESH_POINTERS);
-	MyReadFile(file, meshes, sizeof(int16_t*) * number, &read, nullptr);
+	MyReadFile(file, &number_meshes, sizeof(int32_t));
+	meshes = (int16_t**)game_malloc(number_meshes * sizeof(int16_t*), MESH_POINTERS);
+	MyReadFile(file, meshes, sizeof(int16_t*) * number_meshes);
 
 	// adjust mesh offsets using base pointer
 
-	for (int i = 0; i < number; ++i)
+	for (int i = 0; i < number_meshes; ++i)
 		meshes[i] = mesh_base + (int)meshes[i] / 2;
 
 	// load in animation arrays
 
 	max_number_custom_anims = 1024;
 
-	MyReadFile(file, &number_anims, sizeof(int32_t), &read, nullptr);
+	MyReadFile(file, &number_anims, sizeof(int32_t));
 	anims = (ANIM_STRUCT*)game_malloc((number_anims + max_number_custom_anims) * sizeof(ANIM_STRUCT), ANIMS);
 
 	for (int i = 0; i < number_anims; ++i)
@@ -262,16 +259,16 @@ bool LoadObjects(HANDLE file)
 
 		int16_t change_index, command_index;
 
-		MyReadFile(file, anim, offsetof(ANIM_STRUCT, change_ptr) - sizeof(change_index), &read, nullptr);
-		MyReadFile(file, &change_index, sizeof(int16_t), &read, nullptr);
-		MyReadFile(file, &anim->number_commands, sizeof(int16_t), &read, nullptr);
-		MyReadFile(file, &command_index, sizeof(int16_t), &read, nullptr);
+		MyReadFile(file, anim, offsetof(ANIM_STRUCT, change_ptr) - sizeof(change_index));
+		MyReadFile(file, &change_index, sizeof(int16_t));
+		MyReadFile(file, &anim->number_commands, sizeof(int16_t));
+		MyReadFile(file, &command_index, sizeof(int16_t));
 
 		anim->change_ptr = (int16_t*)change_index;
 		anim->command_ptr = (int16_t*)command_index;
 	}
 
-	MyReadFile(file, &number_anim_changes, sizeof(int32_t), &read, nullptr);
+	MyReadFile(file, &number_anim_changes, sizeof(int32_t));
 	changes = (CHANGE_STRUCT*)game_malloc(number_anim_changes * sizeof(CHANGE_STRUCT), STRUCTS);
 
 	for (int i = 0; i < number_anim_changes; ++i)
@@ -280,33 +277,33 @@ bool LoadObjects(HANDLE file)
 
 		int16_t range_index;
 		
-		MyReadFile(file, change, offsetof(CHANGE_STRUCT, range_ptr), &read, nullptr);
-		MyReadFile(file, &range_index, sizeof(int16_t), &read, nullptr);
+		MyReadFile(file, change, offsetof(CHANGE_STRUCT, range_ptr));
+		MyReadFile(file, &range_index, sizeof(int16_t));
 
 		change->range_ptr = (int16_t*)range_index;
 	}
 
-	MyReadFile(file, &number_anim_ranges, sizeof(int32_t), &read, nullptr);
+	MyReadFile(file, &number_anim_ranges, sizeof(int32_t));
 	ranges = (RANGE_STRUCT*)game_malloc(number_anim_ranges * sizeof(RANGE_STRUCT), RANGES);
-	MyReadFile(file, ranges, sizeof(RANGE_STRUCT) * number_anim_ranges, &read, nullptr);
+	MyReadFile(file, ranges, sizeof(RANGE_STRUCT) * number_anim_ranges);
 
 	// load in animation data wodges
 
-	MyReadFile(file, &number_anim_commands, sizeof(int32_t), &read, nullptr);
+	MyReadFile(file, &number_anim_commands, sizeof(int32_t));
 	commands = (int16_t*)game_malloc(number_anim_commands * sizeof(int16_t), COMMANDS);
-	MyReadFile(file, commands, sizeof(int16_t) * number_anim_commands, &read, nullptr);
+	MyReadFile(file, commands, sizeof(int16_t) * number_anim_commands);
 
 	// bones
 
-	MyReadFile(file, &size, sizeof(int32_t), &read, nullptr);
-	bones = (int32_t*)game_malloc(size * sizeof(int32_t), BONES);
-	MyReadFile(file, bones, sizeof(int32_t) * size, &read, nullptr);
+	MyReadFile(file, &number_bones, sizeof(int32_t));
+	bones = (int32_t*)game_malloc(number_bones * sizeof(int32_t), BONES);
+	MyReadFile(file, bones, sizeof(int32_t) * number_bones);
 
 	// frames
 
-	MyReadFile(file, &number_anim_frames, sizeof(int32_t), &read, nullptr);
+	MyReadFile(file, &number_anim_frames, sizeof(int32_t));
 	frames = (int16_t*)game_malloc(number_anim_frames * sizeof(int16_t), FRAMES);
-	MyReadFile(file, frames, sizeof(int16_t) * number_anim_frames, &read, nullptr);
+	MyReadFile(file, frames, sizeof(int16_t) * number_anim_frames);
 
 	// remap anim pointers
 	// what this does is basically assign the actual frame pointer without
@@ -332,18 +329,18 @@ bool LoadObjects(HANDLE file)
 
 	int32_t objects_count;
 
-	MyReadFile(file, &objects_count, sizeof(int32_t), &read, nullptr);
+	MyReadFile(file, &objects_count, sizeof(int32_t));
 
 	for (int i = 0; i < objects_count; ++i)
 	{
-		int j;
+		int j, size;
 
-		MyReadFile(file, &j, sizeof(int32_t), &read, nullptr);						// read normal object number
-		MyReadFile(file, &objects[j].nmeshes, sizeof(int16_t), &read, nullptr);		// NumMeshes
-		MyReadFile(file, &objects[j].mesh_index, sizeof(int16_t), &read, nullptr);
-		MyReadFile(file, &objects[j].bone_index, sizeof(int32_t), &read, nullptr);
-		MyReadFile(file, &size, sizeof(int32_t), &read, nullptr);
-		MyReadFile(file, &objects[j].anim_index, sizeof(int16_t), &read, nullptr);
+		MyReadFile(file, &j, sizeof(int32_t));						// read normal object number
+		MyReadFile(file, &objects[j].nmeshes, sizeof(int16_t));		// NumMeshes
+		MyReadFile(file, &objects[j].mesh_index, sizeof(int16_t));
+		MyReadFile(file, &objects[j].bone_index, sizeof(int32_t));
+		MyReadFile(file, &size, sizeof(int32_t));
+		MyReadFile(file, &objects[j].anim_index, sizeof(int16_t));
 
 		objects[j].frame_base = (int16_t*)((uintptr_t)frames + (uintptr_t)size);
 		objects[j].loaded = 1;														// flag object as loaded
@@ -355,17 +352,19 @@ bool LoadObjects(HANDLE file)
 
 	// load in static objects
 
-	MyReadFile(file, &number, sizeof(int32_t), &read, nullptr);
+	MyReadFile(file, &number_static_objects, sizeof(int32_t));
 
-	for (int i = 0; i < number; ++i)
+	static_objects = (STATIC_INFO*)game_malloc(number_static_objects * sizeof(STATIC_INFO));
+
+	for (int i = 0; i < number_static_objects; ++i)
 	{
 		int j;
 
-		MyReadFile(file, &j, sizeof(int32_t), &read, nullptr);								// read static object number
-		MyReadFile(file, &static_objects[j].mesh_number, sizeof(int16_t), &read, nullptr);
-		MyReadFile(file, &static_objects[j].x_minp, sizeof(int16_t) * 6, &read, nullptr);	// read physical bound info
-		MyReadFile(file, &static_objects[j].x_minc, sizeof(int16_t) * 6, &read, nullptr);	// read collide bound info
-		MyReadFile(file, &static_objects[j].flags, sizeof(int16_t), &read, nullptr);
+		MyReadFile(file, &j, sizeof(int32_t));								// read static object number
+		MyReadFile(file, &static_objects[j].mesh_number, sizeof(int16_t));
+		MyReadFile(file, &static_objects[j].x_minp, sizeof(int16_t) * 6);	// read physical bound info
+		MyReadFile(file, &static_objects[j].x_minc, sizeof(int16_t) * 6);	// read collide bound info
+		MyReadFile(file, &static_objects[j].flags, sizeof(int16_t));
 	}
 
 	return true;
@@ -374,16 +373,15 @@ bool LoadObjects(HANDLE file)
 bool LoadSprites(HANDLE file)
 {
 	int number;
-	DWORD read;
 
 	// Sprite info pointers
 
-	MyReadFile(file, &number, sizeof(int32_t), &read, nullptr);
-	MyReadFile(file, phdsprinfo, sizeof(PHDSPRITESTRUCT) * number, &read, nullptr);
+	MyReadFile(file, &number, sizeof(int32_t));
+	MyReadFile(file, phdsprinfo, sizeof(PHDSPRITESTRUCT) * number);
 
 	// Load object information (for non-static sprites)
 
-	MyReadFile(file, &number, sizeof(int32_t), &read, nullptr);
+	MyReadFile(file, &number, sizeof(int32_t));
 
 	for (int i = 0; i < number; ++i)
 	{
@@ -391,7 +389,7 @@ bool LoadSprites(HANDLE file)
 
 		int j;
 
-		MyReadFile(file, &j, sizeof(int32_t), &read, nullptr);
+		MyReadFile(file, &j, sizeof(int32_t));
 
 		// Wad file may contain information about static objects too (useful for editors,
 		// but game code doesn't want to know) which needs skipping across
@@ -400,8 +398,8 @@ bool LoadSprites(HANDLE file)
 		{
 			// 'nmeshes' is a negative value for sprites, and stores number of animated frames
 
-			MyReadFile(file, &objects[j].nmeshes, sizeof(int16_t), &read, nullptr);
-			MyReadFile(file, &objects[j].mesh_index, sizeof(int16_t), &read, nullptr);
+			MyReadFile(file, &objects[j].nmeshes, sizeof(int16_t));
+			MyReadFile(file, &objects[j].mesh_index, sizeof(int16_t));
 
 			objects[j].loaded = 1;
 		}
@@ -414,7 +412,7 @@ bool LoadSprites(HANDLE file)
 			j -= NUMBER_OBJECTS;
 
 			SetFilePointer(file, sizeof(int16_t), nullptr, FILE_CURRENT);
-			MyReadFile(file, &static_objects[j].mesh_number, sizeof(int16_t), &read, nullptr);
+			MyReadFile(file, &static_objects[j].mesh_number, sizeof(int16_t));
 		}
 	}
 
@@ -425,17 +423,14 @@ bool LoadItems(HANDLE file)
 {
 	// allocate and load in all the starting positions of movable items from room data
 
-	int32_t number_items;
-	DWORD read;
-
-	MyReadFile(file, &number_items, sizeof(int32_t), &read, nullptr);
+	MyReadFile(file, &level_items, sizeof(int32_t));
 
 	// actual final game will crash and burn if 'number_items' is 0, but may be during testing
 
-	if (number_items == 0)
+	if (level_items == 0)
 		return true;
 
-	if (number_items > NUMBER_ITEMS)
+	if (level_items > NUMBER_ITEMS)
 	{
 		prof::print(DARK_RED, "LoadItems(): Too Many Items being Loaded!!");
 		return false;
@@ -449,23 +444,21 @@ bool LoadItems(HANDLE file)
 		return false;
 	}
 
-	level_items = number_items;
-
 	InitialiseItemArray(NUMBER_ITEMS);
 
-	for (int i = 0; i < number_items; ++i)
+	for (int i = 0; i < level_items; ++i)
 	{
 		auto item = &items[i];
 
-		MyReadFile(file, &item->object_number, sizeof(int16_t), &read, nullptr);
-		MyReadFile(file, &item->room_number, sizeof(int16_t), &read, nullptr);
-		MyReadFile(file, &item->pos.x_pos, sizeof(int32_t), &read, nullptr);
-		MyReadFile(file, &item->pos.y_pos, sizeof(int32_t), &read, nullptr);
-		MyReadFile(file, &item->pos.z_pos, sizeof(int32_t), &read, nullptr);
-		MyReadFile(file, &item->pos.y_rot, sizeof(int16_t), &read, nullptr);
-		MyReadFile(file, &item->shade, sizeof(int16_t), &read, nullptr);
-		MyReadFile(file, &item->shadeB, sizeof(int16_t), &read, nullptr); // two shades for item_info
-		MyReadFile(file, &item->flags, sizeof(int16_t), &read, nullptr);
+		MyReadFile(file, &item->object_number, sizeof(int16_t));
+		MyReadFile(file, &item->room_number, sizeof(int16_t));
+		MyReadFile(file, &item->pos.x_pos, sizeof(int32_t));
+		MyReadFile(file, &item->pos.y_pos, sizeof(int32_t));
+		MyReadFile(file, &item->pos.z_pos, sizeof(int32_t));
+		MyReadFile(file, &item->pos.y_rot, sizeof(int16_t));
+		MyReadFile(file, &item->shade, sizeof(int16_t));
+		MyReadFile(file, &item->shadeB, sizeof(int16_t)); // two shades for item_info
+		MyReadFile(file, &item->flags, sizeof(int16_t));
 
 		if (item->object_number < 0 || item->object_number >= NUMBER_OBJECTS)
 		{
@@ -483,9 +476,7 @@ bool LoadItems(HANDLE file)
 
 bool LoadDepthQ(HANDLE file)
 {
-	DWORD read;
-
-	MyReadFile(file, depthq_table, 32 * 256, &read, nullptr);
+	MyReadFile(file, depthq_table, 32 * 256);
 
 	// force colour 0 to black
 
@@ -514,9 +505,7 @@ bool LoadDepthQ(HANDLE file)
 
 bool LoadPalette(HANDLE file)
 {
-	DWORD read;
-
-	MyReadFile(file, game_palette, 256 * 3, &read, nullptr);
+	MyReadFile(file, game_palette, 256 * 3);
 
 	// force colour 0 to black
 
@@ -525,7 +514,7 @@ bool LoadPalette(HANDLE file)
 	for (int i = 3; i < 768; ++i)
 		game_palette[i] <<= 2;
 
-	MyReadFile(file, G_GouraudPalette, 256 * 4, &read, nullptr);
+	MyReadFile(file, G_GouraudPalette, 256 * 4);
 
 	return true;
 }
@@ -534,33 +523,29 @@ bool LoadCameras(HANDLE file)
 {
 	// load all the stuff to do with camera positions and the like
 
-	DWORD read;
-
 	DWORD number_cameras;
-	MyReadFile(file, &number_cameras, sizeof(int32_t), &read, nullptr);
+	MyReadFile(file, &number_cameras, sizeof(int32_t));
 	if (number_cameras == 0)
 		return true;
 
 	if (!(camera.fixed = (OBJECT_VECTOR*)game_malloc(sizeof(OBJECT_VECTOR) * number_cameras, CAMERAS)))
 		return false;
 
-	MyReadFile(file, camera.fixed, sizeof(OBJECT_VECTOR) * number_cameras, &read, nullptr);
+	MyReadFile(file, camera.fixed, sizeof(OBJECT_VECTOR) * number_cameras);
 
 	return true;
 }
 
 bool LoadSoundEffects(HANDLE file)
 {
-	DWORD read;
-
-	MyReadFile(file, &number_sound_effects, sizeof(int32_t), &read, nullptr);
+	MyReadFile(file, &number_sound_effects, sizeof(int32_t));
 	if (number_sound_effects == 0)
 		return true;
 
 	if (!(sound_effects = (OBJECT_VECTOR*)game_malloc(sizeof(OBJECT_VECTOR) * number_sound_effects, SOUND_FX)))
 		return false;
 
-	MyReadFile(file, sound_effects, sizeof(OBJECT_VECTOR) * number_sound_effects, &read, nullptr);
+	MyReadFile(file, sound_effects, sizeof(OBJECT_VECTOR) * number_sound_effects);
 
 	return true;
 }
@@ -570,9 +555,9 @@ bool LoadBoxes(HANDLE file)
 	int32_t number_overlaps;
 	DWORD read;
 
-	MyReadFile(file, &number_boxes, sizeof(int32_t), &read, nullptr);
+	MyReadFile(file, &number_boxes, sizeof(int32_t));
 	boxes = (BOX_INFO*)game_malloc(sizeof(BOX_INFO) * number_boxes, BOXES);
-	MyReadFile(file, boxes, sizeof(BOX_INFO) * number_boxes, &read, nullptr);
+	MyReadFile(file, boxes, sizeof(BOX_INFO) * number_boxes, &read);
 
 	if (read != sizeof(BOX_INFO) * number_boxes)
 	{
@@ -582,9 +567,9 @@ bool LoadBoxes(HANDLE file)
 
 	// box overlaps
 
-	MyReadFile(file, &number_overlaps, sizeof(int32_t), &read, nullptr);
+	MyReadFile(file, &number_overlaps, sizeof(int32_t));
 	overlap = (uint16_t*)game_malloc(sizeof(uint16_t) * number_overlaps, OVERLAPS);
-	MyReadFile(file, overlap, sizeof(uint16_t) * number_overlaps, &read, nullptr);
+	MyReadFile(file, overlap, sizeof(uint16_t) * number_overlaps, &read);
 
 	if (read != sizeof(uint16_t) * number_overlaps)
 	{
@@ -599,7 +584,7 @@ bool LoadBoxes(HANDLE file)
 		for (int j = 0; j < 4; ++j)
 		{
 			ground_zone[j][i] = (int16_t*)game_malloc(sizeof(int16_t) * number_boxes, GROUNDZONE);
-			MyReadFile(file, ground_zone[j][i], sizeof(int16_t) * number_boxes, &read, nullptr);
+			MyReadFile(file, ground_zone[j][i], sizeof(int16_t) * number_boxes, &read);
 
 			if (read != sizeof(int16_t) * number_boxes)
 			{
@@ -609,7 +594,7 @@ bool LoadBoxes(HANDLE file)
 		}
 
 		fly_zone[i] = (int16_t*)game_malloc(sizeof(int16_t) * number_boxes, FLYZONE);
-		MyReadFile(file, fly_zone[i], sizeof(int16_t) * number_boxes, &read, nullptr);
+		MyReadFile(file, fly_zone[i], sizeof(int16_t) * number_boxes, &read);
 
 		if (read != sizeof(int16_t) * number_boxes)
 		{
@@ -626,15 +611,13 @@ bool LoadAnimatedTextures(HANDLE file)
 	int size,
 		num_obj_textures;
 
-	DWORD read;
-
-	MyReadFile(file, &size, sizeof(int32_t), &read, nullptr);
+	MyReadFile(file, &size, sizeof(int32_t));
 
 	anim_tex_ranges = (int16_t*)game_malloc(size * sizeof(int16_t), ANIMATING_TEXTURE_RANGES);
 
-	MyReadFile(file, anim_tex_ranges, sizeof(int16_t) * size, &read, nullptr);
-	MyReadFile(file, &num_obj_textures, sizeof(int32_t), &read, nullptr);
-	MyReadFile(file, phdtextinfo, sizeof(PHDTEXTURESTRUCT) * num_obj_textures, &read, nullptr);
+	MyReadFile(file, anim_tex_ranges, sizeof(int16_t) * size);
+	MyReadFile(file, &num_obj_textures, sizeof(int32_t));
+	MyReadFile(file, phdtextinfo, sizeof(PHDTEXTURESTRUCT) * num_obj_textures);
 
 	LnTextureInfos = num_obj_textures;
 
@@ -662,42 +645,8 @@ bool LoadAnimatedTextures(HANDLE file)
 	return true;
 }
 
-bool LoadCinematic(HANDLE file)
-{
-	DWORD read;
-
-	int num_cine_frames;
-
-	MyReadFile(file, &num_cine_frames, sizeof(int16_t), &read, nullptr);
-
-	if (num_cine_frames)
-	{
-		auto cine = (int16_t*)game_malloc(sizeof(int16_t) * 8 * num_cine_frames, CINEMATIC_FRAMES);
-		MyReadFile(file, cine, sizeof(int16_t) * 8 * num_cine_frames, &read, nullptr);
-	}
-
-	return true;
-}
-
-int LoadDemo(HANDLE file)
-{
-	int16_t length;
-	DWORD read;
-
-	auto demoptr = (uint32_t*)game_malloc(9000 * sizeof(uint32_t), LOADDEMO_BUFFER);
-
-	MyReadFile(file, &length, sizeof(int16_t), &read, nullptr);
-
-	if (length)
-		MyReadFile(file, demoptr, length, &read, nullptr);
-
-	return true;
-}
-
 int load_level_file(const char* filename)
 {
-	init_game_malloc();
-
 	auto file = CreateFile(filename, GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_SEQUENTIAL_SCAN, nullptr);
 
 	if (file == INVALID_HANDLE_VALUE)
@@ -717,7 +666,7 @@ int load_level_file(const char* filename)
 
 	int version, level_dummy;
 
-	MyReadFile(file, &version, sizeof(int), &read, nullptr);
+	MyReadFile(file, &version, sizeof(int));
 
 	// load palette
 
@@ -735,7 +684,7 @@ int load_level_file(const char* filename)
 
 	// now load level number and see if it is correct
 
-	MyReadFile(file, &level_dummy, sizeof(int), &read, nullptr);
+	MyReadFile(file, &level_dummy, sizeof(int));
 
 	// load rooms and associated data
 
@@ -784,11 +733,19 @@ int load_level_file(const char* filename)
 	if (!LoadDepthQ(file))
 		return false;
 
-	if (!LoadCinematic(file))
-		return false;
+	// ignore cinematic and demo data
 
-	if (!LoadDemo(file))
-		return false;
+	int tmp_size;
+
+	MyReadFile(file, &tmp_size, sizeof(int16_t));
+
+	if (tmp_size)
+		SetFilePointer(file, sizeof(int16_t) * 8 * tmp_size, 0, FILE_CURRENT);
+
+	MyReadFile(file, &tmp_size, sizeof(int16_t));
+
+	if (tmp_size)
+		SetFilePointer(file, tmp_size, 0, FILE_CURRENT);
 
 	CloseHandle(file);
 
@@ -907,7 +864,7 @@ bool S_LoadGameFlow(const char* filename)
 
 	// read script version number
 
-	MyReadFile(file, &GF_ScriptVersion, sizeof(uint32_t), &read, nullptr);
+	MyReadFile(file, &GF_ScriptVersion, sizeof(uint32_t));
 
 	if (GF_ScriptVersion != THIS_SCRIPT_VERSION)
 	{
@@ -915,18 +872,18 @@ bool S_LoadGameFlow(const char* filename)
 		return false;
 	}
 
-	MyReadFile(file, GF_Description, 256, &read, nullptr);
+	MyReadFile(file, GF_Description, 256);
 
 	prof::print(YELLOW, GF_Description);
 
 	// read in GAMEFLOW_INFO
 
-	MyReadFile(file, &size, sizeof(int16_t), &read, nullptr);
+	MyReadFile(file, &size, sizeof(int16_t));
 
 	if (size != sizeof(GAMEFLOW_INFO))
 		return false;
 
-	MyReadFile(file, &gameflow, sizeof(GAMEFLOW_INFO), &read, nullptr);
+	MyReadFile(file, &gameflow, sizeof(GAMEFLOW_INFO));
 
 #ifdef GAMEDEBUG
 	prof::print(YELLOW, "GF:	Cyphered Strings:{}", gameflow.cyphered_strings);
@@ -998,15 +955,15 @@ bool S_LoadGameFlow(const char* filename)
 
 	// read-in offsets into seq buffer for each sequence
 
-	MyReadFile(file, &LGF_offsets, sizeof(int16_t) * (gameflow.num_levels + 1), &read, nullptr);
-	MyReadFile(file, &size, sizeof(int16_t), &read, nullptr);
+	MyReadFile(file, &LGF_offsets, sizeof(int16_t) * (gameflow.num_levels + 1));
+	MyReadFile(file, &size, sizeof(int16_t));
 
 	// read-in sequence data
 
 	if (!(GF_sequence_buffer = (int16_t*)GlobalAlloc(GMEM_FIXED, size)))
 		return false;
 
-	MyReadFile(file, GF_sequence_buffer, size, &read, nullptr);
+	MyReadFile(file, GF_sequence_buffer, size);
 
 	// frontend sequence
 
@@ -1018,12 +975,12 @@ bool S_LoadGameFlow(const char* filename)
 	if (gameflow.num_demos)
 	{
 		int16_t dummy[24];
-		MyReadFile(file, dummy, sizeof(int16_t) * gameflow.num_demos, &read, nullptr);
+		MyReadFile(file, dummy, sizeof(int16_t) * gameflow.num_demos);
 	}
 
 	// GameText strings
 
-	MyReadFile(file, &number, sizeof(int16_t), &read, nullptr);
+	MyReadFile(file, &number, sizeof(int16_t));
 
 	if (number != GT_NUM_GAMESTRINGS)
 		return false;

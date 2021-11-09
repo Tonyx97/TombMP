@@ -111,7 +111,7 @@ struct STATIC_INFO
 };
 
 inline OBJECT_INFO objects[NUMBER_OBJECTS];
-inline STATIC_INFO static_objects[NUMBER_STATIC_OBJECTS];
+inline STATIC_INFO* static_objects = nullptr;
 
 inline int32_t* bones;
 inline ANIM_STRUCT* anims;
@@ -120,6 +120,11 @@ inline CHANGE_STRUCT* changes;
 inline int16_t** meshes,
 			  * commands,
 			  * frames;
+
+inline int32_t number_static_objects = 0;
+
+inline int32_t number_meshes = 0,
+			   number_bones = 0;
 
 inline int32_t number_anims = 0,
 			   number_custom_anims = 0,

@@ -97,7 +97,7 @@ inline ITEM_INFO* items = nullptr;
 inline int16_t body_bag;
 inline int16_t next_item_free;
 inline int16_t next_item_active;
-inline int level_items = 0;
+inline int32_t level_items = 0;
 
 void InitialiseItemArray(int numitems);
 void KillItem(int16_t item_number, bool sync = true);
