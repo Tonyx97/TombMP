@@ -157,6 +157,11 @@ void cf_player::register_functions(sol::state* vm)
 		return true;
 	});
 
+	vm->set_function("getInventoryItemCount", [&](int id)
+	{
+		return Inv_RequestItem(id);
+	});
+
 	vm->set_function("removeInventoryItem", [&](int id, int amount)
 	{
 		for (int i = 0; i < amount; ++i)
