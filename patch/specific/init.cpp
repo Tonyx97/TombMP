@@ -184,7 +184,7 @@ void free_game_memory()
 
 void* game_malloc(int size, int type)
 {
-	auto ptr = calloc(1, size * alloc_multiplier);
+	auto ptr = calloc(1, size);
 
 	g_game_mem.insert(ptr);
 
