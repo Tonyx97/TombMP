@@ -175,6 +175,7 @@
 		· getPlayerArmFrameNumber.
 		· setMinecartTurnModifier.
 		· loadAnimation.
+		· getAnimFrameBase.
 	
 	
 	
