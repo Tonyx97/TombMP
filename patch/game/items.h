@@ -17,11 +17,12 @@
 #define ROT_Y 8
 #define ROT_Z 16
 
-#define GUARD	1			// AI bits
-#define AMBUSH	2
-#define PATROL1	4
-#define MODIFY	8
-#define FOLLOW	16
+#define GUARD		1			// AI bits
+#define AMBUSH		2
+#define PATROL1		4
+#define MODIFY		8
+#define FOLLOW		16
+#define EXPLODED	32
 
 struct ITEM_LIGHT
 {

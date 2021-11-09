@@ -218,8 +218,6 @@ bool game_main()
 	if (!GF_LoadScriptFile("data\\gf.dat"))
 		S_ExitSystem();
 
-	// allocate our game memory now
-
 	int option = OPENING_GAME;
 
 	bool ok = true;

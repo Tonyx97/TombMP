@@ -159,6 +159,7 @@ void player_handlers::on_player_info()
 		if (info.respawn)
 		{
 			player->set_flags(0);
+			player->get_item()->ai_bits &= ~EXPLODED;
 
 			if (lara.target == player->get_item())
 				lara.target = nullptr;
@@ -215,6 +216,8 @@ void player_handlers::on_player_respawn()
 		ItemNewRoom(lara.item_number, game_vec.room);
 
 	InitialiseResetCamera();
+
+	lara_item->ai_bits &= ~EXPLODED;
 
 	localplayer->set_flags(0);
 	localplayer->set_collidable(1);

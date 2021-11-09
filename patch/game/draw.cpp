@@ -515,6 +515,7 @@ void draw_rooms(int16_t current_room)
 
 			if (player->is_spawned() &&
 				!(player->get_entity_flags() & ENTITY_FLAG_INVISIBLE) &&
+				!(player_item->ai_bits & EXPLODED) &&	// this flag is set when a player explodes locally and it's not synced so we don't get flickers
 				g_resource->trigger_event(events::renderer::ON_PLAYER_RENDER, player))
 			{
 				// fix delayed position of player while in vehicle by updating the pos of the vehicle

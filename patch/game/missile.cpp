@@ -124,7 +124,6 @@ int ExplodingDeath(int16_t item_number, int32_t mesh_bits, int16_t damage)
 {
 	auto item = &items[item_number];
 	auto object = &objects[item->object_number];
-
 	auto frame = GetBestFrame(item);
 
 	phd_PushUnitMatrix();

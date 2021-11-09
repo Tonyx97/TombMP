@@ -794,19 +794,40 @@ void CreatureDie(int16_t item_number, bool explode, bool is_player, bool sync_ex
 
 	if (explode)
 	{
+		auto localplayer = game_level::LOCALPLAYER();
+
+		if (sync_explode)
+		{
+			SYNC_ID sid;
+
+			if (auto entity = g_level->get_entity_by_item(item))
+				sid = entity->get_sync_id();
+			else if (item == lara_item)
+			{
+				localplayer->set_health(DONT_TARGET);
+				localplayer->set_entity_flags(ENTITY_FLAG_INVISIBLE);
+
+				sid = localplayer->get_sync_id();
+			}
+
+			g_client->send_packet(ID_ENTITY_EXPLODE, gns::entity::explode
+			{
+				.sid = sid
+			});
+		}
+
 		ExplodingDeath(item_number, 0xffffffff, 0);
 
 		if (!is_player)
-		{
-			if (!g_level->get_entity_by_item(item))
-				KillItem(item_number, false);
-		}
+			KillItem(item_number, sync_explode);
 		else
 		{
-			if (auto localplayer = game_level::LOCALPLAYER(); localplayer->get_item() == item)
+			if (auto player = g_level->get_player_by_item(item))
+				player->add_entity_flags(ENTITY_FLAG_INVISIBLE);
+			else if (localplayer->get_item() == item)
 				localplayer->add_entity_flags(ENTITY_FLAG_INVISIBLE);
 
-			item->flags = NOT_VISIBLE;
+			item->ai_bits |= EXPLODED;
 		}
 	}
 	else RemoveActiveItem(item_number);
@@ -841,28 +862,6 @@ void CreatureDie(int16_t item_number, bool explode, bool is_player, bool sync_ex
 		ItemNewRoom(pickup_number, item->room_number);
 
 		pickup_number = pickup->carried_item;
-	}
-
-	if (sync_explode && explode)
-	{
-		SYNC_ID sid;
-
-		if (auto entity = g_level->get_entity_by_item(item))
-			sid = entity->get_sync_id();
-		else if (item == lara_item)
-		{
-			auto localplayer = game_level::LOCALPLAYER();
-
-			localplayer->set_health(DONT_TARGET);
-			localplayer->set_entity_flags(ENTITY_FLAG_INVISIBLE);
-
-			sid = localplayer->get_sync_id();
-		}
-
-		g_client->send_packet(ID_ENTITY_EXPLODE, gns::entity::explode
-		{
-			.sid = sid
-		});
 	}
 }
 
