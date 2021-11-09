@@ -143,8 +143,8 @@
 - v1.1.5 (09-11-21):
 	- Fixed onLevelLoaded not being called properly.
 	- Fixed bug when trying to fly while in vehicle, flying in vehicles are blocked so there won't be any more bugs.
-	- Fixed player explosion not being synced properly with players.
 	- Fixed a crash related to lara's hair.
+	- Fixed player explosion not being synced properly with players.
 	- Fixed bleeding windows when destroying them.
 	- Fixed weird and wrong lara meshswaps in certain situations.
 	- Fixed several crashes when loading a level.
@@ -182,6 +182,8 @@
 		· setEngineExtendedVehicleAnimIDs.
 		· setAnimNextAnim.
 	
+- v1.1.6 (xx-11-21):
+	- 
 	
 	
 	
