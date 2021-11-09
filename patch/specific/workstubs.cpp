@@ -11,6 +11,7 @@ void S_ExitSystem()
 {
 	DXSetCooperativeLevel(App.lpDD, App.WindowHandle, DDSCL_NORMAL);
 	free_game_memory();
+	Sleep(2500);
 	exit(1);
 }
 

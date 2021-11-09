@@ -1177,8 +1177,10 @@ int16_t load_animation(const char* filename)
 	anim->acceleration = tmp_anim_info.acceleration;
 	anim->frame_base = tmp_anim_info.frame_base;
 	anim->frame_end = tmp_anim_info.frame_end;
-	anim->jump_anim_num = tmp_anim_info.jump_anim_num;
-	anim->jump_frame_num = tmp_anim_info.jump_frame_num;
+	anim->jump_anim_num = 11;
+	anim->jump_frame_num = anims[11].frame_base;
+	//anim->jump_anim_num = tmp_anim_info.jump_anim_num;
+	//anim->jump_frame_num = tmp_anim_info.jump_frame_num;
 	anim->number_changes = tmp_anim_info.number_changes;
 	anim->number_commands = tmp_anim_info.number_commands;
 
