@@ -1789,6 +1789,8 @@ void BuildOutsideTable()
 		}
 	}
 
+	game_free((((27 * 27 * OUTSIDE_Z) - ((long)s - (long)OutsideRoomTable)) + 3) & ~3, 0);
+
 #if defined(GAMEDEBUG)
 	prof::print(GREEN, "Ouside room table = {} bytes, max_slots = {}\n", (long)s - (long)OutsideRoomTable, max_slots);
 #endif

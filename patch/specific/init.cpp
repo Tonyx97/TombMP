@@ -62,8 +62,6 @@ const char* game_malloc_strings[NUM_MALLOC_TYPES] =
 
 int LanGameMallocTotals[NUM_MALLOC_TYPES];
 
-std::unordered_set<void*> g_game_mem;
-
 unsigned short GetRandom(WATERTAB* w, int n)
 {
 	do {
@@ -172,45 +170,76 @@ void S_InitialiseSystem()
 			}
 		}
 	}
+
+	malloc_size = MALLOC_SIZE;
 }
 
 void free_game_memory()
 {
 	// free everything we can think of
-
-	for (auto ptr : g_game_mem)
-		free(ptr);
-
-	g_game_mem.clear();
+	if (malloc_buffer)
+		GlobalFree((HGLOBAL)malloc_buffer);
 }
 
 void init_game_malloc()
 {
+	malloc_ptr = malloc_buffer;
+	malloc_free = malloc_size;
+	malloc_used = 0;
+
+#ifdef GAMEDEBUG
+	ZeroArray(LanGameMallocTotals);
+	prof::print(YELLOW, "init_game_malloc: size = {}K", malloc_size >> 10);
+#endif
 }
 
 void* game_malloc(int size, int type)
 {
 	size = (size + 3) & ~3;
 
-	auto ptr = calloc(1, size);
+	if (size <= malloc_free)
+	{
+		auto ptr = malloc_ptr;
 
-	g_game_mem.insert(ptr);
+		malloc_free -= size;
+		malloc_used += size;
+		malloc_ptr += size;
 
-	return ptr;
+#ifdef GAMEDEBUG
+		LanGameMallocTotals[type] += size;
+#endif
+
+		return ptr;
+	}
+
+	prof::print(DARK_RED, "game_malloc(): OUT OF MEMORY {} {}", game_malloc_strings[type], size);
+
+	S_ExitSystem();
+
+	return nullptr;
 }
 
-void game_free(void* ptr, int type)
+void game_free(int size, int type)
 {
-	if (auto it = g_game_mem.find(ptr); it != g_game_mem.end())
-	{
-		free(*it);
+	size = (size + 3) & (~3);
 
-		g_game_mem.erase(it);
-	}
+	malloc_ptr -= size;
+	malloc_free += size;
+	malloc_used -= size;
+
+#ifdef GAMEDEBUG
+	LanGameMallocTotals[type] -= size;
+#endif
 }
 
 void show_game_malloc_totals()
 {
+#ifdef GAMEDEBUG
+	for (int i = 0; i < NUM_MALLOC_TYPES; ++i)
+		prof::print(YELLOW, "{}: {}", game_malloc_strings[i], LanGameMallocTotals[i]);
+
+	prof::print(YELLOW, "malloc_used = {}K; malloc_free = {}K; malloc_size = {}K", malloc_used >> 10, malloc_free >> 10, malloc_size >> 10);
+#endif
 }
 
 void CalculateWibbleTable()

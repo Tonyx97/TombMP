@@ -220,6 +220,14 @@ bool game_main()
 
 	// allocate our game memory now
 
+	malloc_buffer = (char*)GlobalAlloc(GMEM_FIXED, MALLOC_SIZE);
+
+	if (!malloc_buffer)
+	{
+		prof::print(DARK_RED, "game_main: could not allocate malloc_buffer");
+		return false;
+	}
+
 	int option = OPENING_GAME;
 
 	bool ok = true;

@@ -1,7 +1,7 @@
 #pragma once
 
 void* game_malloc(int size, int type);
-void game_free(void* ptr, int type);
+void game_free(int size, int type);
 void S_InitialiseSystem();
 void free_game_memory();
 void init_game_malloc();

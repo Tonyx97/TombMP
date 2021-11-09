@@ -855,8 +855,6 @@ void unload_level()
 	HWR_FreeTexturePages();
 
 	LnTextureInfos = 0;
-
-	free_game_memory();
 }
 
 int	Read_Strings(int num_strings, char** strings, char** buffer, DWORD* read, HANDLE file)
