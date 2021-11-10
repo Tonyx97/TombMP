@@ -29,8 +29,8 @@ void S_DrawFish(ITEM_INFO *item)
 		return;
 
 	int32_t xoff = item->pos.x_pos,
-		   yoff = item->pos.y_pos,
-		   zoff = item->pos.z_pos;
+		    yoff = item->pos.y_pos,
+		    zoff = item->pos.z_pos;
 
 	auto pSpriteInfo = (item->object_number == PIRAHNAS ? phdsprinfo + objects[EXPLOSION1].mesh_index + 10
 														: phdsprinfo + objects[EXPLOSION1].mesh_index + 11);
