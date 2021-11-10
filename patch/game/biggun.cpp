@@ -233,7 +233,7 @@ void BigGunDraw(ITEM_INFO* v)
 	if (auto clip = S_GetObjectBounds(frmptr[0]))
 	{
 		auto gun = (BIGGUNINFO*)v->data;
-		auto meshpp = &meshes[object->mesh_index];
+		auto meshpp = &object->mesh_ptr;	// maybe fucked
 		auto bone = object->bone_ptr; 
 
 		CalculateObjectLighting(v, frmptr[0]);

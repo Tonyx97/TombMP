@@ -36,7 +36,7 @@ COLL_INFO mycoll,
 void LaraInitialiseMeshes()
 {
 	for (int i = 0; i < 15; ++i)
-		lara.mesh_ptrs[i] = meshes[objects[LARA].mesh_index + i] = meshes[objects[LARA_SKIN].mesh_index + i];
+		lara.mesh_ptrs[i] = meshes[objects[LARA].mesh_ptr + i] = meshes[objects[LARA_SKIN].mesh_ptr + i];
 }
 
 void LaraCheatGetStuff()
@@ -431,7 +431,7 @@ void LaraSwapMeshExtra()
 {
 	if (objects[LARA_EXTRA].loaded)
 		for (int i = 0; i < 15; ++i)
-			lara.mesh_ptrs[i] = meshes[objects[LARA_EXTRA].mesh_index + i];
+			lara.mesh_ptrs[i] = meshes[objects[LARA_EXTRA].mesh_ptr + i];
 }
 
 void AnimateLara(ITEM_INFO* item)
@@ -796,11 +796,11 @@ void ResetLaraInfo()
 	item->data = nullptr;
 	item->flags = 0;
 
-	lara.mesh_ptrs[HEAD] = meshes[objects[LARA].mesh_index + HEAD];
-	lara.mesh_ptrs[THIGH_R] = meshes[objects[LG_UNARMED].mesh_index + THIGH_R];
-	lara.mesh_ptrs[THIGH_L] = meshes[objects[LG_UNARMED].mesh_index + THIGH_L];
-	lara.mesh_ptrs[HAND_R] = meshes[objects[LARA].mesh_index + HAND_R];
-	lara.mesh_ptrs[HAND_L] = meshes[objects[LARA].mesh_index + HAND_L];
+	lara.mesh_ptrs[HEAD] = meshes[objects[LARA].mesh_ptr + HEAD];
+	lara.mesh_ptrs[THIGH_R] = meshes[objects[LG_UNARMED].mesh_ptr + THIGH_R];
+	lara.mesh_ptrs[THIGH_L] = meshes[objects[LG_UNARMED].mesh_ptr + THIGH_L];
+	lara.mesh_ptrs[HAND_R] = meshes[objects[LARA].mesh_ptr + HAND_R];
+	lara.mesh_ptrs[HAND_L] = meshes[objects[LARA].mesh_ptr + HAND_L];
 
 	lara.calc_fallspeed = 0;
 	lara.climb_status = 0;

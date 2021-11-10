@@ -147,7 +147,7 @@ void S_DrawBat()
 				v[2].clip = clipflag;
 				v[2].g = BATCOLOR;
 
-				auto pSpriteInfo = phdsprinfo + objects[EXPLOSION1].mesh_index + 12;
+				auto pSpriteInfo = phdsprinfo + objects[EXPLOSION1].mesh_ptr + 12;
 
 				uint16_t u1 = (pSpriteInfo->offset << 8) & 0xff00,
 					   v1 = pSpriteInfo->offset & 0xff00,

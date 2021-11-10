@@ -728,7 +728,7 @@ void SubDraw(ITEM_INFO* v)
 
 		CalculateObjectLighting(v, frmptr[0]);
 
-		auto meshpp = &meshes[object->mesh_index];
+		auto meshpp = &meshes[object->mesh_ptr];
 		auto bone = object->bone_ptr;
 
 		if (!frac)
@@ -1070,7 +1070,7 @@ void TriggerSubMist(long x, long y, long z, long speed, int16_t angle)
 	}
 	else sptr->Flags = SP_SCALE | SP_DEF | SP_EXPDEF;
 
-	sptr->Def = objects[EXPLOSION1].mesh_index;
+	sptr->Def = uint8_t(objects[EXPLOSION1].mesh_ptr);
 	sptr->Scalar = 3;
 	sptr->Gravity = sptr->MaxYvel = 0;
 	sptr->Width = sptr->sWidth = size >> 2;

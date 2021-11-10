@@ -175,7 +175,7 @@ void LaraGun()
 	}
 	case LG_UNDRAW:
 	{
-		lara.mesh_ptrs[HEAD] = meshes[objects[LARA].mesh_index + HEAD];
+		lara.mesh_ptrs[HEAD] = meshes[objects[LARA].mesh_ptr + HEAD];
 
 		switch (lara.gun_type)
 		{
@@ -202,7 +202,7 @@ void LaraGun()
 		break;
 	case LG_READY:
 	{
-		lara.mesh_ptrs[HEAD] = (lara.pistols.ammo && (input & IN_ACTION) ? meshes[objects[UZI].mesh_index + HEAD] : meshes[objects[LARA].mesh_index + HEAD]);
+		lara.mesh_ptrs[HEAD] = (lara.pistols.ammo && (input & IN_ACTION) ? meshes[objects[UZI].mesh_ptr + HEAD] : meshes[objects[LARA].mesh_ptr + HEAD]);
 
 		if (camera.type != CINEMATIC_CAMERA && camera.type != LOOK_CAMERA)
 			camera.type = COMBAT_CAMERA;

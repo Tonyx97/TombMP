@@ -648,7 +648,7 @@ void DrawInventoryItem(INVENTORY_ITEM* inv_item)
 	}
 
 	if (object->nmeshes < 0)
-		return S_DrawSprite(SPRITE_REL, 0, 0, 0, object->mesh_index, 0, 0);
+		return S_DrawSprite(SPRITE_REL, 0, 0, 0, object->mesh_ptr, 0, 0);
 
 	if (auto isprite_list = inv_item->sprlist)
 	{
@@ -692,7 +692,7 @@ void DrawInventoryItem(INVENTORY_ITEM* inv_item)
 
 		gar_RotYXZsuperpack(&rotation, 0);
 
-		auto mesh = object->mesh_index;
+		auto mesh = object->mesh_ptr;
 		auto bone = object->bone_ptr;
 
 		int16_t mesh_num = 1;

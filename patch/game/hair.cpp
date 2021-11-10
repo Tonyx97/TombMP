@@ -332,7 +332,7 @@ void HairControl(ITEM_INFO* item, vec3d* data, int_vec3* hair_vel)
 void DrawHair(vec3d* data)
 {
 	auto object = &objects[HAIR];
-	auto mesh = &meshes[object->mesh_index];
+	auto mesh = &meshes[object->mesh_ptr];
 
 	for (int i = 0; i < HAIR_SEGMENTS; ++i)
 	{

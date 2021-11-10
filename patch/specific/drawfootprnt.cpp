@@ -18,7 +18,7 @@ void S_DrawFootPrints()
 
 	auto f = &FootPrint[0];
 
-	auto pSpriteInfo = phdsprinfo + objects[EXPLOSION1].mesh_index + 17;
+	auto pSpriteInfo = phdsprinfo + objects[EXPLOSION1].mesh_ptr + 17;
 
 	uint16_t u1 = (pSpriteInfo->offset << 8) & 0xff00,
 		     v1 = pSpriteInfo->offset & 0xff00,

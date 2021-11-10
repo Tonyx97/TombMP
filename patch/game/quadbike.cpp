@@ -1088,7 +1088,7 @@ void QuadBikeDraw(ITEM_INFO* item)
 		CalculateObjectLighting(item, frmptr[0]);
 
 		auto object = &objects[item->object_number];
-		auto meshpp = &meshes[object->mesh_index];
+		auto meshpp = &meshes[object->mesh_ptr];
 		auto bone = object->bone_ptr;
 		auto bike = (QUADINFO*)item->data;
 
@@ -1364,7 +1364,7 @@ void TriggerExhaustSmoke(long x, long y, long z, int16_t angle, long speed, long
 	}
 	else sptr->Flags = SP_SCALE | SP_DEF | SP_EXPDEF;
 
-	sptr->Def = objects[EXPLOSION1].mesh_index;
+	sptr->Def = uint8_t(objects[EXPLOSION1].mesh_ptr);
 	sptr->Scalar = 2;
 	sptr->Gravity = -(GetRandomControl() & 3) - 4;
 	sptr->MaxYvel = -(GetRandomControl() & 7) - 8;

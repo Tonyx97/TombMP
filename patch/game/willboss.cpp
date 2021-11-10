@@ -671,7 +671,7 @@ void TriggerWillbossPlasma(int16_t item_number, long node, long size)
 	sptr->MaxYvel = (GetRandomControl() & 7) + 16;
 	sptr->FxObj = item_number;
 	sptr->NodeNumber = node;
-	sptr->Def = objects[EXPLOSION1].mesh_index;
+	sptr->Def = uint8_t(objects[EXPLOSION1].mesh_ptr);
 	sptr->Scalar = 1;
 	sptr->Width = sptr->sWidth = size;
 	sptr->Height = sptr->sHeight = size;
@@ -719,7 +719,7 @@ void TriggerWillbossPlasmaBallFlame(int16_t fx_number, long type, long xv, long 
 	else sptr->Flags = SP_SCALE | SP_DEF | SP_EXPDEF | SP_FX;
 
 	sptr->FxObj = fx_number;
-	sptr->Def = objects[EXPLOSION1].mesh_index;
+	sptr->Def = uint8_t(objects[EXPLOSION1].mesh_ptr);
 	sptr->Gravity = sptr->MaxYvel = 0;
 
 	int size;

@@ -579,8 +579,8 @@ void DoUserInput(ITEM_INFO* v, ITEM_INFO* l, CARTINFO* cart)
 			{
 				auto tmp = lara.mesh_ptrs[HAND_R];
 
-				lara.mesh_ptrs[HAND_R] = meshes[objects[minecart_anim_obj].mesh_index + HAND_R];
-				meshes[objects[minecart_anim_obj].mesh_index + HAND_R] = tmp;
+				lara.mesh_ptrs[HAND_R] = meshes[objects[minecart_anim_obj].mesh_ptr + HAND_R];
+				meshes[objects[minecart_anim_obj].mesh_ptr + HAND_R] = tmp;
 
 				cart->Flags &= ~CF_MESH;
 			}
@@ -652,8 +652,8 @@ void DoUserInput(ITEM_INFO* v, ITEM_INFO* l, CARTINFO* cart)
 		{
 			auto tmp = lara.mesh_ptrs[HAND_R];
 
-			lara.mesh_ptrs[HAND_R] = meshes[objects[minecart_anim_obj].mesh_index + HAND_R];
-			meshes[objects[minecart_anim_obj].mesh_index + HAND_R] = tmp;
+			lara.mesh_ptrs[HAND_R] = meshes[objects[minecart_anim_obj].mesh_ptr + HAND_R];
+			meshes[objects[minecart_anim_obj].mesh_ptr + HAND_R] = tmp;
 
 			cart->Flags |= CF_MESH;
 		}

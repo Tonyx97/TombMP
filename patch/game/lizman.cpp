@@ -446,7 +446,7 @@ void TriggerLizmanGas(long x, long y, long z, long xv, long yv, long zv, long fx
 
 	sptr->FxObj = fxnum;
 	sptr->Gravity = sptr->MaxYvel = 0;
-	sptr->Def = objects[EXPLOSION1].mesh_index;
+	sptr->Def = uint8_t(objects[EXPLOSION1].mesh_ptr);
 
 	if (xv || yv || zv)
 	{

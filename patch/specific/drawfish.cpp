@@ -32,8 +32,8 @@ void S_DrawFish(ITEM_INFO *item)
 		    yoff = item->pos.y_pos,
 		    zoff = item->pos.z_pos;
 
-	auto pSpriteInfo = (item->object_number == PIRAHNAS ? phdsprinfo + objects[EXPLOSION1].mesh_index + 10
-														: phdsprinfo + objects[EXPLOSION1].mesh_index + 11);
+	auto pSpriteInfo = (item->object_number == PIRAHNAS ? phdsprinfo + objects[EXPLOSION1].mesh_ptr + 10
+														: phdsprinfo + objects[EXPLOSION1].mesh_ptr + 11);
 
 	auto fptr = &fish[MAX_FISH + (leader * 24)];
 

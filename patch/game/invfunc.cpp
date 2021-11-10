@@ -334,8 +334,8 @@ int	Inv_AddItem(int itemNum)
 			if (lara.last_gun_type == LG_UNARMED)
 			{
 				lara.last_gun_type = LG_PISTOLS;
-				lara.mesh_ptrs[THIGH_L] = meshes[objects[PISTOLS].mesh_index + THIGH_L];
-				lara.mesh_ptrs[THIGH_R] = meshes[objects[PISTOLS].mesh_index + THIGH_R];
+				lara.mesh_ptrs[THIGH_L] = meshes[objects[PISTOLS].mesh_ptr + THIGH_L];
+				lara.mesh_ptrs[THIGH_R] = meshes[objects[PISTOLS].mesh_ptr + THIGH_R];
 			}
 
 			return 1;

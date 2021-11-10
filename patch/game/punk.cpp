@@ -102,7 +102,7 @@ void TriggerPunkFlame(int16_t item_number, PHD_VECTOR* pos)
 
 	sptr->FxObj = item_number;
 	sptr->NodeNumber = SPN_PUNKFLAME;
-	sptr->Def = objects[EXPLOSION1].mesh_index;
+	sptr->Def = uint8_t(objects[EXPLOSION1].mesh_ptr);
 	sptr->Scalar = 1;
 	sptr->Width = sptr->sWidth = size;
 	sptr->Height = sptr->sHeight = size;

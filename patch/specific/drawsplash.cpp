@@ -57,8 +57,8 @@ void S_DrawSplashes()
 		for (int j = 0; j < 3; ++j)
 		{
 			int nSprite = (j == 2 || (j == 0 && (sptr->flags & SPL_RIPPLEINNER)) || (j == 1 && (sptr->flags & SPL_RIPPLEMIDDLE)))
-							? objects[EXPLOSION1].mesh_index + 4 + ((wibble >> 4) & 3)
-							: objects[EXPLOSION1].mesh_index + 8;
+							? objects[EXPLOSION1].mesh_ptr + 4 + ((wibble >> 4) & 3)
+							: objects[EXPLOSION1].mesh_ptr + 8;
 
 			auto pptr = &SplashLinks[0];
 
@@ -130,7 +130,7 @@ void S_DrawSplashes()
 			continue;
 
 		auto size = rptr->size << 2,
-			 nSprite = objects[EXPLOSION1].mesh_index + 9;
+			 nSprite = objects[EXPLOSION1].mesh_ptr + 9;
 
 		scrpoints = (long*)&mscrpoints;
 		mCalcPoint(rptr->x - size, rptr->y, rptr->z - size, result);
@@ -189,7 +189,7 @@ void S_DrawSplashes()
 		{
 			if (rptr->flags & SPL_BLOOD)
 			{
-				nSprite = objects[EXPLOSION1].mesh_index;
+				nSprite = objects[EXPLOSION1].mesh_ptr;
 				nShade = (rptr->init ? (rptr->init >> 1) << 10 : (rptr->life >> 1) << 10);
 			}
 			else nShade = (rptr->init ? (rptr->init >> 2) << 10 | (rptr->init >> 2) << 5 | rptr->init >> 2

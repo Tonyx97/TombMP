@@ -97,8 +97,8 @@ void DrawMonkey(ITEM_INFO* item)
 
 		auto extra_rotation = (int16_t*)item->data;
 
-		auto meshpp = &meshes[objects[MONKEY].mesh_index],
-			 swappp = &meshes[objects[item->ai_bits != MODIFY ? MESHSWAP2 : MESHSWAP3].mesh_index];
+		auto meshpp = &meshes[objects[MONKEY].mesh_ptr],
+			 swappp = &meshes[objects[item->ai_bits != MODIFY ? MESHSWAP2 : MESHSWAP3].mesh_ptr];
 
 		auto bone = object->bone_ptr;
 

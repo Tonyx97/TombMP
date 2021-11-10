@@ -372,12 +372,13 @@ bool LoadObjects(HANDLE file)
 		auto obj = &objects[j];
 
 		MyReadFile(file, &obj->nmeshes, sizeof(int16_t));
-		MyReadFile(file, &obj->mesh_index, sizeof(int16_t));
-		MyReadFile(file, &obj->bone_ptr, sizeof(int32_t));
+		MyReadFile(file, &obj->mesh_ptr, sizeof(int16_t));	// mesh_index
+		MyReadFile(file, &obj->bone_ptr, sizeof(int32_t));	// bone_index
 		MyReadFile(file, &size, sizeof(int32_t));
 		MyReadFile(file, &obj->anim_index, sizeof(int16_t));
 
 		obj->frame_base = (int16_t*)((uintptr_t)frames + (uintptr_t)size);
+		obj->mesh_ptr = (int16_t*)(&meshes[(uint32_t)obj->mesh_ptr]);
 		obj->bone_ptr = (int32_t*)(&bones[(uint32_t)obj->bone_ptr]);
 		obj->loaded = 1;														// flag object as loaded
 	}
@@ -430,6 +431,8 @@ bool LoadSprites(HANDLE file)
 
 		MyReadFile(file, &j, sizeof(int32_t));
 
+		auto obj = &objects[j];
+
 		// Wad file may contain information about static objects too (useful for editors,
 		// but game code doesn't want to know) which needs skipping across
 
@@ -437,10 +440,11 @@ bool LoadSprites(HANDLE file)
 		{
 			// 'nmeshes' is a negative value for sprites, and stores number of animated frames
 
-			MyReadFile(file, &objects[j].nmeshes, sizeof(int16_t));
-			MyReadFile(file, &objects[j].mesh_index, sizeof(int16_t));
+			MyReadFile(file, &obj->nmeshes, sizeof(int16_t));
+			MyReadFile(file, &obj->mesh_ptr, sizeof(int16_t));
 
-			objects[j].loaded = 1;
+			obj->mesh_ptr = (int16_t*)(phdsprinfo + (uintptr_t)obj->mesh_ptr);
+			obj->loaded = 1;
 		}
 		else
 		{
@@ -520,7 +524,7 @@ bool LoadItems(HANDLE file)
 		auto obj = &objects[obj_id];
 
 		obj->nmeshes = old_obj->nmeshes;
-		obj->mesh_index = old_obj->mesh_index;
+		obj->mesh_ptr = old_obj->mesh_ptr;
 		obj->bone_ptr = old_obj->bone_ptr;
 		obj->anim_index = 0;
 		obj->initialise = nullptr;

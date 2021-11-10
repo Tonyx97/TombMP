@@ -240,7 +240,7 @@ void TriggerWingMuteParticles(int16_t item_number)
 	sptr->FxObj = item_number;
 	sptr->NodeNumber = SPN_WINGMUTEPARTICLES;
 
-	sptr->Def = objects[EXPLOSION1].mesh_index;
+	sptr->Def = uint8_t(objects[EXPLOSION1].mesh_ptr);
 	sptr->Scalar = 3;
 	sptr->Width = sptr->sWidth = size;
 	sptr->Height = sptr->sHeight = size;

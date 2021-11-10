@@ -269,7 +269,7 @@ void TriggerRapidsMist(long x, long y, long z)
 	}
 	else sptr->Flags = SP_SCALE | SP_DEF | SP_EXPDEF;
 
-	sptr->Def = objects[EXPLOSION1].mesh_index;
+	sptr->Def = uint8_t(objects[EXPLOSION1].mesh_ptr);
 	sptr->Scalar = 4;
 	sptr->Gravity = 0;
 	sptr->MaxYvel = 0;
@@ -945,8 +945,8 @@ void KayakUserInput(ITEM_INFO* v, ITEM_INFO* l, KAYAKINFO* Kayak)
 		{
 			auto tmp = lara.mesh_ptrs[HAND_R];
 
-			lara.mesh_ptrs[HAND_R] = meshes[objects[kayak_anim_obj].mesh_index + HAND_R];
-			meshes[objects[kayak_anim_obj].mesh_index + HAND_R] = tmp;
+			lara.mesh_ptrs[HAND_R] = meshes[objects[kayak_anim_obj].mesh_ptr + HAND_R];
+			meshes[objects[kayak_anim_obj].mesh_ptr + HAND_R] = tmp;
 
 			l->mesh_bits &= ~LARA_LEG_BITS;
 
@@ -961,8 +961,8 @@ void KayakUserInput(ITEM_INFO* v, ITEM_INFO* l, KAYAKINFO* Kayak)
 		{
 			auto tmp = lara.mesh_ptrs[HAND_R];
 
-			lara.mesh_ptrs[HAND_R] = meshes[objects[kayak_anim_obj].mesh_index + HAND_R];
-			meshes[objects[kayak_anim_obj].mesh_index + HAND_R] = tmp;
+			lara.mesh_ptrs[HAND_R] = meshes[objects[kayak_anim_obj].mesh_ptr + HAND_R];
+			meshes[objects[kayak_anim_obj].mesh_ptr + HAND_R] = tmp;
 
 			l->mesh_bits |= LARA_LEG_BITS;
 

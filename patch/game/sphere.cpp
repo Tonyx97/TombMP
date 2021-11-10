@@ -98,7 +98,7 @@ int GetSpheres(ITEM_INFO* item, SPHERE* ptr, int WorldSpace)
 	gar_RotYXZsuperpack(&rotation, 0);
 
 	auto object = &objects[item->object_number];
-	auto meshpp = &meshes[object->mesh_index];
+	auto meshpp = &meshes[object->mesh_ptr];
 	auto bone = object->bone_ptr;
 	auto objptr = *(meshpp++);
 

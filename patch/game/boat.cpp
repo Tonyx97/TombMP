@@ -1072,7 +1072,7 @@ void TriggerBoatMist(long x, long y, long z, long speed, int16_t angle, long sno
 	}
 	else sptr->Flags = SP_SCALE | SP_DEF | SP_EXPDEF;
 
-	sptr->Def = objects[EXPLOSION1].mesh_index;
+	sptr->Def = uint8_t(objects[EXPLOSION1].mesh_ptr);
 
 	int size = 0;
 

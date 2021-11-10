@@ -165,7 +165,7 @@ void S_DrawPickup(int16_t x, int16_t y, int16_t object_num)
 		phd_mxptr[M13] = 240 << W2V_SHIFT;
 		phd_mxptr[M23] = 1024 << W2V_SHIFT;
 		phd_RotY(yrot);
-		phd_PutPolygons(meshes[objects[object_num].mesh_index], 1);
+		phd_PutPolygons(objects[object_num].mesh_ptr, 1);
 	}
 	phd_PopMatrix();
 
