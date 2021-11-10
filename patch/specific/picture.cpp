@@ -68,8 +68,6 @@ void ConvertSurfaceToTextures16Bit(LPDIRECTDRAWSURFACE3 lpSurface)
 
 		int BitMask = (rbpp * 100) + (gbpp * 10) + bbpp;
 
-		DXTextureInit(PicTextureList);
-
 		memcpy(pTPage, ddsd.lpSurface, 1920 * 1080 * sizeof(short));
 
 		lpSurface->Unlock(nullptr);
@@ -150,7 +148,7 @@ void DrawTileEx(int nDX, int nDY, int nDW, int nDH, int hTPage, int nSX, int nSY
 /**
 * Draw picture from picture texture files
 */
-void DrawPicture()
+void DrawPicture(int pic)
 {
 	// todo: sort pictures for 8 bit
 
@@ -158,12 +156,12 @@ void DrawPicture()
 
 	auto [wnd_sx, wnd_sy] = g_window->get_resolution();
 
-	DrawTileEx(0, 0, wnd_sx, wnd_sy, DXTextureGetHandle(0, PicTextureList), 0, 0, wnd_sx, wnd_sy, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff);
+	DrawTileEx(0, 0, wnd_sx, wnd_sy, DXTextureGetHandle(pic, PicTextureList), 0, 0, wnd_sx, wnd_sy, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff);
 
 	HWR_EnableZBuffer(true, true);
 }
 
-void FadePictureUp()
+void FadePictureUp(int pic)
 {
 	D3DTLVERTEX v[4];
 
@@ -200,7 +198,7 @@ void FadePictureUp()
 
 	HWR_BeginScene();
 	{
-		DrawPicture();
+		DrawPicture(pic);
 
 		HWR_SetCurrentTexture(0);
 
@@ -241,15 +239,14 @@ void FadePictureUp()
 	}
 #endif
 
-	DrawPicture();
+	DrawPicture(pic);
 
 	App.lpFrontBuffer->Flip(nullptr, DDFLIP_WAIT);
 }
 
-void FadePictureDown()
+void FadePictureDown(int pic)
 {
 #if defined(_DEBUG) || defined(LEVEL_EDITOR)
-	FreePictureTextures();
 	return;
 #endif
 
@@ -291,7 +288,7 @@ void FadePictureDown()
 
 		HWR_BeginScene();
 		{
-			DrawPicture();
+			DrawPicture(pic);
 
 			HWR_SetCurrentTexture(0);
 
@@ -321,6 +318,4 @@ void FadePictureDown()
 	HWR_EndScene();
 
 	App.lpFrontBuffer->Flip(nullptr, DDFLIP_WAIT);
-
-	FreePictureTextures();
 }

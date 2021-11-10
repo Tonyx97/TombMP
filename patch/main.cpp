@@ -155,6 +155,7 @@ int __stdcall WinMain(HINSTANCE instance, HINSTANCE prev_instance, char* _cmd_li
 	InitDrawPrimitive(App.lpD3DDevice);
 
 	DXTextureInit(DXTextureList);
+	DXTextureInit(PicTextureList);
 
 	time_init();
 	hwr_init();
@@ -217,6 +218,18 @@ bool game_main()
 
 	if (!GF_LoadScriptFile("data\\gf.dat"))
 		S_ExitSystem();
+
+	auto pic0 = "data\\pics\\load0.bmp";
+	auto pic1 = "data\\pics\\load1.bmp";
+
+	if (!std::filesystem::is_regular_file(pic0))
+		prof::critical_error("Invalid loading picture!");
+
+	if (!std::filesystem::is_regular_file(pic1))
+		prof::critical_error("Invalid loading picture!");
+
+	LoadPicture(pic0, App.lpPictureBuffer, 1);
+	LoadPicture(pic1, App.lpPictureBuffer, 1);
 
 	int option = OPENING_GAME;
 

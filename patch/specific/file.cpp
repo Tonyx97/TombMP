@@ -764,13 +764,9 @@ bool load_level()
 
 	unload_level();
 
-	auto loading_pic_path = "data\\pics\\load" + std::to_string(utils::rand::rand_int(0, 1)) + ".bmp";
+	auto random_load_pic = rand() % 2;
 
-	if (!std::filesystem::is_regular_file(loading_pic_path))
-		prof::critical_error("Invalid loading picture!");
-
-	LoadPicture(loading_pic_path.c_str(), App.lpPictureBuffer, 1);
-	FadePictureUp();
+	FadePictureUp(random_load_pic);
 
 	auto dispatch_input_and_net = [&]()
 	{
@@ -800,7 +796,7 @@ bool load_level()
 	if (!load_level_file(level_filename.c_str()))
 		return false;
 
-	FadePictureDown();
+	FadePictureDown(random_load_pic);
 
 #ifdef _DEBUG
 	g_debugger->enable();
