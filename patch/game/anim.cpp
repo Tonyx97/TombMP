@@ -33,7 +33,7 @@ struct TMP_CHANGE_STRUCT
 	int16_t range_ptr;
 };
 
-std::unordered_set<int16_t> g_free_custom_anims,
+std::unordered_set<int16_t> g_free_custom_anims,	// we have to make a stack or something, it's not guaranteed that ids are loaded in the same slot for every instance of the game...
 							g_used_custom_anims;
 
 void init_custom_animations_pools(int normal_anims_count)

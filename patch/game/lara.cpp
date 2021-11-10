@@ -4758,7 +4758,7 @@ void get_lara_bone_pos(ITEM_INFO* item, PHD_VECTOR* vec, int bone_id)
 	phd_RotYXZ(item->pos.y_rot, item->pos.x_rot, item->pos.z_rot);
 	phd_PushMatrix();
 
-	auto bone = bones + object->bone_index;
+	auto bone = object->bone_ptr;
 	auto rotation = frame + 9;
 
 	phd_TranslateRel((int32_t)*(frame + 6), (int32_t)*(frame + 7), (int32_t)*(frame + 8));
@@ -5018,7 +5018,7 @@ void get_lara_bone_pos_int(ITEM_INFO* item, PHD_VECTOR* vec, int16_t* frame1, in
 	phd_PushMatrix();
 	phd_PushMatrix();
 
-	auto bone = bones + object->bone_index;
+	auto bone = object->bone_ptr;
 
 	auto rotation1 = frame1 + 9,
 		 rotation2 = frame2 + 9;

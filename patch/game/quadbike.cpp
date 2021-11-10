@@ -1089,7 +1089,7 @@ void QuadBikeDraw(ITEM_INFO* item)
 
 		auto object = &objects[item->object_number];
 		auto meshpp = &meshes[object->mesh_index];
-		auto bone = bones + object->bone_index;
+		auto bone = object->bone_ptr;
 		auto bike = (QUADINFO*)item->data;
 
 		phd_TranslateRel((int32_t) * (frmptr[0] + 6), (int32_t) * (frmptr[0] + 7), (int32_t) * (frmptr[0] + 8));

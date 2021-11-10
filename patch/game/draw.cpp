@@ -935,7 +935,7 @@ void DrawAnimatingItem(ITEM_INFO* item)
 
 		auto extra_rotation = (item->data ? (int16_t*)item->data : null_rotations);
 		auto meshpp = &meshes[object->mesh_index];
-		auto bone = bones + object->bone_index;
+		auto bone = object->bone_ptr;
 
 		uint32_t bit = 1;
 
@@ -1175,7 +1175,7 @@ void draw_lara(ITEM_INFO* item, vec3d* hair_data, short weapon_current_anim_stat
 
 	CalculateObjectLightingLara();
 
-	auto bone = bones + object->bone_index;
+	auto bone = object->bone_ptr;
 	auto rotation = frame + 9;
 
 	phd_TranslateRel((int32_t)*(frame + 6), (int32_t)*(frame + 7), (int32_t)*(frame + 8));
@@ -1251,7 +1251,7 @@ void draw_lara(ITEM_INFO* item, vec3d* hair_data, short weapon_current_anim_stat
 	{
 		phd_PushMatrix();
 		{
-			auto bonew = bones + objects[lara.back_gun].bone_index;
+			auto bonew = objects[lara.back_gun].bone_ptr;
 
 			phd_TranslateRel(*(bonew + 1 + 52), *(bonew + 2 + 52), *(bonew + 3 + 52));
 
@@ -1570,7 +1570,7 @@ void draw_lara_interpolation(ITEM_INFO* item, vec3d* hair_data, int16_t* frame1,
 
 	CalculateObjectLightingLara();
 
-	auto bone = bones + object->bone_index;
+	auto bone = object->bone_ptr;
 	auto rotation1 = frame1 + 9;
 	auto rotation2 = frame2 + 9;
 
@@ -1652,7 +1652,7 @@ void draw_lara_interpolation(ITEM_INFO* item, vec3d* hair_data, int16_t* frame1,
 	{
 		phd_PushMatrix_I();
 
-		auto bonew = bones + objects[lara.back_gun].bone_index;
+		auto bonew = objects[lara.back_gun].bone_ptr;
 
 		phd_TranslateRel_I(*(bonew + 1 + 52), *(bonew + 2 + 52), *(bonew + 3 + 52));
 

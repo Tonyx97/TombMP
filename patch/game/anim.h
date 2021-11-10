@@ -81,7 +81,7 @@ struct OBJECT_INFO
 {
 	int16_t nmeshes;
 	int16_t mesh_index;
-	int32_t bone_index;
+	int32_t* bone_ptr;
 	int16_t* frame_base;
 	void (*initialise)(int16_t item_number);
 	void (*control)(int16_t item_number);

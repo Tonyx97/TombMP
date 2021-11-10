@@ -99,7 +99,7 @@ int GetSpheres(ITEM_INFO* item, SPHERE* ptr, int WorldSpace)
 
 	auto object = &objects[item->object_number];
 	auto meshpp = &meshes[object->mesh_index];
-	auto bone = bones + object->bone_index;
+	auto bone = object->bone_ptr;
 	auto objptr = *(meshpp++);
 
 	phd_PushMatrix();
@@ -177,7 +177,7 @@ void GetJointAbsPosition(ITEM_INFO* item, PHD_VECTOR* vec, int joint)
 	phd_RotYXZ(item->pos.y_rot, item->pos.x_rot, item->pos.z_rot);
 
 	auto extra_rotation = (item->data ? (int16_t*)item->data : null_rotations);
-	auto bone = bones + object->bone_index;
+	auto bone = object->bone_ptr;
 
 	if (!frac)
 	{

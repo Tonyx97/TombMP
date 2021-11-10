@@ -273,8 +273,8 @@ void BaddyObjects()
 		obj->intelligent = 1;
 		obj->non_lot = 1;
 
-		bones[obj->bone_index + 0 * 4] |= ROT_Y;
-		bones[obj->bone_index + 6 * 4] |= ROT_Y;
+		*(obj->bone_ptr + 0 * 4) |= ROT_Y;
+		*(obj->bone_ptr + 6 * 4) |= ROT_Y;
 	}
 
 	if ((obj = &objects[MONKEY])->loaded)
@@ -292,9 +292,9 @@ void BaddyObjects()
 		obj->intelligent = 1;
 		obj->pivot_length = 0;
 
-		bones[obj->bone_index + 0 * 4] |= ROT_Z;
-		bones[obj->bone_index + 7 * 4] |= ROT_X;
-		bones[obj->bone_index + 7 * 4] |= ROT_Y;
+		*(obj->bone_ptr + 0 * 4) |= ROT_Z;
+		*(obj->bone_ptr + 7 * 4) |= ROT_X;
+		*(obj->bone_ptr + 7 * 4) |= ROT_Y;
 	}
 
 	if ((obj = &objects[ROBOT_SENTRY_GUN])->loaded)
@@ -309,8 +309,8 @@ void BaddyObjects()
 		obj->non_lot = 1;
 		obj->bite_offset = AUTOGUN_LEFT_BITE;
 
-		bones[obj->bone_index + 0 * 4] |= ROT_Y;
-		bones[obj->bone_index + 1 * 4] |= ROT_X;
+		*(obj->bone_ptr + 0 * 4) |= ROT_Y;
+		*(obj->bone_ptr + 1 * 4) |= ROT_X;
 	}
 
 	if ((obj = &objects[DIVER])->loaded)
@@ -347,10 +347,10 @@ void BaddyObjects()
 		obj->radius = DINO_RADIUS;
 		obj->intelligent = 1;
 
-		bones[obj->bone_index + 9 * 4] |= ROT_Y;
-		bones[obj->bone_index + 11 * 4] |= ROT_Y;
-		bones[obj->bone_index + 20 * 4] |= ROT_Y;
-		bones[obj->bone_index + 22 * 4] |= ROT_Y;
+		*(obj->bone_ptr + 9 * 4) |= ROT_Y;
+		*(obj->bone_ptr + 11 * 4) |= ROT_Y;
+		*(obj->bone_ptr + 20 * 4) |= ROT_Y;
+		*(obj->bone_ptr + 22 * 4) |= ROT_Y;
 	}
 
 	if ((obj = &objects[RAPTOR])->loaded)
@@ -363,10 +363,10 @@ void BaddyObjects()
 		obj->radius = RAPTOR_RADIUS;
 		obj->intelligent = 1;
 
-		bones[obj->bone_index + 20 * 4] |= ROT_Y;
-		bones[obj->bone_index + 21 * 4] |= ROT_Y;
-		bones[obj->bone_index + 23 * 4] |= ROT_Y;
-		bones[obj->bone_index + 25 * 4] |= ROT_Y;
+		*(obj->bone_ptr + 20 * 4) |= ROT_Y;
+		*(obj->bone_ptr + 21 * 4) |= ROT_Y;
+		*(obj->bone_ptr + 23 * 4) |= ROT_Y;
+		*(obj->bone_ptr + 25 * 4) |= ROT_Y;
 	}
 
 	if ((obj = &objects[DOG])->loaded)
@@ -380,8 +380,8 @@ void BaddyObjects()
 		obj->radius = DOG_RADIUS;
 		obj->intelligent = 1;
 
-		bones[obj->bone_index + 2 * 4] |= ROT_Y;
-		bones[obj->bone_index + 2 * 4] |= ROT_X;
+		*(obj->bone_ptr + 2 * 4) |= ROT_Y;
+		*(obj->bone_ptr + 2 * 4) |= ROT_X;
 	}
 
 	if ((obj = &objects[HUSKIE])->loaded)
@@ -395,8 +395,8 @@ void BaddyObjects()
 		obj->radius = DOG_RADIUS;
 		obj->intelligent = 1;
 
-		bones[obj->bone_index + 2 * 4] |= ROT_Y;
-		bones[obj->bone_index + 2 * 4] |= ROT_X;
+		*(obj->bone_ptr + 2 * 4) |= ROT_Y;
+		*(obj->bone_ptr + 2 * 4) |= ROT_X;
 	}
 
 	if ((obj = &objects[SMALL_RAT])->loaded)
@@ -409,7 +409,7 @@ void BaddyObjects()
 		obj->radius = MOUSE_RADIUS;
 		obj->intelligent = 1;
 
-		bones[obj->bone_index + 3 * 4] |= ROT_Y;
+		*(obj->bone_ptr + 3 * 4) |= ROT_Y;
 	}
 
 	if ((obj = &objects[COMPY])->loaded)
@@ -424,8 +424,8 @@ void BaddyObjects()
 		obj->intelligent = 1;
 		obj->non_lot = 1;
 
-		bones[obj->bone_index + 1 * 4] |= ROT_Y;
-		bones[obj->bone_index + 2 * 4] |= ROT_Y;
+		*(obj->bone_ptr + 1 * 4) |= ROT_Y;
+		*(obj->bone_ptr + 2 * 4) |= ROT_Y;
 	}
 
 	if ((obj = &objects[TRIBEBOSS])->loaded)
@@ -440,8 +440,8 @@ void BaddyObjects()
 		obj->radius = TRIBEBOSS_RADIUS;
 		obj->intelligent = 1;
 
-		bones[obj->bone_index + 4 * 4] |= ROT_Y;
-		bones[obj->bone_index + 7 * 4] |= ROT_Y | ROT_X;
+		*(obj->bone_ptr + 4 * 4) |= ROT_Y;
+		*(obj->bone_ptr + 7 * 4) |= ROT_Y | ROT_X;
 	}
 
 	if ((obj = &objects[TONY])->loaded)
@@ -456,9 +456,9 @@ void BaddyObjects()
 		obj->radius = TONYBOSS_RADIUS;
 		obj->intelligent = 1;
 
-		bones[obj->bone_index + 6 * 4] |= ROT_Y;
-		bones[obj->bone_index + 6 * 4] |= ROT_X;
-		bones[obj->bone_index + 13 * 4] |= ROT_Y;
+		*(obj->bone_ptr + 6 * 4) |= ROT_Y;
+		*(obj->bone_ptr + 6 * 4) |= ROT_X;
+		*(obj->bone_ptr + 13 * 4) |= ROT_Y;
 	}
 
 	if ((obj = &objects[LON_BOSS])->loaded)
@@ -473,9 +473,9 @@ void BaddyObjects()
 		obj->radius = LONDONBOSS_RADIUS;
 		obj->intelligent = 1;
 
-		bones[obj->bone_index + 6 * 4] |= ROT_Y;
-		bones[obj->bone_index + 6 * 4] |= ROT_X;
-		bones[obj->bone_index + 13 * 4] |= ROT_Y;
+		*(obj->bone_ptr + 6 * 4) |= ROT_Y;
+		*(obj->bone_ptr + 6 * 4) |= ROT_X;
+		*(obj->bone_ptr + 13 * 4) |= ROT_Y;
 	}
 
 	if ((obj = &objects[WILLARD_BOSS])->loaded)
@@ -501,7 +501,7 @@ void BaddyObjects()
 		obj->radius = TIGER_RADIUS;
 		obj->intelligent = 1;
 
-		bones[obj->bone_index + 21 * 4] |= ROT_Y;
+		*(obj->bone_ptr + 21 * 4) |= ROT_Y;
 	}
 
 	if ((obj = &objects[SHIVA])->loaded)
@@ -519,10 +519,10 @@ void BaddyObjects()
 		obj->intelligent = 1;
 		obj->pivot_length = 0;
 
-		bones[obj->bone_index + 6 * 4] |= ROT_Y;
-		bones[obj->bone_index + 6 * 4] |= ROT_X;
-		bones[obj->bone_index + 25 * 4] |= ROT_Y;
-		bones[obj->bone_index + 25 * 4] |= ROT_X;
+		*(obj->bone_ptr + 6 * 4) |= ROT_Y;
+		*(obj->bone_ptr + 6 * 4) |= ROT_X;
+		*(obj->bone_ptr + 25 * 4) |= ROT_Y;
+		*(obj->bone_ptr + 25 * 4) |= ROT_X;
 	}
 
 	if ((obj = &objects[WHITE_SOLDIER])->loaded)
@@ -537,9 +537,9 @@ void BaddyObjects()
 		obj->pivot_length = 0;
 		obj->bite_offset = WHITE_SOLDIER_BITE;
 
-		bones[obj->bone_index + 0 * 4] |= ROT_Y;
-		bones[obj->bone_index + 0 * 4] |= ROT_X;
-		bones[obj->bone_index + 7 * 4] |= ROT_Y;
+		*(obj->bone_ptr + 0 * 4) |= ROT_Y;
+		*(obj->bone_ptr + 0 * 4) |= ROT_X;
+		*(obj->bone_ptr + 7 * 4) |= ROT_Y;
 	}
 
 	if ((obj = &objects[MUTANT2])->loaded)
@@ -552,9 +552,9 @@ void BaddyObjects()
 		obj->intelligent = 1;
 		obj->pivot_length = 0;
 
-		bones[obj->bone_index + 0 * 4] |= ROT_Z;
-		bones[obj->bone_index + 0 * 4] |= ROT_X;
-		bones[obj->bone_index + 7 * 4] |= ROT_Y;
+		*(obj->bone_ptr + 0 * 4) |= ROT_Z;
+		*(obj->bone_ptr + 0 * 4) |= ROT_X;
+		*(obj->bone_ptr + 7 * 4) |= ROT_Y;
 	}
 
 	if ((obj = &objects[MUTANT3])->loaded)
@@ -567,9 +567,9 @@ void BaddyObjects()
 		obj->intelligent = 1;
 		obj->pivot_length = 0;
 
-		bones[obj->bone_index + 0 * 4] |= ROT_Z;
-		bones[obj->bone_index + 0 * 4] |= ROT_X;
-		bones[obj->bone_index + 7 * 4] |= ROT_Y;
+		*(obj->bone_ptr + 0 * 4) |= ROT_Z;
+		*(obj->bone_ptr + 0 * 4) |= ROT_X;
+		*(obj->bone_ptr + 7 * 4) |= ROT_Y;
 	}
 
 	if ((obj = &objects[BURNT_MUTANT])->loaded)
@@ -582,9 +582,9 @@ void BaddyObjects()
 		obj->intelligent = 1;
 		obj->pivot_length = 0;
 
-		bones[obj->bone_index + 8 * 4] |= ROT_Z;
-		bones[obj->bone_index + 8 * 4] |= ROT_X;
-		bones[obj->bone_index + 9 * 4] |= ROT_Y;
+		*(obj->bone_ptr + 8 * 4) |= ROT_Z;
+		*(obj->bone_ptr + 8 * 4) |= ROT_X;
+		*(obj->bone_ptr + 9 * 4) |= ROT_Y;
 	}
 
 	if ((obj = &objects[SWAT_GUN])->loaded)
@@ -599,9 +599,9 @@ void BaddyObjects()
 		obj->pivot_length = 0;
 		obj->bite_offset = SWAT_GUN_BITE;
 
-		bones[obj->bone_index + 0 * 4] |= ROT_Y;
-		bones[obj->bone_index + 0 * 4] |= ROT_X;
-		bones[obj->bone_index + 7 * 4] |= ROT_Y;
+		*(obj->bone_ptr + 0 * 4) |= ROT_Y;
+		*(obj->bone_ptr + 0 * 4) |= ROT_X;
+		*(obj->bone_ptr + 7 * 4) |= ROT_Y;
 	}
 
 	if ((obj = &objects[STHPAC_MERCENARY])->loaded)
@@ -616,9 +616,9 @@ void BaddyObjects()
 		obj->pivot_length = 0;
 		obj->bite_offset = ARMYSMG_GUN_BITE;
 
-		bones[obj->bone_index + 0 * 4] |= ROT_Y;
-		bones[obj->bone_index + 0 * 4] |= ROT_X;
-		bones[obj->bone_index + 7 * 4] |= ROT_Y;
+		*(obj->bone_ptr + 0 * 4) |= ROT_Y;
+		*(obj->bone_ptr + 0 * 4) |= ROT_X;
+		*(obj->bone_ptr + 7 * 4) |= ROT_Y;
 	}
 
 	if ((obj = &objects[LIZARD_MAN])->loaded)
@@ -631,8 +631,8 @@ void BaddyObjects()
 		obj->intelligent = 1;
 		obj->pivot_length = 0;
 
-		bones[obj->bone_index + 1 * 4] |= ROT_Z;
-		bones[obj->bone_index + 9 * 4] |= ROT_Z;
+		*(obj->bone_ptr + 1 * 4) |= ROT_Z;
+		*(obj->bone_ptr + 9 * 4) |= ROT_Z;
 	}
 
 	if ((obj = &objects[MP1])->loaded)
@@ -646,9 +646,9 @@ void BaddyObjects()
 		obj->intelligent = 1;
 		obj->pivot_length = 0;
 
-		bones[obj->bone_index + 6 * 4] |= ROT_Y;
-		bones[obj->bone_index + 6 * 4] |= ROT_X;
-		bones[obj->bone_index + 13 * 4] |= ROT_Y;
+		*(obj->bone_ptr + 6 * 4) |= ROT_X;
+		*(obj->bone_ptr + 6 * 4) |= ROT_Y;
+		*(obj->bone_ptr + 13 * 4) |= ROT_X;
 	}
 
 	if ((obj = &objects[CIVVIE])->loaded)
@@ -662,9 +662,9 @@ void BaddyObjects()
 		obj->intelligent = 1;
 		obj->pivot_length = 0;
 
-		bones[obj->bone_index + 6 * 4] |= ROT_Y;
-		bones[obj->bone_index + 6 * 4] |= ROT_X;
-		bones[obj->bone_index + 13 * 4] |= ROT_Y;
+		*(obj->bone_ptr + 6 * 4) |= ROT_Y;
+		*(obj->bone_ptr + 6 * 4) |= ROT_X;
+		*(obj->bone_ptr + 13 * 4) |= ROT_Y;
 	}
 
 	if ((obj = &objects[BOB])->loaded)
@@ -678,9 +678,9 @@ void BaddyObjects()
 		obj->intelligent = 1;
 		obj->pivot_length = 0;
 
-		bones[obj->bone_index + 6 * 4] |= ROT_Y;
-		bones[obj->bone_index + 6 * 4] |= ROT_X;
-		bones[obj->bone_index + 13 * 4] |= ROT_Y;
+		*(obj->bone_ptr + 6 * 4) |= ROT_Y;
+		*(obj->bone_ptr + 6 * 4) |= ROT_X;
+		*(obj->bone_ptr + 13 * 4) |= ROT_Y;
 	}
 
 	if ((obj = &objects[FLAMETHROWER_BLOKE])->loaded)
@@ -693,9 +693,9 @@ void BaddyObjects()
 		obj->intelligent = 1;
 		obj->pivot_length = 0;
 
-		bones[obj->bone_index + 0 * 4] |= ROT_Y;
-		bones[obj->bone_index + 0 * 4] |= ROT_X;
-		bones[obj->bone_index + 7 * 4] |= ROT_Y;
+		*(obj->bone_ptr + 0 * 4) |= ROT_Y;
+		*(obj->bone_ptr + 0 * 4) |= ROT_X;
+		*(obj->bone_ptr + 7 * 4) |= ROT_Y;
 	}
 
 	if ((obj = &objects[TRIBEAXE])->loaded)
@@ -708,8 +708,8 @@ void BaddyObjects()
 		obj->intelligent = 1;
 		obj->pivot_length = 0;
 
-		bones[obj->bone_index + 13 * 4] |= ROT_Y;
-		bones[obj->bone_index + 6 * 4] |= ROT_Y;
+		*(obj->bone_ptr + 13 * 4) |= ROT_Y;
+		*(obj->bone_ptr + 6 * 4) |= ROT_Y;
 	}
 
 	if ((obj = &objects[BLOWPIPE])->loaded)
@@ -721,10 +721,10 @@ void BaddyObjects()
 		obj->radius = BLOWPIPE_RADIUS;
 		obj->intelligent = 1;
 
-		bones[obj->bone_index + 6 * 4] |= ROT_Y;
-		bones[obj->bone_index + 6 * 4] |= ROT_X;
-		bones[obj->bone_index + 13 * 4] |= ROT_Y;
-		bones[obj->bone_index + 13 * 4] |= ROT_X;
+		*(obj->bone_ptr + 6 * 4) |= ROT_Y;
+		*(obj->bone_ptr + 6 * 4) |= ROT_X;
+		*(obj->bone_ptr + 13 * 4) |= ROT_Y;
+		*(obj->bone_ptr + 13 * 4) |= ROT_X;
 	}
 
 	if ((obj = &objects[MUTANT1])->loaded)
@@ -774,9 +774,9 @@ void BaddyObjects()
 		obj->pivot_length = 0;
 		obj->bite_offset = OILRED_BITE;
 
-		bones[obj->bone_index + 6 * 4] |= ROT_Y;
-		bones[obj->bone_index + 6 * 4] |= ROT_X;
-		bones[obj->bone_index + 13 * 4] |= ROT_Y;
+		*(obj->bone_ptr + 6 * 4) |= ROT_Y;
+		*(obj->bone_ptr + 6 * 4) |= ROT_X;
+		*(obj->bone_ptr + 13 * 4) |= ROT_Y;
 	}
 
 	if ((obj = &objects[SECURITY_GUARD])->loaded)
@@ -790,9 +790,9 @@ void BaddyObjects()
 		obj->pivot_length = 0;
 		obj->bite_offset = OILRED_BITE;	
 
-		bones[obj->bone_index + 6 * 4] |= ROT_Y;
-		bones[obj->bone_index + 6 * 4] |= ROT_X;
-		bones[obj->bone_index + 13 * 4] |= ROT_Y;
+		*(obj->bone_ptr + 6 * 4) |= ROT_Y;
+		*(obj->bone_ptr + 6 * 4) |= ROT_X;
+		*(obj->bone_ptr + 13 * 4) |= ROT_Y;
 	}
 
 	if ((obj = &objects[ELECTRIC_CLEANER])->loaded)
@@ -818,9 +818,9 @@ void BaddyObjects()
 		obj->pivot_length = 0;
 		obj->bite_offset = OILRED_BITE;
 
-		bones[obj->bone_index + 6 * 4] |= ROT_Y;
-		bones[obj->bone_index + 6 * 4] |= ROT_X;
-		bones[obj->bone_index + 13 * 4] |= ROT_Y;
+		*(obj->bone_ptr + 6 * 4) |= ROT_Y;
+		*(obj->bone_ptr + 6 * 4) |= ROT_X;
+		*(obj->bone_ptr + 13 * 4) |= ROT_Y;
 	}
 
 	if ((obj = &objects[LON_MERCENARY1])->loaded)
@@ -835,9 +835,9 @@ void BaddyObjects()
 		obj->pivot_length = 0;
 		obj->bite_offset = SWAT_GUN_BITE;
 
-		bones[obj->bone_index + 0 * 4] |= ROT_Y;
-		bones[obj->bone_index + 0 * 4] |= ROT_X;
-		bones[obj->bone_index + 7 * 4] |= ROT_Y;
+		*(obj->bone_ptr + 0 * 4) |= ROT_Y;
+		*(obj->bone_ptr + 0 * 4) |= ROT_X;
+		*(obj->bone_ptr + 7 * 4) |= ROT_Y;
 	}
 
 	if ((obj = &objects[PUNK1])->loaded)
@@ -851,9 +851,9 @@ void BaddyObjects()
 		obj->intelligent = 1;
 		obj->pivot_length = 0;
 
-		bones[obj->bone_index + 6 * 4] |= ROT_Y;
-		bones[obj->bone_index + 6 * 4] |= ROT_X;
-		bones[obj->bone_index + 13 * 4] |= ROT_Y;
+		*(obj->bone_ptr + 6 * 4) |= ROT_Y;
+		*(obj->bone_ptr + 6 * 4) |= ROT_X;
+		*(obj->bone_ptr + 13 * 4) |= ROT_Y;
 	}
 
 	if ((obj = &objects[CROCODILE])->loaded)
@@ -867,7 +867,7 @@ void BaddyObjects()
 		obj->water_creature = 1;
 		obj->pivot_length = 200;
 
-		bones[obj->bone_index + 7 * 4] |= ROT_Y;
+		*(obj->bone_ptr + 7 * 4) |= ROT_Y;
 	}
 
 	if ((obj = &objects[WINSTON])->loaded)
@@ -1215,7 +1215,8 @@ void ObjectObjects()
 	obj->collision = BoatCollision;
 	obj->draw_routine = DrawBoat;
 
-	bones[obj->bone_index + (1 * 4)] |= ROT_Z;
+	if (obj->bone_ptr)
+		*(obj->bone_ptr + (1 * 4)) |= ROT_Z;
 
 	obj = &objects[QUADBIKE];
 	obj->initialise = InitialiseQuadBike;

@@ -100,7 +100,7 @@ void DrawMonkey(ITEM_INFO* item)
 		auto meshpp = &meshes[objects[MONKEY].mesh_index],
 			 swappp = &meshes[objects[item->ai_bits != MODIFY ? MESHSWAP2 : MESHSWAP3].mesh_index];
 
-		auto bone = bones + object->bone_index;
+		auto bone = object->bone_ptr;
 
 		uint32_t bit = 1;
 

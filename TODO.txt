@@ -7,6 +7,7 @@
 	· Fix boat sound.
 	· Fix compys.
 	· Fix the quadbike sound sync.
+	· anim.cpp:36.
 	
 - Ideas.
 	· Gamemode where you spawn several rats in arena and players need to survive xd.

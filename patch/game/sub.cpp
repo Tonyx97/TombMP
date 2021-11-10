@@ -729,7 +729,7 @@ void SubDraw(ITEM_INFO* v)
 		CalculateObjectLighting(v, frmptr[0]);
 
 		auto meshpp = &meshes[object->mesh_index];
-		auto bone = bones + object->bone_index;
+		auto bone = object->bone_ptr;
 
 		if (!frac)
 		{

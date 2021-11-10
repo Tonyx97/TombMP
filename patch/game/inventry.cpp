@@ -693,7 +693,7 @@ void DrawInventoryItem(INVENTORY_ITEM* inv_item)
 		gar_RotYXZsuperpack(&rotation, 0);
 
 		auto mesh = object->mesh_index;
-		auto bone = bones + object->bone_index;
+		auto bone = object->bone_ptr;
 
 		int16_t mesh_num = 1;
 

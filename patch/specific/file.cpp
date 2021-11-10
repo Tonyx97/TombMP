@@ -368,14 +368,18 @@ bool LoadObjects(HANDLE file)
 		int j, size;
 
 		MyReadFile(file, &j, sizeof(int32_t));						// read normal object number
-		MyReadFile(file, &objects[j].nmeshes, sizeof(int16_t));		// NumMeshes
-		MyReadFile(file, &objects[j].mesh_index, sizeof(int16_t));
-		MyReadFile(file, &objects[j].bone_index, sizeof(int32_t));
-		MyReadFile(file, &size, sizeof(int32_t));
-		MyReadFile(file, &objects[j].anim_index, sizeof(int16_t));
 
-		objects[j].frame_base = (int16_t*)((uintptr_t)frames + (uintptr_t)size);
-		objects[j].loaded = 1;														// flag object as loaded
+		auto obj = &objects[j];
+
+		MyReadFile(file, &obj->nmeshes, sizeof(int16_t));
+		MyReadFile(file, &obj->mesh_index, sizeof(int16_t));
+		MyReadFile(file, &obj->bone_ptr, sizeof(int32_t));
+		MyReadFile(file, &size, sizeof(int32_t));
+		MyReadFile(file, &obj->anim_index, sizeof(int16_t));
+
+		obj->frame_base = (int16_t*)((uintptr_t)frames + (uintptr_t)size);
+		obj->bone_ptr = (int32_t*)(&bones[(uint32_t)obj->bone_ptr]);
+		obj->loaded = 1;														// flag object as loaded
 	}
 
 	// initialise objects: must come after bones have been set up, but before items loaded
@@ -517,7 +521,7 @@ bool LoadItems(HANDLE file)
 
 		obj->nmeshes = old_obj->nmeshes;
 		obj->mesh_index = old_obj->mesh_index;
-		obj->bone_index = old_obj->bone_index;
+		obj->bone_ptr = old_obj->bone_ptr;
 		obj->anim_index = 0;
 		obj->initialise = nullptr;
 		obj->collision = nullptr;

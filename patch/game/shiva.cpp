@@ -187,7 +187,7 @@ void DrawShiva(ITEM_INFO* item)
 		auto meshpp = &meshes[objects[SHIVA].mesh_index],
 			 swappp = &meshes[objects[MESHSWAP1].mesh_index];
 
-		auto bone = bones + object->bone_index;
+		auto bone = object->bone_ptr;
 
 		uint32_t bit = 1;
 

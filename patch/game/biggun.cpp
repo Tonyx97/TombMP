@@ -234,7 +234,7 @@ void BigGunDraw(ITEM_INFO* v)
 	{
 		auto gun = (BIGGUNINFO*)v->data;
 		auto meshpp = &meshes[object->mesh_index];
-		auto bone = bones + object->bone_index; 
+		auto bone = object->bone_ptr; 
 
 		CalculateObjectLighting(v, frmptr[0]);
 

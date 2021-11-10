@@ -20,7 +20,7 @@ void InitialiseHair(vec3d* data, int_vec3* hair_vel)
 {
 	first_hair = 1;
 
-	auto bone = bones + objects[HAIR].bone_index;
+	auto bone = objects[HAIR].bone_ptr;
 
 	data[0].rot.y = 0;
 	data[0].rot.x = -0x4000;
@@ -74,7 +74,7 @@ void HairControl(ITEM_INFO* item, vec3d* data, int_vec3* hair_vel)
 
 	auto rotation = frame + 9;
 
-	auto bone = bones + object->bone_index;
+	auto bone = object->bone_ptr;
 
 	phd_TranslateRel((int32_t)*(frame + 6), (int32_t)*(frame + 7), (int32_t)*(frame + 8));
 	gar_RotYXZsuperpack(&rotation, 0);
@@ -167,7 +167,7 @@ void HairControl(ITEM_INFO* item, vec3d* data, int_vec3* hair_vel)
 
 	phd_PopMatrix();
 
-	bone = bones + objects[HAIR].bone_index;
+	bone = objects[HAIR].bone_ptr;
 
 	if (first_hair)
 	{

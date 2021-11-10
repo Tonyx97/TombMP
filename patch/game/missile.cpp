@@ -140,7 +140,7 @@ int ExplodingDeath(int16_t item_number, int32_t mesh_bits, int16_t damage)
 
 	gar_RotYXZsuperpack(&rotation, 0);
 
-	auto bone = bones + object->bone_index;
+	auto bone = object->bone_ptr;
 	auto extra_rotation = (int16_t*)item->data;
 
 	int bit = 1;
