@@ -602,6 +602,7 @@
     <ClCompile Include="game\51civvy.cpp" />
     <ClCompile Include="game\51laser.cpp" />
     <ClCompile Include="game\51rocket.cpp" />
+    <ClCompile Include="game\anim.cpp" />
     <ClCompile Include="game\armysmg.cpp" />
     <ClCompile Include="game\autogun.cpp" />
     <ClCompile Include="game\biggun.cpp" />

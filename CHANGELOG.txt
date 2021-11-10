@@ -183,7 +183,7 @@
 		· setAnimNextAnim.
 	
 - v1.1.6 (xx-11-21):
-	- 
+	- Added new client and server scripting functions: unloadAnimation.
 	
 	
 	

@@ -631,6 +631,9 @@
     <ClCompile Include="scripting\functions\cf_anim.cpp">
       <Filter>scripting\functions</Filter>
     </ClCompile>
+    <ClCompile Include="game\anim.cpp">
+      <Filter>game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resources\resource.rc" />

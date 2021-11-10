@@ -212,8 +212,8 @@ int ExplodingDeath(int16_t item_number, int32_t mesh_bits, int16_t damage)
 				fx->pos.z_pos = (*(phd_mxptr + M23) >> W2V_SHIFT) + item->pos.z_pos;
 				fx->room_number = item->room_number;
 				fx->pos.y_rot = (GetRandomControl() - 0x4000) << 1;
-				fx->speed = -(50 + (utils::mt() % 100));
-				fx->fallspeed = -(50 + (utils::mt() % 100));
+				fx->speed = -(50 + int16_t(utils::mt() % 100));
+				fx->fallspeed = -(50 + int16_t(utils::mt() % 100));
 
 				if (item->object_number == SMASH_WINDOW ||
 					item->object_number == SMASH_OBJECT1 ||

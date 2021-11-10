@@ -284,6 +284,7 @@ enum lara_extended_animation
 struct extended_anim_info
 {
 	int16_t id = -1,
+			end_id = -1,
 			frame = -1;
 
 	operator bool() const { return (id != -1 && frame != -1); }

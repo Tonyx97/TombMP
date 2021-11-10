@@ -872,7 +872,7 @@ int CreatureAnimation(int16_t item_number, int16_t angle, int16_t tilt)
 	if (!item->data)
 		return 0;
 
-	if (!item->box_number == NO_BOX)
+	if (item->box_number == NO_BOX)
 		return 0;
 
 	auto creature = (CREATURE_INFO*)item->data;

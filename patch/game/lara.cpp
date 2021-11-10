@@ -4486,7 +4486,7 @@ void lara_as_extcornerl(ITEM_INFO* item, COLL_INFO* coll)
 	if (const auto& corner_left_outer_info = g_extended_anim_info[CORNER_LEFT_OUTER])
 	{
 		camera.target_elevation = -(6 * WALL_L);
-		SetCornerAnim(item, coll, 0x4000, item->anim_number == corner_left_outer_info.id + 1);
+		SetCornerAnim(item, coll, 0x4000, item->anim_number == corner_left_outer_info.end_id);
 	}
 }
 
@@ -4496,7 +4496,7 @@ void lara_as_intcornerl(ITEM_INFO* item, COLL_INFO* coll)
 	{
 		camera.target_elevation = -(6 * WALL_L);
 
-		SetCornerAnim(item, coll, -0x4000, item->anim_number == corner_left_inner_info.id + 1);
+		SetCornerAnim(item, coll, -0x4000, item->anim_number == corner_left_inner_info.end_id);
 	}
 }
 
@@ -4506,7 +4506,7 @@ void lara_as_extcornerr(ITEM_INFO* item, COLL_INFO* coll)
 	{
 		camera.target_elevation = -(6 * WALL_L);
 
-		SetCornerAnim(item, coll, -0x4000, item->anim_number == corner_right_outer_info.id + 1);
+		SetCornerAnim(item, coll, -0x4000, item->anim_number == corner_right_outer_info.end_id);
 	}
 }
 
@@ -4516,7 +4516,7 @@ void lara_as_intcornerr(ITEM_INFO* item, COLL_INFO* coll)
 	{
 		camera.target_elevation = -(6 * WALL_L);
 
-		SetCornerAnim(item, coll, 0x4000, item->anim_number == corner_right_inner_info.id + 1);
+		SetCornerAnim(item, coll, 0x4000, item->anim_number == corner_right_inner_info.end_id);
 	}
 }
 

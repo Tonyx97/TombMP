@@ -1,4 +1,4 @@
-- General bugs & issues:
+- General bugs, issues and new features:
 	· Load/unload of audios when starting/stopping a resource that register them.
 	· Fix memory leak when loading a level? maybe the custom audio buffers?
 	· Fix the side flames.
@@ -8,6 +8,9 @@
 	· Fix the animations not being played properly when the resource is restarted.
 	· Fix compys.
 	· Fix the squid game explosion not in correct position.
+	· Fix the chat word deletion.
+	· Fix the quadbike sound sync.
+	· Make a function to set targets to AI.
 	
 - Ideas.
 	· Gamemode where you spawn several rats in arena and players need to survive xd.

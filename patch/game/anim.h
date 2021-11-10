@@ -134,3 +134,10 @@ inline int32_t number_anims = 0,
 			   number_anim_ranges = 0,
 			   number_anim_commands = 0,
 			   number_anim_frames = 0;
+
+void init_custom_animations_pools(int normal_anims_count);
+
+bool is_valid_anim(int16_t id);
+bool unload_animation(int16_t id);
+
+int16_t load_animation(const std::string& filename);

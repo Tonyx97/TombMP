@@ -248,9 +248,10 @@ bool LoadObjects(HANDLE file)
 
 	// load in animation arrays
 
-	max_number_custom_anims = 1024;
-
 	MyReadFile(file, &number_anims, sizeof(int32_t));
+
+	init_custom_animations_pools(number_anims);
+
 	anims = (ANIM_STRUCT*)game_malloc((number_anims + max_number_custom_anims) * sizeof(ANIM_STRUCT), ANIMS);
 
 	for (int i = 0; i < number_anims; ++i)
@@ -1083,73 +1084,4 @@ bool load_gameflow(const char* filename)
 	CloseHandle(file);
 
 	return true;
-}
-
-int16_t load_animation(const std::string& filename)
-{
-	struct TMP_ANIM_STRUCT
-	{
-		int16_t* frame_ptr;
-		int16_t interpolation;
-		int16_t current_anim_state;
-		int32_t velocity;
-		int32_t acceleration;
-		int16_t frame_base;
-		int16_t frame_end;
-		int16_t jump_anim_num;
-		int16_t jump_frame_num;
-		int16_t number_changes;
-		int16_t change_ptr;
-		int16_t number_commands;
-		int16_t command_ptr;
-	};
-
-	struct TMP_CHANGE_STRUCT
-	{
-		int16_t goal_anim_state;
-		int16_t number_ranges;
-		int16_t range_ptr;
-	};
-
-	auto anim_file = std::ifstream(filename, std::ios::binary);
-	if (!anim_file)
-		return -1;
-
-	TMP_ANIM_STRUCT tmp_anim_info;
-
-	int16_t size_of_frame,
-			anim_len,
-			commands_len;
-
-	anim_file.read((char*)&tmp_anim_info, sizeof(tmp_anim_info));
-	anim_file.read((char*)&size_of_frame, sizeof(size_of_frame));
-	anim_file.read((char*)&anim_len, sizeof(anim_len));
-	anim_file.read((char*)&commands_len, sizeof(commands_len));
-
-	auto anim_frame_data = (char*)game_malloc(anim_len * size_of_frame);
-	auto anim_command_data = (int16_t*)game_malloc(commands_len);
-
-	anim_file.read(anim_frame_data, size_of_frame * anim_len);
-	anim_file.read((char*)anim_command_data, commands_len);
-
-	anim_file.close();
-
-	auto anim_id = number_anims + number_custom_anims++;
-	auto anim = &anims[anim_id];
-
-	anim->frame_ptr = (int16_t*)anim_frame_data;
-	anim->change_ptr = (int16_t*)&changes[(int16_t)tmp_anim_info.change_ptr];
-	anim->command_ptr = anim_command_data;
-	anim->interpolation = tmp_anim_info.interpolation;
-	anim->current_anim_state = tmp_anim_info.current_anim_state;
-	anim->velocity = tmp_anim_info.velocity;
-	anim->acceleration = tmp_anim_info.acceleration;
-	anim->frame_base = tmp_anim_info.frame_base;
-	anim->frame_end = tmp_anim_info.frame_end;
-	anim->jump_anim_num = tmp_anim_info.jump_anim_num;
-	anim->jump_frame_num = tmp_anim_info.jump_frame_num;
-	anim->number_changes = tmp_anim_info.number_changes;
-	anim->number_commands = tmp_anim_info.number_commands;
-
-	return anim_id;
 }
