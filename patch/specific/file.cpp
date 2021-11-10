@@ -543,6 +543,7 @@ bool LoadCameras(HANDLE file)
 bool LoadSoundEffects(HANDLE file)
 {
 	MyReadFile(file, &number_sound_effects, sizeof(int32_t));
+
 	if (number_sound_effects == 0)
 		return true;
 

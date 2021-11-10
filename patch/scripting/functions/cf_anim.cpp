@@ -28,16 +28,21 @@ void cf_anim::register_functions(sol::state* vm)
 
 	vm->set_function("getAnimFrameBase", [&](int16_t id, const sol::variadic_args& args) -> int16_t
 	{
-		int16_t offset = 0;
+		if (is_valid_anim(id) && is_custom_anim_loaded(id))
+		{
+			int16_t offset = 0;
 
-		if (args.size() == 1) offset = args[0].as<int16_t>();
+			if (args.size() == 1) offset = args[0].as<int16_t>();
 
-		return GF(id, offset);
+			return GF(id, offset);
+		}
+
+		return -1;
 	});
 
 	vm->set_function("setAnimNextAnim", [&](int16_t id, int16_t next_id, const sol::variadic_args& args) -> int16_t
 	{
-		if (is_valid_anim(id))
+		if (is_valid_anim(id) && is_custom_anim_loaded(id) && is_custom_anim_loaded(next_id))
 		{
 			int16_t next_offset = 0;
 
@@ -54,9 +59,9 @@ void cf_anim::register_functions(sol::state* vm)
 		return false;
 	});
 
-	vm->set_function("setEngineExtendedAnimID", [&](int extended_anim_id, int16_t anim_id, const sol::variadic_args& args)
+	vm->set_function("setEngineExtendedAnimID", [&](int extended_anim_id, int16_t id, const sol::variadic_args& args)
 	{
-		if (extended_anim_id >= 0 && extended_anim_id < MAX_LARA_EXTENDED_ANIMS)
+		if (extended_anim_id >= 0 && extended_anim_id < MAX_LARA_EXTENDED_ANIMS && is_valid_anim(id) && is_custom_anim_loaded(id))
 		{
 			int16_t frame_offset = 0,
 					end_id = -1;
@@ -64,7 +69,7 @@ void cf_anim::register_functions(sol::state* vm)
 			if (args.size() == 1) frame_offset = args[0].as<int16_t>();
 			if (args.size() == 2) end_id = args[1].as<int16_t>();
 
-			g_extended_anim_info[extended_anim_id] = { .id = anim_id, .end_id = end_id, .frame = int16_t(GF(anim_id, frame_offset)) };
+			g_extended_anim_info[extended_anim_id] = { .id = id, .end_id = end_id, .frame = int16_t(GF(id, frame_offset)) };
 		}
 	});
 

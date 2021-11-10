@@ -139,5 +139,6 @@ void init_custom_animations_pools(int normal_anims_count);
 
 bool is_valid_anim(int16_t id);
 bool unload_animation(int16_t id);
+bool is_custom_anim_loaded(int16_t id);
 
 int16_t load_animation(const std::string& filename);

@@ -68,6 +68,11 @@ bool unload_animation(int16_t id)
 	return true;
 }
 
+bool is_custom_anim_loaded(int16_t id)
+{
+	return g_used_custom_anims.contains(id);
+}
+
 int16_t load_animation(const std::string& filename)
 {
 	if (g_free_custom_anims.empty())
