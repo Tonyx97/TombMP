@@ -5,7 +5,10 @@
 	· Detonator usage doesn't work.
 	· Fix rain maybe.
 	· Fix boat sound.
-	· Fix the animations not being played properly when the resource is restarted
+	· Fix the animations not being played properly when the resource is restarted.
+	
+- Ideas.
+	· Gamemode where you spawn several rats in arena and players need to survive xd.
 
 - v1.0.6:
 	· Sometimes the AI death anim aren't fully synced and they get stuck in the middle.
