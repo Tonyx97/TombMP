@@ -116,6 +116,7 @@ long bug_ripper::show_and_dump_crash(_EXCEPTION_POINTERS* ep)
 		log << "- Exception Code: " << std::hex << ep->ExceptionRecord->ExceptionCode << std::endl;
 		log << "- GP Registers:" << std::endl;
 		log << "\tEip: " << mod_name << " + 0x" << std::hex << eip << std::endl;
+		log << "\tEbp: 0x" << std::hex << ep->ContextRecord->Ebp << std::endl;
 		log << "\tEax: 0x" << std::hex << ep->ContextRecord->Eax << std::endl;
 		log << "\tEbx: 0x" << std::hex << ep->ContextRecord->Ebx << std::endl;
 		log << "\tEcx: 0x" << std::hex << ep->ContextRecord->Ecx << std::endl;
