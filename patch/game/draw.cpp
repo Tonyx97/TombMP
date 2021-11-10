@@ -95,9 +95,9 @@ uint8_t EnemyWeapon[16] =
 };
 
 int32_t* IMptr,
-		IMstack[12 * 64],
-		IM_frac,
-		IM_rate;
+		 IMstack[12 * 64],
+		 IM_frac,
+		 IM_rate;
 
 int bound_list[128],
 	bound_start = 0,

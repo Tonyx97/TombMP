@@ -175,7 +175,7 @@ void create_flare(int thrown)
 		}
 
 		flare->data = (do_flare_light((PHD_VECTOR*)&flare->pos, lara.flare_age) ? (void*)(lara.flare_age | 0x8000)
-																			  : (void*)(lara.flare_age & 0x7fff));
+																			    : (void*)(lara.flare_age & 0x7fff));
 
 		AddActiveItem(flare_item);
 

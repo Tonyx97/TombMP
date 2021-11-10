@@ -225,6 +225,35 @@ void AdjustTextureUVs(bool tNew)
 	App.nUVAdd += nAdd;
 }
 
+int16_t create_custom_item(int16_t id)
+{
+	auto flare_item = CreateItem();
+
+	if (flare_item != NO_ITEM)
+	{
+		auto flare = &items[flare_item];
+
+		flare->object_number = id;
+		flare->room_number = lara_item->room_number;
+		flare->pos.x_pos = 47616;
+		flare->pos.y_pos = STEP_L * 3;
+		flare->pos.z_pos = 24064;
+		flare->room_number = 0;
+
+		InitialiseItem(flare_item);
+
+		flare->pos.z_rot = 0;
+		flare->pos.x_rot = 0;
+		flare->shade = -1;
+
+		AddActiveItem(flare_item);
+
+		flare->status = ACTIVE;
+	}
+
+	return flare_item;
+}
+
 bool LoadObjects(HANDLE file)
 {
 	// load actual mesh data
@@ -475,6 +504,34 @@ bool LoadItems(HANDLE file)
 		// NOTE: any extra memory allocation for item is done via InitialiseItem now
 
 		InitialiseItem(i);
+	}
+
+	// loading custom object...
+	{
+		// we gonna test by copying the tr2 m16 (id 410)
+
+		auto old_obj_id = 401;
+		auto old_obj = &objects[old_obj_id];
+		constexpr auto obj_id = NUMBER_OBJECTS + 100;
+		auto obj = &objects[obj_id];
+
+		obj->nmeshes = old_obj->nmeshes;
+		obj->mesh_index = old_obj->mesh_index;
+		obj->bone_index = old_obj->bone_index;
+		obj->anim_index = 0;
+		obj->initialise = nullptr;
+		obj->collision = nullptr;
+		obj->control = nullptr;
+		obj->draw_routine = DrawAnimatingItem;
+		obj->floor = obj->ceiling = nullptr;
+		obj->pivot_length = 0;
+		obj->radius = 100;
+		obj->shadow_size = 0;
+		obj->hit_points = DONT_TARGET;
+		obj->intelligent = obj->water_creature = 0;
+		obj->loaded = 0;	// we have to notify the server about this if we ever get this working
+
+		create_custom_item(obj_id);
 	}
 
 	return true;
