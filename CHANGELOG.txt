@@ -184,7 +184,7 @@
 	
 - v1.1.6 (xx-11-21):
 	- Improved custom animations and fixed a few issues with animation loading.
-	- Added new client and server scripting functions: unloadAnimation.
+	- Added new client and server scripting functions: unloadAnimation, isItemIntelligent, setItemIntelligent, getItemAI, g/setAIEnemy.
 	
 	
 	

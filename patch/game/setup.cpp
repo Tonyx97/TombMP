@@ -199,7 +199,8 @@ import prof;
 
 #define INIT_PICKUP_ANIM(a)	obj = &objects[a];	\
 							obj->control = AnimatingPickUp;	\
-							obj->collision = PickUpCollision;
+							obj->collision = PickUpCollision;	\
+							obj->intelligent = 0;
 
 #define INIT_KEYHOLE(a)	obj = &objects[a];	\
 						obj->collision = KeyHoleCollision;
@@ -1562,10 +1563,10 @@ void InitialiseLevelFlags()
 
 void InitialiseObjects()
 {
-	auto obj = objects;
-
-	for (int i = 0; i < NUMBER_OBJECTS; ++i, ++obj)
+	for (int i = 0; i < NUMBER_OBJECTS; ++i)
 	{
+		auto obj = &objects[i];
+
 		obj->initialise = nullptr;
 		obj->collision = nullptr;
 		obj->control = nullptr;

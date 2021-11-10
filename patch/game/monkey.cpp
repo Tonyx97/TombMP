@@ -222,7 +222,7 @@ void MonkeyControl(int16_t item_number)
 	{
 		GetAITarget(monkey);
 
-		if (monkey->hurt_by_lara)
+		if (monkey->hurt_by_lara && !monkey->enemy)
 			monkey->enemy = lara_item;
 		
 		if (item->ai_bits != MODIFY)
@@ -233,9 +233,6 @@ void MonkeyControl(int16_t item_number)
 				lara_info;
 
 		CreatureAIInfo(item, &info);
-
-		if (!monkey->hurt_by_lara && monkey->enemy == lara_item && objects[TIGER].loaded)
-			monkey->enemy = nullptr;
 
 		if (monkey->enemy == lara_item)
 		{
@@ -426,10 +423,10 @@ void MonkeyControl(int16_t item_number)
 
 					item->carried_item = NO_ITEM;
 					pickup->ai_bits = 1;
-					monkey->enemy = nullptr;
 				}
 				else
 				{
+					monkey->enemy = nullptr;
 					monkey->maximum_turn = 0;
 
 					if (abs(info.angle) < MONKEY_WALK_TURN)
@@ -532,6 +529,7 @@ void MonkeyControl(int16_t item_number)
 						enemy->hit_points -= MONKEY_HIT_DAMAGE >> 1;
 						enemy->hit_status = 1;
 						monkey->flags = 1;
+
 						CreatureEffect(item, &monkey_hit, DoBloodSplat);
 					}
 				}
@@ -561,6 +559,7 @@ void MonkeyControl(int16_t item_number)
 				{
 					lara_item->hit_points -= MONKEY_HIT_DAMAGE;
 					lara_item->hit_status = 1;
+
 					CreatureEffect(item, &monkey_hit, DoBloodSplat);
 
 					monkey->flags = 1;

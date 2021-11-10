@@ -40,6 +40,9 @@ void cf_item::register_functions(sol::state* vm)
 	vm->set_function("isItemCollidable", [&](ITEM_INFO* item)			 { return !!item->collidable; });
 	vm->set_function("setItemCollidable", [&](ITEM_INFO* item, bool val) { item->collidable = uint16_t(val); });
 
+	vm->set_function("isItemIntelligent", [&](ITEM_INFO* item)				{ return !!objects[item->object_number].intelligent; });
+	vm->set_function("setItemIntelligent", [&](ITEM_INFO* item, bool val)	{ objects[item->object_number].intelligent = val; });
+
 	vm->set_function("getItemPosition", [&](ITEM_INFO* item) -> std::tuple<int, int, int>
 	{
 		return { item->pos.x_pos, item->pos.y_pos, item->pos.z_pos };
@@ -109,4 +112,9 @@ void cf_item::register_functions(sol::state* vm)
 
 	vm->set_function("getItemAnimFrame", [&](ITEM_INFO* item) { return item->frame_number; });
 	vm->set_function("setItemAnimFrame", [&](ITEM_INFO* item, int16_t v) { item->frame_number = v; });
+
+	vm->set_function("getItemAI", [&](ITEM_INFO* item) { return item->active ? (CREATURE_INFO*)item->data : nullptr; });
+
+	vm->set_function("getAIEnemy", [&](CREATURE_INFO* ai)					{ return ai->enemy; });
+	vm->set_function("setAIEnemy", [&](CREATURE_INFO* ai, ITEM_INFO* enemy) { ai->enemy = enemy; ai->hurt_by_lara = 1; });
 }

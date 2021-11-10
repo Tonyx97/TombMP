@@ -8,7 +8,7 @@
 #define TIGER_WALK_TURN			(3 * ONE_DEGREE)
 #define TIGER_RUN_TURN			(6 * ONE_DEGREE)
 #define TIGER_ATTACK1_RANGE		SQUARE(WALL_L / 3)
-#define TIGER_ATTACK2_RANGE		SQUARE(WALL_L * 3/2)
+#define TIGER_ATTACK2_RANGE		SQUARE(WALL_L * 3 / 2)
 #define TIGER_ATTACK3_RANGE		SQUARE(WALL_L)
 #define TIGER_ROAR_CHANCE		0x60
 #define TIGER_WALK_CHANCE		(TIGER_ROAR_CHANCE + 0x400)
@@ -81,8 +81,7 @@ void TigerControl(int16_t item_number)
 			{
 				if (lara.target != item && info.ahead)
 					item->goal_anim_state = TIGER_STOP;
-				else
-					item->goal_anim_state = TIGER_RUN;
+				else item->goal_anim_state = TIGER_RUN;
 			}
 			else if (tiger->mood == BORED_MOOD)
 			{
@@ -146,13 +145,35 @@ void TigerControl(int16_t item_number)
 		case TIGER_ATTACK2:
 		case TIGER_ATTACK3:
 		{
-			if (!tiger->flags && (item->touch_bits & TIGER_TOUCH))
-			{
-				lara_item->hit_status = 1;
-				lara_item->hit_points -= TIGER_BITE_DAMAGE;
-				CreatureEffect(item, &tiger_bite, DoBloodSplat);
+			auto enemy = tiger->enemy;
 
-				tiger->flags = 1;
+			if (enemy == lara_item)
+			{
+				if (!tiger->flags && (item->touch_bits & TIGER_TOUCH))
+				{
+					lara_item->hit_status = 1;
+					lara_item->hit_points -= TIGER_BITE_DAMAGE;
+
+					CreatureEffect(item, &tiger_bite, DoBloodSplat);
+
+					tiger->flags = 1;
+				}
+			}
+			else
+			{
+				if (!tiger->flags && enemy)
+				{
+					if (ABS(enemy->pos.x_pos - item->pos.x_pos) < TIGER_ATTACK2_RANGE &&
+						ABS(enemy->pos.y_pos - item->pos.y_pos) <= TIGER_ATTACK2_RANGE &&
+						ABS(enemy->pos.z_pos - item->pos.z_pos) < TIGER_ATTACK2_RANGE)
+					{
+						enemy->hit_points -= TIGER_BITE_DAMAGE >> 1;
+						enemy->hit_status = 1;
+						tiger->flags = 1;
+
+						CreatureEffect(item, &tiger_bite, DoBloodSplat);
+					}
+				}
 			}
 		}
 		}

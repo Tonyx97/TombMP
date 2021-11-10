@@ -95,11 +95,11 @@ struct OBJECT_INFO
 	int16_t radius;
 	int16_t shadow_size;			// size of shadow ( -1 if none )
 	uint16_t bite_offset;			// offset into table of BITE_INFO structures for enemies that fire weapons. (Table in DRAW.C, set up bite_offset in SETUP.C).
-	uint16_t loaded : 1;			// is this object loaded on this level
-	uint16_t intelligent : 1;		// does this object need AI info??
-	uint16_t non_lot : 1;			// does this creature not use LOT system (e.g. Compys)
-	uint16_t semi_transparent : 1;	// is sprite object semi transparent
-	uint16_t water_creature : 1;	// is this is water based baddie? needed for SFX in shallow water
+	uint16_t loaded;			// is this object loaded on this level
+	uint16_t intelligent;		// does this object need AI info??
+	uint16_t non_lot;			// does this creature not use LOT system (e.g. Compys)
+	uint16_t semi_transparent;	// is sprite object semi transparent
+	uint16_t water_creature;	// is this is water based baddie? needed for SFX in shallow water
 };
 
 struct STATIC_INFO
