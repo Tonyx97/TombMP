@@ -133,10 +133,10 @@ void DXTextureReleaseDeviceSurface(DXTEXTURE& rTexture)
 {
 	HWR_ResetCurrentTexture();
 
-	rTexture.hTexture = 0;
-
 	RELEASE_LOGTYPE(rTexture.pTexture);
 	RELEASE_LOGTYPE(rTexture.pDeviceSurface);
+
+	rTexture.hTexture = 0;
 }
 
 int DXTextureNew(int nWidth, int nHeight, DXTEXTURE TextureList[])
@@ -178,12 +178,6 @@ void DXTextureCleanup(int nSlot, DXTEXTURE TextureList[])
 
 	RELEASE_LOGTYPE(rTexture.pSystemSurface);
 
-	if (rTexture.pSoftwareSurface)
-	{
-		free(rTexture.pSoftwareSurface);
-		rTexture.pSoftwareSurface = 0;
-	}
-
 	rTexture.dwFlags = 0;
 }
 
@@ -215,7 +209,6 @@ bool DXTextureRestore(int nHandle, bool tForce, DXTEXTURE TextureList[])
 
 	if (rTexture.pDeviceSurface == rTexture.pSystemSurface) return true;
 
-
 	if (tForce || (!rTexture.pDeviceSurface) || (DX_TRY(DD_EnsureSurfaceAvailable(rTexture.pDeviceSurface))))
 	{
 		DXTextureReleaseDeviceSurface(rTexture);
@@ -231,9 +224,7 @@ bool DXTextureRestore(int nHandle, bool tForce, DXTEXTURE TextureList[])
 
 	DX_TRY(DD_EnsureSurfaceAvailable(rTexture.pSystemSurface));
 
-	IDirect3DTexture2* pSrc;
-	pSrc = DXTextureGetInterface(rTexture.pSystemSurface);
-
+	auto pSrc = DXTextureGetInterface(rTexture.pSystemSurface);
 	if (!pSrc)
 	{
 		prof::print(RED, "DXTextureRestore({}): can't get src iface", nHandle);
@@ -256,13 +247,13 @@ bool DXTextureRestoreAll(bool tForce, DXTEXTURE TextureList[])
 {
 	prof::print(YELLOW, "DXTextureRestoreAll");
 	
-	bool tSuccess = true;
+	bool ok = true;
 
 	for (int i = 0; i < MAX_D3D_TEXTURES; ++i)
 		if (TextureList[i].dwFlags & TX_FLAG_SLOTUSED)
-			tSuccess &= DXTextureRestore(i, tForce, TextureList);
+			ok = ok && DXTextureRestore(i, tForce, TextureList);
 
-	return tSuccess;
+	return ok;
 }
 
 DWORD DXTextureGetHandle(int nHandle, DXTEXTURE TextureList[])

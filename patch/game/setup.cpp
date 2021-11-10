@@ -235,7 +235,6 @@ enum
 void InitialiseGameFlags()
 {
 	for (int i = 0; i < MAX_FLIPMAPS; ++i) flipmap[i] = 0;
-	for (int i = 0; i < NUMBER_OBJECTS; ++i) objects[i].loaded = 0;
 
 	flip_status = 0;
 	sunset = 0;

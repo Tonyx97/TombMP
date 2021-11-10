@@ -15,8 +15,8 @@
 #define ArraySize(a)	(sizeof(a) / sizeof(*a))
 #define Zero(thing)		memset(&thing, 0, sizeof(thing))
 
-#define RELEASE_NOLOG(x)	if (x) { x->Release(); x = 0; }
-#define RELEASE_LOGTYPE(x)	if (x) { int nRef = x->Release(); prof::print(YELLOW, "Releasing " #x " -> {}", nRef); x = 0; }
+#define RELEASE_NOLOG(x)	if (x) { (x)->Release(); (x) = 0; }
+#define RELEASE_LOGTYPE(x)	if (x) { int nRef = (x)->Release(); prof::print(YELLOW, "Releasing " #x " -> {}", nRef); (x) = 0; }
 #define RELEASE(x)			RELEASE_LOGTYPE(x)
 
 #define DXCB_FRONT		1
@@ -54,6 +54,7 @@ enum game_malloc_types
 	ROOM_FLOOR,
 	ROOM_LIGHTS,
 	ROOM_STATIC_MESH_INFOS,
+	OBJECTS,
 	FLOOR_DATA,
 	ITEMS,
 	CAMERAS,

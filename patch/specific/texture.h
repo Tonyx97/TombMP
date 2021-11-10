@@ -16,8 +16,6 @@ struct DXTEXTURE
 		nHeight;
 
 	DWORD dwFlags;
-
-	unsigned short* pSoftwareSurface;
 };
 
 inline DXTEXTURE DXTextureList[MAX_D3D_TEXTURES];

@@ -332,6 +332,8 @@ bool LoadObjects(HANDLE file)
 
 	MyReadFile(file, &objects_count, sizeof(int32_t));
 
+	objects = (OBJECT_INFO*)game_malloc((NUMBER_OBJECTS + 128) * sizeof(OBJECT_INFO), OBJECTS);
+
 	for (int i = 0; i < objects_count; ++i)
 	{
 		int j, size;
@@ -818,7 +820,7 @@ void unload_level()
 	texture_infos = 0;
 	number_custom_anims = 0;
 
-	//free_game_memory();
+	free_game_memory();
 }
 
 int	Read_Strings(int num_strings, char** strings, char** buffer, DWORD* read, HANDLE file)

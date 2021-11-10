@@ -941,7 +941,7 @@ void DrawAnimatingItem(ITEM_INFO* item)
 
 		if (!frac)
 		{
-			phd_TranslateRel((int32_t) * (frmptr[0] + 6), (int32_t) * (frmptr[0] + 7), (int32_t) * (frmptr[0] + 8));
+			phd_TranslateRel((int32_t)*(frmptr[0] + 6), (int32_t)*(frmptr[0] + 7), (int32_t)*(frmptr[0] + 8));
 
 			auto rotation1 = frmptr[0] + 9;
 

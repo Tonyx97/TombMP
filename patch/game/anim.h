@@ -110,7 +110,7 @@ struct STATIC_INFO
 	int16_t x_minc, x_maxc, y_minc, y_maxc, z_minc, z_maxc;  // collision Bounds
 };
 
-inline OBJECT_INFO objects[NUMBER_OBJECTS];
+inline OBJECT_INFO* objects = nullptr;
 inline STATIC_INFO* static_objects = nullptr;
 
 inline int32_t* bones;
