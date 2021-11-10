@@ -5,9 +5,7 @@
 	· Detonator usage doesn't work.
 	· Fix rain maybe.
 	· Fix boat sound.
-	· Fix the animations not being played properly when the resource is restarted.
 	· Fix compys.
-	· Fix the squid game explosion not in correct position.
 	· Fix the chat word deletion.
 	· Fix the quadbike sound sync.
 	· Make a function to set targets to AI.

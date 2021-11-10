@@ -68,7 +68,13 @@ void chat::remove_word()
 			return;
 		else curr_msg = L"";
 	}
-	else curr_msg = curr_msg.substr(0, last_space);
+	else
+	{
+		if (!curr_msg.empty() && *(curr_msg.end() - 1) == ' ')
+			curr_msg.pop_back();
+
+		curr_msg = curr_msg.substr(0, last_space + 1);
+	}
 }
 
 void chat::paste_text()

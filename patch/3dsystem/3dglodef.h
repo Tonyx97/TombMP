@@ -123,11 +123,11 @@ struct PHD_3DPOS
 struct PHDTEXTURESTRUCT
 {
 	uint16_t drawtype,
-		   tpage,
-		   u1, v1,
-		   u2, v2,
-		   u3, v3,
-		   u4, v4;
+		     tpage,
+		     u1, v1,
+		     u2, v2,
+		     u3, v3,
+		     u4, v4;
 };
 
 struct PHDSPRITESTRUCT
