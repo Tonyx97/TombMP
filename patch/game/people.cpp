@@ -116,6 +116,9 @@ bool ShotLara(ITEM_INFO* item, AI_INFO* info, BITE_INFO* gun, int16_t extra_rota
 	auto creature = (CREATURE_INFO*)item->data;
 	auto enemy = creature->enemy;
 
+	if (!enemy)
+		return false;
+
 	bool targetable = false,
 		 hit = false;
 
