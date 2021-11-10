@@ -703,6 +703,7 @@ void DrawInventoryItem(INVENTORY_ITEM* inv_item)
 		for (int i = object->nmeshes - 1; i > 0; --i, bone += 3)
 		{
 			++mesh;
+
 			mesh_num <<= 1;
 
 			int poppush = *(bone++);
