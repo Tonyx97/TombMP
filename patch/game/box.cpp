@@ -120,11 +120,8 @@ void CreatureAIInfo(ITEM_INFO* item, AI_INFO* info)
 
 	if (!objects[item->object_number].non_lot)
 	{
-		if (enemy->box_number != NO_BOX)
-		{
-			if (boxes[enemy->box_number].overlap_index & creature->LOT.block_mask)										   info->enemy_zone |= BLOCKED;
-			else if (creature->LOT.node[item->box_number].search_number == (creature->LOT.search_number | BLOCKED_SEARCH)) info->enemy_zone |= BLOCKED;
-		}
+		if (enemy->box_number != NO_BOX && boxes[enemy->box_number].overlap_index & creature->LOT.block_mask)										 info->enemy_zone |= BLOCKED;
+		else if (item->box_number != NO_BOX && creature->LOT.node[item->box_number].search_number == (creature->LOT.search_number | BLOCKED_SEARCH)) info->enemy_zone |= BLOCKED;
 	}
 
 	auto object = &objects[item->object_number];
