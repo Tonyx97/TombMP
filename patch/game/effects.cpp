@@ -569,26 +569,26 @@ void draw_right_gun(ITEM_INFO* item)
 {
 	auto temp = lara.mesh_ptrs[THIGH_R];
 
-	lara.mesh_ptrs[THIGH_R] = *(objects[PISTOLS].mesh_ptr + THIGH_R);
-	*(objects[PISTOLS].mesh_ptr + THIGH_R) = temp;
+	lara.mesh_ptrs[THIGH_R] = objects[PISTOLS].mesh_ptr[THIGH_R];
+	objects[PISTOLS].mesh_ptr[THIGH_R] = temp;
 
 	temp = lara.mesh_ptrs[HAND_R];
 
-	lara.mesh_ptrs[HAND_R] = *(objects[PISTOLS].mesh_ptr + HAND_R);
-	*(objects[PISTOLS].mesh_ptr + HAND_R) = temp;
+	lara.mesh_ptrs[HAND_R] = objects[PISTOLS].mesh_ptr[HAND_R];
+	objects[PISTOLS].mesh_ptr[HAND_R] = temp;
 }
 
 void draw_left_gun(ITEM_INFO* item)
 {
 	auto temp = lara.mesh_ptrs[THIGH_L];
 
-	lara.mesh_ptrs[THIGH_L] = *(objects[PISTOLS].mesh_ptr + THIGH_L);
-	*(objects[PISTOLS].mesh_ptr + THIGH_L) = temp;
+	lara.mesh_ptrs[THIGH_L] = objects[PISTOLS].mesh_ptr[THIGH_L];
+	objects[PISTOLS].mesh_ptr[THIGH_L] = temp;
 
 	temp = lara.mesh_ptrs[HAND_L];
 
-	lara.mesh_ptrs[HAND_L] = *(objects[PISTOLS].mesh_ptr + HAND_L);
-	*(objects[PISTOLS].mesh_ptr + HAND_L) = temp;
+	lara.mesh_ptrs[HAND_L] = objects[PISTOLS].mesh_ptr[HAND_L];
+	objects[PISTOLS].mesh_ptr[HAND_L] = temp;
 }
 
 void shoot_right_gun(ITEM_INFO* item)
@@ -610,10 +610,10 @@ void swap_meshes_with_meshswap1(ITEM_INFO* item)
 
 	for (int i = 0; i < obj->nmeshes; ++i)
 	{
-		auto temp = *(obj->mesh_ptr + i);
+		auto temp = obj->mesh_ptr[i];
 
-		*(obj->mesh_ptr + i) = *(objects[MESHSWAP1].mesh_ptr + i);
-		*(objects[MESHSWAP1].mesh_ptr + i) = temp;
+		obj->mesh_ptr[i] = objects[MESHSWAP1].mesh_ptr[i];
+		objects[MESHSWAP1].mesh_ptr[i] = temp;
 	}
 }
 
@@ -624,10 +624,10 @@ void swap_meshes_with_meshswap2(ITEM_INFO* item)
 
 	for (int i = 0; i < obj->nmeshes; ++i)
 	{
-		auto temp = *(obj->mesh_ptr + i);
+		auto temp = obj->mesh_ptr[i];
 
-		*(obj->mesh_ptr + i) = *(objects[MESHSWAP2].mesh_ptr + i);
-		*(objects[MESHSWAP2].mesh_ptr + i) = temp;
+		obj->mesh_ptr[i] = objects[MESHSWAP2].mesh_ptr[i];
+		objects[MESHSWAP2].mesh_ptr[i] = temp;
 	}
 }
 
@@ -638,14 +638,14 @@ void swap_meshes_with_meshswap3(ITEM_INFO* item)
 
 	for (int i = 0; i < obj->nmeshes; ++i)
 	{
-		auto temp = *(obj->mesh_ptr + i);
+		auto temp = obj->mesh_ptr[i];
 
-		*(obj->mesh_ptr + i) = *(objects[MESHSWAP3].mesh_ptr + i);
+		obj->mesh_ptr[i] = objects[MESHSWAP3].mesh_ptr[i];
 
 		if (item == lara_item)
-			lara.mesh_ptrs[i] = *(objects[MESHSWAP3].mesh_ptr + i);
+			lara.mesh_ptrs[i] = objects[MESHSWAP3].mesh_ptr[i];
 
-		*(objects[MESHSWAP3].mesh_ptr + i) = temp;
+		objects[MESHSWAP3].mesh_ptr[i] = temp;
 	}
 }
 

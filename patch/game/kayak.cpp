@@ -945,8 +945,8 @@ void KayakUserInput(ITEM_INFO* v, ITEM_INFO* l, KAYAKINFO* Kayak)
 		{
 			auto tmp = lara.mesh_ptrs[HAND_R];
 
-			lara.mesh_ptrs[HAND_R] = *(objects[kayak_anim_obj].mesh_ptr + HAND_R);
-			*(objects[kayak_anim_obj].mesh_ptr + HAND_R) = tmp;
+			lara.mesh_ptrs[HAND_R] = objects[kayak_anim_obj].mesh_ptr[HAND_R];
+			objects[kayak_anim_obj].mesh_ptr[HAND_R] = tmp;
 
 			l->mesh_bits &= ~LARA_LEG_BITS;
 
@@ -961,8 +961,8 @@ void KayakUserInput(ITEM_INFO* v, ITEM_INFO* l, KAYAKINFO* Kayak)
 		{
 			auto tmp = lara.mesh_ptrs[HAND_R];
 
-			lara.mesh_ptrs[HAND_R] = *(objects[kayak_anim_obj].mesh_ptr + HAND_R);
-			*(objects[kayak_anim_obj].mesh_ptr + HAND_R) = tmp;
+			lara.mesh_ptrs[HAND_R] = objects[kayak_anim_obj].mesh_ptr[HAND_R];
+			objects[kayak_anim_obj].mesh_ptr[HAND_R] = tmp;
 
 			l->mesh_bits |= LARA_LEG_BITS;
 
