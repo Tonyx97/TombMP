@@ -121,9 +121,10 @@ inline ANIM_STRUCT* anims;
 inline RANGE_STRUCT* ranges;
 inline CHANGE_STRUCT* changes;
 inline int16_t** meshes,
-			  * meshes_base,
-			  * commands,
-			  * frames;
+			  ** custom_meshes,
+			   * meshes_base,
+			   * commands,
+			   * frames;
 
 inline int32_t number_static_objects = 0;
 

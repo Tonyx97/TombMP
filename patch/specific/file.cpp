@@ -521,13 +521,25 @@ bool LoadItems(HANDLE file)
 	{
 		// we gonna test by copying the tr2 m16 (id 410)
 
+		auto custom_meshes = (int16_t**)game_malloc(10 * sizeof(int16_t*));
+
 		auto old_obj_id = 401;
 		auto old_obj = &objects[old_obj_id];
 		constexpr auto obj_id = NUMBER_OBJECTS + 100;
 		auto obj = &objects[obj_id];
 
+		auto mesh_data_size = *(*old_obj->mesh_ptr + 4 + 1);
+		auto mesh_light_size = *(*old_obj->mesh_ptr + mesh_data_size);
+		auto total_size = ((mesh_data_size + mesh_light_size)) * sizeof(int16_t) * 4;
+		auto new_mesh_ptr = (int16_t*)game_malloc(total_size);
+
+		memcpy(new_mesh_ptr, *old_obj->mesh_ptr, total_size);
+
+		custom_meshes[0] = new_mesh_ptr;
+
 		obj->nmeshes = old_obj->nmeshes;
 		obj->mesh_ptr = old_obj->mesh_ptr;
+		//obj->mesh_ptr = &custom_meshes[0];
 		obj->bone_ptr = old_obj->bone_ptr;
 		obj->anim_index = 0;
 		obj->initialise = nullptr;
@@ -542,7 +554,7 @@ bool LoadItems(HANDLE file)
 		obj->intelligent = obj->water_creature = 0;
 		obj->loaded = 1;	// we have to notify the server about this if we ever get this working
 
-		//create_custom_item(obj_id);
+		create_custom_item(obj_id);
 	}
 
 	return true;
