@@ -240,7 +240,7 @@ void HWI_InsertClippedPoly_Textured(int nPoints, float zdepth, int nDrawType, in
 
 		*((D3DTLVERTEX**)(info + 3)) = pTLV;
 
-		for (int nPoint = nPoints;nPoint--;)
+		for (int nPoint = nPoints; nPoint--;)
 		{
 			pTLV->sx = pVI->x;
 			pTLV->sy = pVI->y;

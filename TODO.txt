@@ -15,3 +15,8 @@
 	· Sometimes the AI death anim aren't fully synced and they get stuck in the middle.
 	
 - v1.1.x:
+
+
+
+
+IMPORTANT: testing code parts are marked with the comment "(TESTING)"

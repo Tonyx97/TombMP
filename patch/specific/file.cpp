@@ -54,10 +54,10 @@ bool LoadTexturePages(HANDLE file)
 
 	int nBytesPerPage = 0x20000,
 		nAllocAmount = num_pages * nBytesPerPage;
-
-	auto base = new char[nAllocAmount];
 	
 	SetFilePointer(file, num_pages * 65536, 0, FILE_CURRENT);
+
+	auto base = new char[nAllocAmount];
 
 	for (int i = 0; i < num_pages; ++i)
 		MyReadFile(file, base + (i * nBytesPerPage), nBytesPerPage);
@@ -206,7 +206,7 @@ void AdjustTextureUVs(bool tNew)
 	auto pUVF = LabTextureUVFlag;
 
 	int nTI = texture_infos,
-		nAdd = 128 - App.nUVAdd;;
+		nAdd = 128 - App.nUVAdd;
 
 	for (; --nTI; ++pTS)
 	{
@@ -518,6 +518,7 @@ bool LoadItems(HANDLE file)
 	}
 
 	// loading custom object...
+	if (true)
 	{
 		// we gonna test by copying the tr2 m16 (id 410)
 
@@ -542,9 +543,27 @@ bool LoadItems(HANDLE file)
 
 		auto gt4_faces = *curr_ptr;
 
-		curr_ptr += 1 + gt4_faces * 5;
+		curr_ptr++;
+
+		for (int i = 0; i < gt4_faces; ++i)
+		{
+			prof::print(RED, "1 {}", curr_ptr[4] & 0x7fff);
+			curr_ptr[4] = 0;
+			curr_ptr += 5;
+		}
+
+		curr_ptr += gt4_faces * 5;
 
 		auto gt3_faces = *curr_ptr;
+
+		curr_ptr++;
+
+		for (int i = 0; i < gt3_faces; ++i)
+		{
+			prof::print(RED, "2 {}", curr_ptr[3] & 0x7fff);
+			curr_ptr[3] = 0;
+			curr_ptr += 4;
+		}
 
 		curr_ptr += 1 + gt3_faces * 4;
 
@@ -556,7 +575,7 @@ bool LoadItems(HANDLE file)
 
 		curr_ptr += 1 + g3_faces * 4;
 
-		auto total_size = ((mesh_data_size + mesh_light_size)) * sizeof(int16_t);
+		auto total_size = (curr_ptr - *old_obj->mesh_ptr) * sizeof(int16_t);
 		auto new_mesh_ptr = (int16_t*)game_malloc(total_size);
 
 		memcpy(new_mesh_ptr, *old_obj->mesh_ptr, total_size);
@@ -564,8 +583,8 @@ bool LoadItems(HANDLE file)
 		custom_meshes[0] = new_mesh_ptr;
 
 		obj->nmeshes = old_obj->nmeshes;
-		obj->mesh_ptr = old_obj->mesh_ptr;
-		//obj->mesh_ptr = &custom_meshes[0];
+		//obj->mesh_ptr = old_obj->mesh_ptr;
+		obj->mesh_ptr = &custom_meshes[0];
 		obj->bone_ptr = old_obj->bone_ptr;
 		obj->anim_index = 0;
 		obj->initialise = nullptr;
@@ -721,18 +740,25 @@ bool LoadBoxes(HANDLE file)
 
 bool LoadAnimatedTextures(HANDLE file)
 {
-	int size,
-		num_obj_textures;
+	int size;
 
 	MyReadFile(file, &size, sizeof(int32_t));
 
 	anim_tex_ranges = (int16_t*)game_malloc(size * sizeof(int16_t), ANIMATING_TEXTURE_RANGES);
 
 	MyReadFile(file, anim_tex_ranges, sizeof(int16_t) * size);
-	MyReadFile(file, &num_obj_textures, sizeof(int32_t));
-	MyReadFile(file, phdtextinfo, sizeof(PHDTEXTURESTRUCT) * num_obj_textures);
 
-	texture_infos = num_obj_textures;
+	return true;
+}
+
+bool LoadObjectsTextures(HANDLE file)
+{
+	MyReadFile(file, &texture_infos, sizeof(int32_t));
+	MyReadFile(file, phdtextinfo, sizeof(PHDTEXTURESTRUCT) * texture_infos);
+
+	return true;
+
+	// (TESTING) I think the code from below is just useless xd
 
 	for (int i = 0; i < texture_infos; ++i)
 	{
@@ -830,6 +856,11 @@ int load_level_file(const char* filename)
 	// load ranges for room texture animation slightly after just before very, very end of room wad
 
 	if (!LoadAnimatedTextures(file))
+		return false;
+
+	// load objects textures
+
+	if (!LoadObjectsTextures(file))
 		return false;
 
 	// load non-static items from the end of the room wad
