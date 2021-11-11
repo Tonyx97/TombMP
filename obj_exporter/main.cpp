@@ -56,8 +56,36 @@ struct ANIM_FRAME
 	uint16_t* angle_sets;
 };
 
+struct ITEM_INFO;
+struct COLL_INFO;
+
+struct OBJECT_INFO
+{
+	int16_t nmeshes;
+	int16_t** mesh_ptr;
+	int32_t* bone_ptr;
+	int16_t* frame_base;
+	void (*initialise)(int16_t item_number);
+	void (*control)(int16_t item_number);
+	void (*floor)(ITEM_INFO* item, int32_t x, int32_t y, int32_t z, int32_t* height);
+	void (*ceiling)(ITEM_INFO* item, int32_t x, int32_t y, int32_t z, int32_t* height);
+	void (*draw_routine)(ITEM_INFO* item);
+	void (*collision)(int16_t item_num, ITEM_INFO* laraitem, COLL_INFO* coll);
+	int16_t anim_index;
+	int16_t hit_points;
+	int16_t pivot_length;		// replacement for 'head_size': distance from centre to neck rotation
+	int16_t radius;
+	int16_t shadow_size;			// size of shadow ( -1 if none )
+	uint16_t bite_offset;			// offset into table of BITE_INFO structures for enemies that fire weapons. (Table in DRAW.C, set up bite_offset in SETUP.C).
+	uint16_t loaded;			// is this object loaded on this level
+	uint16_t intelligent;		// does this object need AI info??
+	uint16_t non_lot;			// does this creature not use LOT system (e.g. Compys)
+	uint16_t semi_transparent;	// is sprite object semi transparent
+	uint16_t water_creature;	// is this is water based baddie? needed for SFX in shallow water
+};
+
 std::ifstream g_level;
-std::ofstream g_out_anim;
+std::ofstream g_out_obj;
 
 uint32_t g_offset = 0;
 
@@ -82,7 +110,7 @@ void read(void* data, int elements, uint32_t off = g_offset)
 
 void write(void* data, int size)
 {
-	g_out_anim.write((char*)data, size);
+	g_out_obj.write((char*)data, size);
 }
 
 int main(int argc, char** argv)
@@ -145,18 +173,23 @@ int main(int argc, char** argv)
 
 	g_offset += NumFloorData * 2;	// FloorData
 
-	auto NumMeshData = read<int32_t>();
+	// MESHES
 
-	g_offset += NumMeshData * 2; // mesh_base
+	auto NumMeshData = read<int32_t>();
+	auto meshes_base = new int16_t[NumMeshData]();
+
+	read<int16_t>(meshes_base, NumMeshData);
+
+	// MESH POINTERS
 
 	auto NumMeshPointers = read<int32_t>();
+	auto meshes = new int16_t*[NumMeshPointers]();
 
-	g_offset += NumMeshPointers * 4;	// MeshPointers / meshes
+	read<int16_t*>(meshes, NumMeshPointers);
 
 	// ANIMATIONS
 
 	auto NumAnimations = read<int32_t>();
-
 	auto animations = new ANIM_STRUCT[NumAnimations]();
 
 	read<ANIM_STRUCT>(animations, NumAnimations);
@@ -164,7 +197,6 @@ int main(int argc, char** argv)
 	// STATE CHANGES
 
 	auto NumStateChanges = read<int32_t>();
-
 	auto changes = new CHANGE_STRUCT[NumStateChanges]();
 
 	read<CHANGE_STRUCT>(changes, NumStateChanges);
@@ -172,7 +204,6 @@ int main(int argc, char** argv)
 	// RANGES
 
 	auto NumAnimDispatches = read<int32_t>();
-
 	auto ranges = new RANGE_STRUCT[NumAnimDispatches]();
 
 	read<RANGE_STRUCT>(ranges, NumAnimDispatches);
@@ -180,21 +211,20 @@ int main(int argc, char** argv)
 	// COMMANDS
 
 	auto NumAnimCommands = read<int32_t>();
-
 	auto commands = new int16_t[NumAnimCommands]();
 
 	read<int16_t>(commands, NumAnimCommands);
-	
-	// IGNORING BONES (MeshTree) HERE
+
+	// BONES
 
 	auto NumMeshTrees = read<int32_t>();
+	auto bones = new int32_t[NumMeshTrees]();
 
-	g_offset += NumMeshTrees * 4;	// MeshTrees
+	read<int32_t>(bones, NumMeshTrees);
 
 	// FRAMES
 
 	auto NumFrames = read<int32_t>();
-
 	auto frames = new int16_t[NumFrames]();
 
 	read<int16_t>(frames, NumFrames);
@@ -202,15 +232,9 @@ int main(int argc, char** argv)
 	// MODELS (used to get frame base or something)
 
 	auto NumModels = read<int32_t>();
+	auto objects = new OBJECT_INFO[1024]();
 
 	// read tr_model here
-
-	struct
-	{
-		int16_t num_meshes;
-		int16_t anim_index;
-		int16_t frame_base;
-	} objects[1000];
 
 	for (int i = 0; i < NumModels; ++i)
 	{
@@ -222,8 +246,18 @@ int main(int argc, char** argv)
 		auto size = read<int32_t>();
 		auto anim_index = read<int16_t>();
 
-		objects[id] = { .num_meshes = num_meshes, .anim_index = anim_index, .frame_base = int16_t(size) };
+		auto obj = &objects[id];
+
+		obj->nmeshes = num_meshes;
+		obj->anim_index = anim_index;
+		obj->frame_base = &frames[size / 2];
+		obj->mesh_ptr = &meshes[mesh_index];
+		obj->bone_ptr = &bones[bone_index];
+		obj->loaded = 1;
 	}
+
+	for (int i = 0; i < NumMeshPointers; ++i)
+		meshes[i] = meshes_base + (int)meshes[i] / 2;
 
 	// remap anim pointers
 
@@ -231,10 +265,10 @@ int main(int argc, char** argv)
 	{
 		auto anim = &animations[i];
 
-		anim->frame_ptr = (int16_t*)((uintptr_t)frames + (uintptr_t)anim->frame_ptr);
+		anim->frame_ptr = &frames[int32_t(anim->frame_ptr) / 2];
 	}
 
-	// close level and create anim file
+	// close level and create obj file
 
 	g_level.close();
 
@@ -242,45 +276,77 @@ int main(int argc, char** argv)
 
 	while (option == 'y')
 	{
-		int16_t obj_id = -1,
-				obj_target_id = -1,
-				anim_id = -1;
+		int16_t obj_id = -1;
 
-		std::cout << "Anim Object Location: ";
+		std::cout << "Object ID: ";
 
-		std::cin >> obj_id;
+		//std::cin >> obj_id;
 
-		if (obj_id == -1)
-			return 0;
-
-		std::cout << "To Relative Object: ";
-
-		std::cin >> obj_target_id;
-
-		if (obj_target_id == -1)
-			return 0;
-
-		std::cout << "Anim ID: ";
-
-		std::cin >> anim_id;
-
-		if (anim_id == -1)
-			return 0;
+		//if (obj_id == -1)
+		//	return 0;
 
 		std::cout << "Output File Name: ";
 
-		std::string anim_name;
+		std::string obj_name;
 
-		std::cin >> anim_name;
+		//std::cin >> obj_name;
 
-		if (anim_name.empty())
-			anim_name = "default";
+		if (obj_name.empty())
+			obj_name = "default";
 
-		anim_name += ".anim";
+		obj_name += ".obj";
 
-		g_out_anim = std::ofstream(anim_name, std::ios::binary | std::ios::trunc);
+		g_out_obj = std::ofstream("..\\patch\\" + obj_name, std::ios::binary | std::ios::trunc);
 
-		auto obj_anim_index = objects[obj_id].anim_index;
+		obj_id = 353;
+
+		auto obj = &objects[obj_id];
+
+		auto process_mesh_array = [&](int16_t* mesh_ptr, int32_t* mesh_size)
+		{
+			auto curr_ptr = mesh_ptr;			curr_ptr += 5;
+
+			auto mesh_data_size = *curr_ptr;	curr_ptr += 1 + mesh_data_size * 3;
+			auto mesh_light_size = *curr_ptr;	curr_ptr += 1 + mesh_light_size * 3;
+			auto gt4_faces_count = *curr_ptr;
+			auto gt4_faces = curr_ptr + 1;		curr_ptr = gt4_faces + gt4_faces_count * 5;
+			auto gt3_faces_count = *curr_ptr;
+			auto gt3_faces = curr_ptr + 1;		curr_ptr = gt3_faces + gt3_faces_count * 4;
+			auto g4_faces_count = *curr_ptr;
+			auto g4_faces = curr_ptr + 1;		curr_ptr = g4_faces + g4_faces_count * 5;
+			auto g3_faces_count = *curr_ptr;
+			auto g3_faces = curr_ptr + 1;		curr_ptr = g3_faces + g3_faces_count * 4;
+
+			// reset faces texture info
+
+			for (auto face = gt4_faces; face < gt4_faces + gt4_faces_count * 5; face += 5) face[4] = 0;
+			for (auto face = gt3_faces; face < gt3_faces + gt3_faces_count * 4; face += 4) face[3] = 0;
+			for (auto face = g4_faces; face < g4_faces + g4_faces_count * 5; face += 5)	face[4] = 0;
+			for (auto face = g3_faces; face < g3_faces + g3_faces_count * 4; face += 4)	face[3] = 0;
+
+			auto size = *mesh_size = (curr_ptr - mesh_ptr) * sizeof(int16_t);
+			auto mesh_data = new uint8_t[size]();
+
+			memcpy(mesh_data, mesh_ptr, size);
+
+			return mesh_data;
+		};
+
+		write(&obj->nmeshes, sizeof(obj->nmeshes));
+
+		auto mesh_array = new int16_t*[obj->nmeshes]();
+
+		for (int i = 0; i < obj->nmeshes; ++i)
+		{
+			int32_t mesh_array_size = 0;
+
+			auto mesh_array = process_mesh_array(obj->mesh_ptr[i], &mesh_array_size);
+
+			write(&mesh_array_size, sizeof(mesh_array_size));
+			write(mesh_array, mesh_array_size);
+		}
+
+		/*auto obj_anim_index = objects[obj_id].anim_index;
 		auto target_obj_anim_index = objects[obj_target_id].anim_index;
 		auto anim = &animations[obj_anim_index + anim_id];
 		auto size_of_frame = int16_t(sizeof(ANIM_STRUCT) + (objects[obj_id].num_meshes * sizeof(int16_t) * 2) - sizeof(int16_t));
@@ -296,11 +362,11 @@ int main(int argc, char** argv)
 		write(&anim_len, sizeof(anim_len));							// write anim length
 		write(&commands_len, sizeof(commands_len));					// write command length
 		write(anim->frame_ptr, anim_len * size_of_frame);			// write frame data
-		write(&commands[anim->command_index], commands_len);		// write command data
+		write(&commands[anim->command_index], commands_len);		// write command data*/
 
-		g_out_anim.close();
+		g_out_obj.close();
 
-		std::cout << "Animation " << anim_id << " exported to file " << anim_name << std::endl;
+		std::cout << "Object " << obj_id << " exported to file " << obj_name << std::endl;
 		std::cout << "Export more? (y/n)" << std::endl;
 
 		std::cin >> option;

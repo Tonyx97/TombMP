@@ -243,12 +243,8 @@ int16_t create_custom_item(int16_t id)
 		InitialiseItem(flare_item);
 
 		flare->pos.z_rot = 0;
+		flare->pos.y_rot = 0;
 		flare->pos.x_rot = 0;
-		flare->shade = -1;
-
-		AddActiveItem(flare_item);
-
-		flare->status = ACTIVE;
 	}
 
 	return flare_item;
@@ -520,73 +516,41 @@ bool LoadItems(HANDLE file)
 	// loading custom object...
 	if (true)
 	{
-		// we gonna test by copying the tr2 m16 (id 410)
+		// we gonna test by copying the tr2 m16 (id 401)
 
-		auto custom_meshes = (int16_t**)game_malloc(10 * sizeof(int16_t*));
+		auto custom_meshes = (int16_t**)game_malloc(256 * sizeof(int16_t*));
 
-		auto old_obj_id = 401;
+		auto old_obj_id = 353;
 		auto old_obj = &objects[old_obj_id];
-		constexpr auto obj_id = NUMBER_OBJECTS + 100;
+
+		auto obj_id = NUMBER_OBJECTS + 100;
 		auto obj = &objects[obj_id];
 
-		auto curr_ptr = *old_obj->mesh_ptr;
+		std::ifstream obj_file("default.obj", std::ios::binary);
 
-		curr_ptr += 5;	// x, y, z, radius and padding
+		/*int16_t num_meshes = 0;
+		int32_t mesh_array_size = 0;
 
-		auto mesh_data_size = *curr_ptr;
+		obj_file.read((char*)&num_meshes, sizeof(num_meshes));
 
-		curr_ptr += 1 + mesh_data_size * 3;
-
-		auto mesh_light_size = *curr_ptr;
-
-		curr_ptr += 1 + mesh_light_size * 3;
-
-		auto gt4_faces = *curr_ptr;
-
-		curr_ptr++;
-
-		for (int i = 0; i < gt4_faces; ++i)
+		for (int i = 0; i < num_meshes; ++i)
 		{
-			prof::print(RED, "1 {}", curr_ptr[4] & 0x7fff);
-			curr_ptr[4] = 0;
-			curr_ptr += 5;
-		}
+			obj_file.read((char*)&mesh_array_size, sizeof(mesh_array_size));
 
-		curr_ptr += gt4_faces * 5;
+			auto new_mesh_ptr = (int16_t*)game_malloc(mesh_array_size);
 
-		auto gt3_faces = *curr_ptr;
+			obj_file.read((char*)new_mesh_ptr, mesh_array_size);
 
-		curr_ptr++;
-
-		for (int i = 0; i < gt3_faces; ++i)
-		{
-			prof::print(RED, "2 {}", curr_ptr[3] & 0x7fff);
-			curr_ptr[3] = 0;
-			curr_ptr += 4;
-		}
-
-		curr_ptr += 1 + gt3_faces * 4;
-
-		auto g4_faces = *curr_ptr;
-
-		curr_ptr += 1 + g4_faces * 5;
-
-		auto g3_faces = *curr_ptr;
-
-		curr_ptr += 1 + g3_faces * 4;
-
-		auto total_size = (curr_ptr - *old_obj->mesh_ptr) * sizeof(int16_t);
-		auto new_mesh_ptr = (int16_t*)game_malloc(total_size);
-
-		memcpy(new_mesh_ptr, *old_obj->mesh_ptr, total_size);
-
-		custom_meshes[0] = new_mesh_ptr;
+			custom_meshes[i] = new_mesh_ptr;
+		}*/
 
 		obj->nmeshes = old_obj->nmeshes;
-		//obj->mesh_ptr = old_obj->mesh_ptr;
-		obj->mesh_ptr = &custom_meshes[0];
+		obj->mesh_ptr = old_obj->mesh_ptr;
 		obj->bone_ptr = old_obj->bone_ptr;
-		obj->anim_index = 0;
+		obj->frame_base = old_obj->frame_base;
+		//obj->mesh_ptr = &custom_meshes[0];
+		//obj->bone_ptr = new_bone_ptr;
+		obj->anim_index = old_obj->anim_index;
 		obj->initialise = nullptr;
 		obj->collision = nullptr;
 		obj->control = nullptr;
@@ -952,6 +916,8 @@ void unload_level()
 
 	texture_infos = 0;
 	number_custom_anims = 0;
+
+	g_attachments.clear();
 
 	free_game_memory();
 }
