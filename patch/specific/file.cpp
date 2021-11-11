@@ -528,9 +528,35 @@ bool LoadItems(HANDLE file)
 		constexpr auto obj_id = NUMBER_OBJECTS + 100;
 		auto obj = &objects[obj_id];
 
-		auto mesh_data_size = *(*old_obj->mesh_ptr + 4 + 1);
-		auto mesh_light_size = *(*old_obj->mesh_ptr + mesh_data_size);
-		auto total_size = ((mesh_data_size + mesh_light_size)) * sizeof(int16_t) * 4;
+		auto curr_ptr = *old_obj->mesh_ptr;
+
+		curr_ptr += 5;	// x, y, z, radius and padding
+
+		auto mesh_data_size = *curr_ptr;
+
+		curr_ptr += 1 + mesh_data_size * 3;
+
+		auto mesh_light_size = *curr_ptr;
+
+		curr_ptr += 1 + mesh_light_size * 3;
+
+		auto gt4_faces = *curr_ptr;
+
+		curr_ptr += 1 + gt4_faces * 5;
+
+		auto gt3_faces = *curr_ptr;
+
+		curr_ptr += 1 + gt3_faces * 4;
+
+		auto g4_faces = *curr_ptr;
+
+		curr_ptr += 1 + g4_faces * 5;
+
+		auto g3_faces = *curr_ptr;
+
+		curr_ptr += 1 + g3_faces * 4;
+
+		auto total_size = ((mesh_data_size + mesh_light_size)) * sizeof(int16_t);
 		auto new_mesh_ptr = (int16_t*)game_malloc(total_size);
 
 		memcpy(new_mesh_ptr, *old_obj->mesh_ptr, total_size);
