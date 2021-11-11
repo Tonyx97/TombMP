@@ -371,15 +371,18 @@ bool LoadObjects(HANDLE file)
 
 		auto obj = &objects[j];
 
+		int32_t bone_index;
+		int16_t mesh_index;
+
 		MyReadFile(file, &obj->nmeshes, sizeof(int16_t));
-		MyReadFile(file, &obj->mesh_ptr, sizeof(int16_t));	// mesh_index
-		MyReadFile(file, &obj->bone_ptr, sizeof(int32_t));	// bone_index
+		MyReadFile(file, &mesh_index, sizeof(int16_t));
+		MyReadFile(file, &bone_index, sizeof(int32_t));
 		MyReadFile(file, &size, sizeof(int32_t));
 		MyReadFile(file, &obj->anim_index, sizeof(int16_t));
 
 		obj->frame_base = (int16_t*)((uintptr_t)frames + (uintptr_t)size);
-		obj->mesh_ptr = (int16_t**)(&meshes[(uint32_t)obj->mesh_ptr]);
-		obj->bone_ptr = (int32_t*)(&bones[(uint32_t)obj->bone_ptr]);
+		obj->mesh_ptr = &meshes[mesh_index];
+		obj->bone_ptr = &bones[bone_index];
 		obj->loaded = 1;														// flag object as loaded
 	}
 
