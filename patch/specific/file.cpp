@@ -294,7 +294,7 @@ bool LoadObjects(HANDLE file)
 		MyReadFile(file, &anim->number_commands, sizeof(int16_t));
 		MyReadFile(file, &command_index, sizeof(int16_t));
 
-		anim->change_ptr = (int16_t*)change_index;
+		anim->change_ptr = (CHANGE_STRUCT*)change_index;
 		anim->command_ptr = (int16_t*)command_index;
 	}
 
@@ -310,7 +310,7 @@ bool LoadObjects(HANDLE file)
 		MyReadFile(file, change, offsetof(CHANGE_STRUCT, range_ptr));
 		MyReadFile(file, &range_index, sizeof(int16_t));
 
-		change->range_ptr = (int16_t*)range_index;
+		change->range_ptr = (RANGE_STRUCT*)range_index;
 	}
 
 	MyReadFile(file, &number_anim_ranges, sizeof(int32_t));
@@ -343,16 +343,16 @@ bool LoadObjects(HANDLE file)
 	{
 		auto anim = &anims[i];
 
-		anim->frame_ptr = (int16_t*)((uintptr_t)frames + (uintptr_t)anim->frame_ptr);
-		anim->change_ptr = (int16_t*)&changes[reinterpret_cast<int16_t>(anim->change_ptr)];
-		anim->command_ptr = (int16_t*)&commands[reinterpret_cast<int16_t>(anim->command_ptr)];
+		anim->frame_ptr = &frames[int32_t(anim->frame_ptr) / 2];
+		anim->change_ptr = &changes[int32_t(anim->change_ptr)];
+		anim->command_ptr = &commands[int32_t(anim->command_ptr)];
 	}
 
 	for (int i = 0; i < number_anim_changes; ++i)
 	{
 		auto change = &changes[i];
 
-		change->range_ptr = (int16_t*)&ranges[reinterpret_cast<int16_t>(change->range_ptr)];
+		change->range_ptr = &ranges[int32_t(change->range_ptr)];
 	}
 
 	// load in normal animating objects (NumModels)
@@ -380,7 +380,7 @@ bool LoadObjects(HANDLE file)
 		MyReadFile(file, &size, sizeof(int32_t));
 		MyReadFile(file, &obj->anim_index, sizeof(int16_t));
 
-		obj->frame_base = (int16_t*)((uintptr_t)frames + (uintptr_t)size);
+		obj->frame_base = &frames[size / 2];
 		obj->mesh_ptr = &meshes[mesh_index];
 		obj->bone_ptr = &bones[bone_index];
 		obj->loaded = 1;														// flag object as loaded

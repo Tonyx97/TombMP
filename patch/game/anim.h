@@ -4,6 +4,9 @@
 #include "collide.h"
 #include "objects.h"
 
+struct CHANGE_STRUCT;
+struct RANGE_STRUCT;
+
 enum command_types
 {
 	COMMAND_NULL,
@@ -45,7 +48,7 @@ struct ANIM_STRUCT
 	int16_t jump_anim_num;
 	int16_t jump_frame_num;
 	int16_t number_changes;
-	int16_t* change_ptr;
+	CHANGE_STRUCT* change_ptr;
 	int16_t number_commands;
 	int16_t* command_ptr;
 };
@@ -54,7 +57,7 @@ struct CHANGE_STRUCT
 {
 	int16_t goal_anim_state;
 	int16_t number_ranges;
-	int16_t* range_ptr;
+	RANGE_STRUCT* range_ptr;
 };
 
 struct RANGE_STRUCT

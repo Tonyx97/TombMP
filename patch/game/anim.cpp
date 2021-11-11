@@ -105,7 +105,7 @@ int16_t load_animation(const std::string& filename)
 	auto anim = &anims[anim_id];
 
 	anim->frame_ptr = (int16_t*)anim_frame_data;
-	anim->change_ptr = (int16_t*)&changes[(int16_t)anim_info.change_ptr];
+	anim->change_ptr = &changes[int32_t(anim_info.change_ptr)];
 	anim->command_ptr = anim_command_data;
 	anim->interpolation = anim_info.interpolation;
 	anim->current_anim_state = anim_info.current_anim_state;
