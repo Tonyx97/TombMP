@@ -91,6 +91,8 @@ struct DYNAMIC
 
 struct SPARKS
 {
+	PHDSPRITESTRUCT* Def;
+
 	long x, y, z;
 
 	short Xvel;
@@ -111,7 +113,6 @@ struct SPARKS
 	unsigned char Height;
 	unsigned char Scalar;
 
-	unsigned char Def;
 	signed char	RotAdd;
 	signed char	MaxYvel;
 	unsigned char On;				// Used ?

@@ -190,10 +190,10 @@ void UpdateSparks()
 
 		if (sptr->Flags & SP_EXPDEF)
 		{
-			if (sptr->R < 16 && sptr->G < 16 && sptr->B < 16)	   sptr->Def = uint8_t(objects[EXPLOSION1].mesh_ptr) + 3;
-			else if (sptr->R < 64 && sptr->G < 64 && sptr->B < 64) sptr->Def = uint8_t(objects[EXPLOSION1].mesh_ptr) + 2;
-			else if (sptr->R < 96 && sptr->G < 96 && sptr->B < 96) sptr->Def = uint8_t(objects[EXPLOSION1].mesh_ptr) + 1;
-			else												   sptr->Def = uint8_t(objects[EXPLOSION1].mesh_ptr);
+			if (sptr->R < 16 && sptr->G < 16 && sptr->B < 16)	   sptr->Def = (PHDSPRITESTRUCT*)objects[EXPLOSION1].mesh_ptr + 3;
+			else if (sptr->R < 64 && sptr->G < 64 && sptr->B < 64) sptr->Def = (PHDSPRITESTRUCT*)objects[EXPLOSION1].mesh_ptr + 2;
+			else if (sptr->R < 96 && sptr->G < 96 && sptr->B < 96) sptr->Def = (PHDSPRITESTRUCT*)objects[EXPLOSION1].mesh_ptr + 1;
+			else												   sptr->Def = (PHDSPRITESTRUCT*)objects[EXPLOSION1].mesh_ptr;
 		}
 
 		if ((sptr->sLife - sptr->Life == (sptr->extras >> 3)) && (sptr->extras & 7))
@@ -444,7 +444,7 @@ void TriggerFlareSparks(long x, long y, long z, long xv, long yv, long zv, long 
 		}
 		else sptr1->Flags = SP_SCALE | SP_DEF | SP_EXPDEF;
 
-		sptr1->Def = uint8_t(objects[EXPLOSION1].mesh_ptr);
+		sptr1->Def = (PHDSPRITESTRUCT*)objects[EXPLOSION1].mesh_ptr;
 		sptr1->Scalar = 2;
 		sptr1->Gravity = -(GetRandomDraw() & 3) - 8;
 		sptr1->MaxYvel = -(GetRandomDraw() & 3) - 4;
@@ -563,7 +563,7 @@ void TriggerExplosionSparks(long x, long y, long z, long extra_trigs, long dyn, 
 	}
 	else sptr->Flags = (uw == 1 ? (SP_SCALE | SP_DEF | SP_EXPDEF | SP_UNDERWEXP) : (SP_SCALE | SP_DEF | SP_EXPDEF));
 
-	sptr->Def = uint8_t(objects[EXPLOSION1].mesh_ptr);
+	sptr->Def = (PHDSPRITESTRUCT*)objects[EXPLOSION1].mesh_ptr;
 	sptr->Scalar = 3;
 	sptr->Gravity = 0;
 
@@ -664,7 +664,7 @@ void TriggerExplosionSmokeEnd(long x, long y, long z, long uw)
 	sptr->Flags = SP_SCALE | SP_DEF | SP_ROTATE | SP_EXPDEF;
 	sptr->RotAng = GetRandomControl() & 4095;
 	sptr->RotAdd = ((GetRandomControl() & 1) ? -(GetRandomControl() & 15) - 16 : (GetRandomControl() & 15) + 16);
-	sptr->Def = uint8_t(objects[EXPLOSION1].mesh_ptr);
+	sptr->Def = (PHDSPRITESTRUCT*)objects[EXPLOSION1].mesh_ptr;
 	sptr->Scalar = 3;
 
 	if (uw)
@@ -719,7 +719,7 @@ void TriggerExplosionSmoke(long x, long y, long z, long uw)
 	sptr->Flags = SP_SCALE | SP_DEF | SP_ROTATE | SP_EXPDEF;
 	sptr->RotAng = GetRandomControl() & 4095;
 	sptr->RotAdd = (GetRandomControl() & 15) + 16;
-	sptr->Def = uint8_t(objects[EXPLOSION1].mesh_ptr);
+	sptr->Def = (PHDSPRITESTRUCT*)objects[EXPLOSION1].mesh_ptr;
 	sptr->Scalar = 1;
 	sptr->Gravity = -(GetRandomControl() & 3) - 3;
 	sptr->MaxYvel = -(GetRandomControl() & 3) - 4;
@@ -793,7 +793,7 @@ void TriggerFireSmoke(long x, long y, long z, long body_part, long type)
 	}
 	else sptr->Flags = SP_SCALE | SP_DEF | SP_EXPDEF;
 
-	sptr->Def = uint8_t(objects[EXPLOSION1].mesh_ptr);
+	sptr->Def = (PHDSPRITESTRUCT*)objects[EXPLOSION1].mesh_ptr;
 	sptr->Scalar = 3;
 	sptr->Gravity = -(GetRandomControl() & 15) - 16;
 	sptr->MaxYvel = -(GetRandomControl() & 7) - 8;
@@ -862,7 +862,7 @@ void TriggerGunSmoke(long x, long y, long z, long xv, long yv, long zv, long ini
 	}
 	else sptr->Flags = ((room[room_id].flags & NOT_INSIDE) ? (SP_SCALE | SP_DEF | SP_WIND | SP_EXPDEF) : (SP_SCALE | SP_DEF | SP_EXPDEF));
 
-	sptr->Def = uint8_t(objects[EXPLOSION1].mesh_ptr);
+	sptr->Def = (PHDSPRITESTRUCT*)objects[EXPLOSION1].mesh_ptr;
 	sptr->Scalar = 3;
 	sptr->Gravity = -(GetRandomControl() & 1) - 2;
 	sptr->MaxYvel = -(GetRandomControl() & 1) - 2;
@@ -1039,7 +1039,7 @@ void TriggerFireFlame(long x, long y, long z, long body_part, long type)
 		}
 	}
 
-	sptr->Def = uint8_t(objects[EXPLOSION1].mesh_ptr);
+	sptr->Def = (PHDSPRITESTRUCT*)objects[EXPLOSION1].mesh_ptr;
 	sptr->Scalar = 2;
 
 	int size = 0;
@@ -1158,7 +1158,7 @@ void TriggerFireFlame(long x, long y, long z, long body_part, int r, int g, int 
 		}
 	}
 
-	sptr->Def = uint8_t(objects[EXPLOSION1].mesh_ptr);
+	sptr->Def = (PHDSPRITESTRUCT*)objects[EXPLOSION1].mesh_ptr;
 	sptr->Scalar = 2;
 
 	int size = (GetRandomControl() & 15) + 48;
@@ -1218,7 +1218,7 @@ void TriggerSideFlame(long x, long y, long z, long angle, long speed, long pilot
 	sptr->Flags = SP_SCALE | SP_DEF | SP_EXPDEF;
 	sptr->Gravity = -(GetRandomControl() & 15) - 8;
 	sptr->MaxYvel = -(GetRandomControl() & 7) - 8;
-	sptr->Def = uint8_t(objects[EXPLOSION1].mesh_ptr);
+	sptr->Def = (PHDSPRITESTRUCT*)objects[EXPLOSION1].mesh_ptr;
 	sptr->Scalar = 3;
 
 	if (pilot)
@@ -1263,7 +1263,7 @@ void TriggerGunShell(int x, int y, int z, int ry, long shelltype, long weapon, b
 		fx->speed = 16 + (GetRandomControl() & 31);
 		fx->fallspeed = -48 - (GetRandomControl() & 7);
 		fx->object_number = shelltype;
-		fx->frame_number = objects[fx->object_number].mesh_ptr;
+		fx->frame_number = objects[fx->object_number].mesh_ptr - meshes;
 		fx->shade = 0x4210;
 		fx->counter = (GetRandomControl() & 1) + 1;
 
@@ -1449,7 +1449,7 @@ void TriggerRocketFlame(long x, long y, long z, long xv, long yv, long zv, long 
 
 	sptr->Gravity = 0;
 	sptr->MaxYvel = 0;
-	sptr->Def = uint8_t(objects[EXPLOSION1].mesh_ptr);
+	sptr->Def = (PHDSPRITESTRUCT*)objects[EXPLOSION1].mesh_ptr;
 	sptr->Scalar = 2;
 	sptr->Width = sptr->sWidth = size;
 	sptr->dWidth = 2;
@@ -1492,7 +1492,7 @@ void TriggerRocketSmoke(long x, long y, long z, long body_part)
 	}
 	else sptr->Flags = SP_SCALE | SP_DEF | SP_EXPDEF;
 
-	sptr->Def = uint8_t(objects[EXPLOSION1].mesh_ptr);
+	sptr->Def = (PHDSPRITESTRUCT*)objects[EXPLOSION1].mesh_ptr;
 	sptr->Scalar = 3;
 	sptr->Gravity = -(GetRandomControl() & 3) - 4;
 	sptr->MaxYvel = -(GetRandomControl() & 3) - 4;
@@ -1895,7 +1895,7 @@ void TriggerWaterfallMist(long x, long y, long z, long angle)
 		}
 		else sptr->Flags = SP_SCALE | SP_DEF | SP_EXPDEF;
 
-		sptr->Def = uint8_t(objects[EXPLOSION1].mesh_ptr);
+		sptr->Def = (PHDSPRITESTRUCT*)objects[EXPLOSION1].mesh_ptr;
 		sptr->Scalar = 6;
 		sptr->Gravity = 0;
 		sptr->MaxYvel = 0;
@@ -2001,7 +2001,7 @@ void TriggerStaticFlame(long x, long y, long z, long size)
 	sptr->z = z + ((GetRandomControl() & 7) - 4);
 	sptr->Xvel = sptr->Yvel = sptr->Zvel = sptr->Friction = sptr->Gravity = sptr->MaxYvel = 0;
 	sptr->Flags = SP_SCALE | SP_DEF | SP_EXPDEF;
-	sptr->Def = uint8_t(objects[EXPLOSION1].mesh_ptr);
+	sptr->Def = (PHDSPRITESTRUCT*)objects[EXPLOSION1].mesh_ptr;
 	sptr->Scalar = 2;
 	sptr->Width = sptr->sWidth = size;
 	sptr->dWidth = size;
@@ -2061,7 +2061,7 @@ void TriggerDartSmoke(long x, long y, long z, long xv, long zv, long hit)
 	}
 	else sptr->Flags = SP_SCALE | SP_DEF | SP_EXPDEF;
 
-	sptr->Def = uint8_t(objects[EXPLOSION1].mesh_ptr);
+	sptr->Def = (PHDSPRITESTRUCT*)objects[EXPLOSION1].mesh_ptr;
 	sptr->Scalar = 1;
 
 	if (hit)
@@ -2152,7 +2152,7 @@ void TriggerBubble(long x, long y, long z, long size, long sizerange, short item
 	sptr->Friction = 0;
 	sptr->Flags = SP_SCALE | SP_DEF | SP_USEFXOBJPOS | SP_FX;
 	sptr->FxObj = itemnum;
-	sptr->Def = uint8_t(objects[BUBBLES1].mesh_ptr);
+	sptr->Def = (PHDSPRITESTRUCT*)objects[BUBBLES1].mesh_ptr;
 	sptr->Scalar = 0;
 	sptr->Gravity = 0;
 	sptr->MaxYvel = 0;
@@ -2198,7 +2198,7 @@ void TriggerExplosionBubble(long x, long y, long z, short roomnum)
 	sptr->Zvel = 0;
 	sptr->Friction = 0;
 	sptr->Flags = SP_SCALE | SP_DEF | SP_UNDERWEXP;
-	sptr->Def = uint8_t(objects[BUBBLES1].mesh_ptr);
+	sptr->Def = (PHDSPRITESTRUCT*)objects[BUBBLES1].mesh_ptr;
 	sptr->Scalar = 3;
 	sptr->Gravity = 0;
 	sptr->MaxYvel = 0;
@@ -2247,7 +2247,7 @@ void TriggerBreath(long x, long y, long z, long xv, long yv, long zv)
 	sptr->Zvel = zv;
 	sptr->Friction = 0;
 	sptr->Flags = ((room[lara_item->room_number].flags & NOT_INSIDE) ? (SP_SCALE | SP_DEF | SP_EXPDEF | SP_WIND) : (SP_SCALE | SP_DEF | SP_EXPDEF));
-	sptr->Def = uint8_t(objects[EXPLOSION1].mesh_ptr);
+	sptr->Def = (PHDSPRITESTRUCT*)objects[EXPLOSION1].mesh_ptr;
 	sptr->Scalar = 3;
 	sptr->Gravity = 0;
 	sptr->MaxYvel = 0;
@@ -2370,7 +2370,7 @@ void ControlSmokeEmitter(int16_t item_number)
 	}
 	else sptr->Flags = SP_SCALE | SP_DEF | SP_EXPDEF | SP_WIND;
 
-	sptr->Def = uint8_t(objects[EXPLOSION1].mesh_ptr);
+	sptr->Def = (PHDSPRITESTRUCT*)objects[EXPLOSION1].mesh_ptr;
 	sptr->Scalar = 3;
 	sptr->Gravity = -(GetRandomControl() & 7) - 8;
 	sptr->MaxYvel = -(GetRandomControl() & 7) - 4;

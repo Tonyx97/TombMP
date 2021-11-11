@@ -805,7 +805,7 @@ void TriggerSummonSmoke(long x, long y, long z)
 	}
 	else sptr->Flags = SP_SCALE | SP_DEF | SP_EXPDEF | SP_WIND;
 
-	sptr->Def = uint8_t(objects[EXPLOSION1].mesh_ptr);
+	sptr->Def = (PHDSPRITESTRUCT*)objects[EXPLOSION1].mesh_ptr;
 	sptr->Scalar = 3;
 	sptr->Gravity = -(GetRandomControl() & 7) - 8;
 	sptr->MaxYvel = -(GetRandomControl() & 7) - 4;

@@ -174,7 +174,7 @@ int ExplodingDeath(int16_t item_number, int32_t mesh_bits, int16_t damage)
 					fx->counter = 0;
 				else fx->counter = (damage << 2) | (GetRandomControl() & 3);
 
-				fx->frame_number = object->mesh_ptr;
+				fx->frame_number = object->mesh_ptr - meshes;
 				fx->object_number = BODY_PART;
 			}
 
@@ -228,7 +228,7 @@ int ExplodingDeath(int16_t item_number, int32_t mesh_bits, int16_t damage)
 					fx->counter = (damage << 2) | (GetRandomControl() & 3);
 				}
 
-				fx->frame_number = object->mesh_ptr + i;
+				fx->frame_number = (object->mesh_ptr - meshes) + i;
 				fx->object_number = BODY_PART;
 				fx->shade = 0x4210;
 			}

@@ -28,7 +28,7 @@ uint32_t g_text_dark[] =
 	0xc0ffc0,		// bronze
 };
 
-void S_DrawSprite(uint32_t dwFlags, int32_t nX, int32_t nY, int32_t nZ, int16_t nSprite, int16_t nShade, int16_t nScale)
+void S_DrawSprite(uint32_t dwFlags, int32_t nX, int32_t nY, int32_t nZ, int16_t* nSprite, int16_t nShade, int16_t nScale)
 {
 	int32_t xv, yv, zv;
 	
@@ -73,7 +73,7 @@ void S_DrawSprite(uint32_t dwFlags, int32_t nX, int32_t nY, int32_t nZ, int16_t 
 	}
 
 	auto zp = zv / phd_persp;
-	auto sprite_info = phdsprinfo + nSprite;
+	auto sprite_info = (PHDSPRITESTRUCT*)nSprite;
 	auto x1 = sprite_info->x1;
 	auto y1 = sprite_info->y1;
 	auto x2 = sprite_info->x2;
@@ -125,54 +125,6 @@ void S_DrawSprite(uint32_t dwFlags, int32_t nX, int32_t nY, int32_t nZ, int16_t 
 }
 
 /**
-* Draw 3D pickup
-*/
-void S_DrawPickup(int16_t x, int16_t y, int16_t object_num)
-{
-	static int16_t yrot = 0;
-
-	smcr = 128;
-	smcg = 128;
-	smcb = 128;
-
-	LightCol[M00] = 0xcf0;
-	LightCol[M10] = 0x680;
-	LightCol[M20] = 0x000;
-
-	LightCol[M01] = 0xcf0;
-	LightCol[M11] = 0xcf0;
-	LightCol[M21] = 0xcf0;
-
-	LightCol[M02] = 0x0;
-	LightCol[M12] = 0x0;
-	LightCol[M22] = 0xc00;
-
-	LPos[0].x = 4096 << 2;
-	LPos[0].y = -4096 << 2;
-	LPos[0].z = 3072 << 2;
-
-	LPos[1].x = -4096 << 2;
-	LPos[1].y = -4096 << 2;
-	LPos[1].z = 3072 << 2;
-
-	LPos[2].x = 0 << 2;
-	LPos[2].y = 2048 << 2;
-	LPos[2].z = 3072 << 2;
-
-	phd_PushUnitMatrix();
-	{
-		phd_mxptr[M03] = 512 << W2V_SHIFT;
-		phd_mxptr[M13] = 240 << W2V_SHIFT;
-		phd_mxptr[M23] = 1024 << W2V_SHIFT;
-		phd_RotY(yrot);
-		phd_PutPolygons(objects[object_num].mesh_ptr, 1);
-	}
-	phd_PopMatrix();
-
-	yrot += 512;
-}
-
-/**
 * Insert scaled sprite off room data
 */
 int16_t* ins_room_sprite(int16_t* objptr, int num)
@@ -193,7 +145,7 @@ int16_t* ins_room_sprite(int16_t* objptr, int num)
 		if (x2 < phd_left || y2 < phd_top || x1 >= phd_right || y1 >= phd_bottom)
 			continue;
 
-		InsertSprite((int)vn->zv, x1, y1, x2, y2, objptr[1], (int)vn->g, -1, DRAW_TLV_WGT, 0);
+		InsertSprite((int)vn->zv, x1, y1, x2, y2, (int16_t*)(phdsprinfo + objptr[1]), (int)vn->g, -1, DRAW_TLV_WGT, 0);
 	}
 
 	return objptr;
@@ -202,9 +154,9 @@ int16_t* ins_room_sprite(int16_t* objptr, int num)
 /**
 * Draw sprite at specific screen location with scalable width and height
 */
-void S_DrawScreenSprite2d(int32_t sx, int32_t sy, int32_t z, int32_t scaleH, int32_t scaleV, int16_t sprnum, int16_t shade, uint16_t flags)
+void S_DrawScreenSprite2d(int32_t sx, int32_t sy, int32_t z, int32_t scaleH, int32_t scaleV, int16_t* sprnum, int16_t shade, uint16_t flags)
 {
-	auto sptr = &phdsprinfo[sprnum];
+	auto sptr = (PHDSPRITESTRUCT*)sprnum;
 	auto x1 = ((sptr->x1 * scaleH) >> 16) + sx;
 	auto y1 = ((sptr->y1 * scaleV) >> 16) + sy;
 	auto x2 = ((sptr->x2 * scaleH) >> 16) + sx;
@@ -225,12 +177,14 @@ void S_DrawScreenSprite2d(int32_t sx, int32_t sy, int32_t z, int32_t scaleH, int
 
 	int nShade2 = r << 10 | g << 5 | b;
 
+	auto sprite = (int16_t*)sptr;
+
 	if (flags != 65535)
 	{
-		InsertSprite(phd_znear + (6 << 3), x1, y1, x2, y2, sprnum, nShade1, nShade2, DRAW_TLV_WGT, 4);
-		InsertSprite(phd_znear + (6 << 3), x1 + 2, y1 + 2, x2 + 2, y2 + 2, sprnum, 0, 0, DRAW_TLV_WGT, 4);
+		InsertSprite(phd_znear + (6 << 3), x1, y1, x2, y2, sprite, nShade1, nShade2, DRAW_TLV_WGT, 4);
+		InsertSprite(phd_znear + (6 << 3), x1 + 2, y1 + 2, x2 + 2, y2 + 2, sprite, 0, 0, DRAW_TLV_WGT, 4);
 	}
-	else InsertSprite(phd_znear, x1, y1, x2, y2, sprnum, nShade1, nShade2, DRAW_TLV_WGT, 0);
+	else InsertSprite(phd_znear, x1, y1, x2, y2, sprite, nShade1, nShade2, DRAW_TLV_WGT, 0);
 }
 
 /**
@@ -239,13 +193,13 @@ void S_DrawScreenSprite2d(int32_t sx, int32_t sy, int32_t z, int32_t scaleH, int
 void S_DrawScreenSprite(int32_t sx, int32_t sy, int32_t z, int32_t scaleH, int32_t scaleV, int16_t sprnum, int16_t shade, uint16_t flags)
 {
 	auto sptr = &phdsprinfo[sprnum];
-	auto x1 = (((sptr->x1>>3) * scaleH)>>16) + sx;
-	auto x2 = (((sptr->x2>>3) * scaleH)>>16) + sx;
-	auto y1 = (((sptr->y1>>3) * scaleV)>>16) + sy;
-	auto y2 = (((sptr->y2>>3) * scaleV)>>16) + sy;
+	auto x1 = (((sptr->x1 >> 3) * scaleH) >> 16) + sx;
+	auto x2 = (((sptr->x2 >> 3) * scaleH) >> 16) + sx;
+	auto y1 = (((sptr->y1 >> 3) * scaleV) >> 16) + sy;
+	auto y2 = (((sptr->y2 >> 3) * scaleV) >> 16) + sy;
 
 	if (x2 < 0 || y2 < 0 || x1 >= phd_winwidth || y1 >= phd_winheight)
 		return;
 
-	InsertSprite(z << 3, x1, y1, x2, y2, sprnum, shade, -1, DRAW_TLV_WGT, 0);
+	InsertSprite(z << 3, x1, y1, x2, y2, (int16_t*)(phdsprinfo + sprnum), shade, -1, DRAW_TLV_WGT, 0);
 }

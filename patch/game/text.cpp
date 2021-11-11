@@ -382,31 +382,7 @@ void T_DrawText()
 
 	for (int i = 0; i < MAX_TEXT_STRINGS; ++i, ++textString)
 		if (textString && (textString->flags & T_ACTIVE))
-		{
 			T_DrawThisText(textString);
-		}
-}
-
-void draw_border(int32_t xpos, int32_t ypos, int32_t zpos, int32_t width, int32_t height)
-{
-#ifdef GAMEDEBUG
-	if (!objects[BORDERS].loaded)
-		return;
-#endif
-
-	width -= 8;
-	height -= 8;
-	xpos += 4;
-	ypos += 4;
-
-	S_DrawScreenSprite2d(xpos, ypos, zpos, 0x10000, 0x10000, (int16_t)(objects[BORDERS].mesh_ptr + 0), 7, -1);
-	S_DrawScreenSprite2d(xpos + width, ypos, zpos, 0x10000, 0x10000, (int16_t)(objects[BORDERS].mesh_ptr + 1), 7, -1);
-	S_DrawScreenSprite2d(xpos + width, ypos + height, zpos, 0x10000, 0x10000, (int16_t)(objects[BORDERS].mesh_ptr + 2), 7, -1);
-	S_DrawScreenSprite2d(xpos, ypos + height, zpos, 0x10000, 0x10000, (int16_t)(objects[BORDERS].mesh_ptr + 3), 7, -1);
-	S_DrawScreenSprite2d(xpos, ypos, zpos, width * 0x2000, 0x10000, (int16_t)(objects[BORDERS].mesh_ptr + 4), 7, -1);
-	S_DrawScreenSprite2d(xpos + width, ypos, zpos, 0x10000, height * 0x2000, (int16_t)(objects[BORDERS].mesh_ptr + 5), 7, -1);
-	S_DrawScreenSprite2d(xpos, ypos + height, zpos, width * 0x2000, 0x10000, (int16_t)(objects[BORDERS].mesh_ptr + 6), 7, -1);
-	S_DrawScreenSprite2d(xpos, ypos, zpos, 0x10000, height * 0x2000, (int16_t)(objects[BORDERS].mesh_ptr + 7), 7, -1);
 }
 
 void T_RightJustify(TEXTSTRING* textString)
@@ -486,7 +462,7 @@ void T_DrawThisText(TEXTSTRING* textString)
 			xpos += ((((12 - T_textSpacing[sprite]) / 2) * scaleH) >> 16);
 
 		if (xpos > 0 && xpos < SCR_RIGHT && ypos > 0 && ypos < SCR_BOTTOM)
-			S_DrawScreenSprite2d(xpos, ypos, zpos, scaleH, scaleV, (int16_t)(objects[ALPHABET].mesh_ptr + sprite), textString->Colour, textString->textflags);
+			S_DrawScreenSprite2d(xpos, ypos, zpos, scaleH, scaleV, (int16_t*)((PHDSPRITESTRUCT*)objects[ALPHABET].mesh_ptr + sprite), textString->Colour, textString->textflags);
 
 		if (letter == '(' || letter == ')' || letter == '$' || letter == '~')
 			continue;
@@ -530,9 +506,6 @@ void T_DrawThisText(TEXTSTRING* textString)
 		}
 		else S_DrawScreenFBox(bxpos, bypos, zpos + textString->bgndOffZ + 2, bwidth, bheight, textString->bgndColour, textString->bgndGour, textString->bgndflags);
 	}
-
-	if (textString->flags & T_ADDOUTLINE)
-		draw_border(bxpos, bypos, 0, bwidth, bheight);
 }
 
 uint32_t GetTextScaleH(uint32_t scaleH)

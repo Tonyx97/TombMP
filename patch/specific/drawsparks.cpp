@@ -257,7 +257,7 @@ void S_DrawSparks()
 										 x2, y1, z, nShade,
 										 x2, y2, z, nShade,
 										 x1, y2, z, nShade,
-										 -1, type, 0);
+										 nullptr, type, 0);
 		}
 	}
 }

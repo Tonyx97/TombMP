@@ -966,7 +966,7 @@ void TriggerPlasmaBallFlameLB(int16_t fx_number, long type, long xv, long yv, lo
 	else sptr->Flags = SP_SCALE | SP_DEF | SP_EXPDEF | SP_FX;
 
 	sptr->FxObj = fx_number;
-	sptr->Def = uint8_t(objects[EXPLOSION1].mesh_ptr);
+	sptr->Def = (PHDSPRITESTRUCT*)objects[EXPLOSION1].mesh_ptr;
 	sptr->Scalar = 1;
 	sptr->Width = sptr->sWidth = size;
 	sptr->Height = sptr->sHeight = size;

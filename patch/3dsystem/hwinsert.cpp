@@ -1017,7 +1017,7 @@ int16_t* InsertObjectG4(int16_t* pFaceInfo, int nFaces, sort_type nSortType)
 	return pFaceInfo;
 }
 
-void InsertSprite(int nZDepth, int nX1, int nY1, int nX2, int nY2, int nSprite, int nShade, int nShade1, int drawtype, int offset)
+void InsertSprite(int nZDepth, int nX1, int nY1, int nX2, int nY2, int16_t* nSprite, int nShade, int nShade1, int drawtype, int offset)
 {
 	if (nX2 <= nX1 || nY2 <= nY1 || nX2 <= 0 || nY2 <= 0 ||
 		nX1 >= phd_winxmax || nY1 >= phd_winymax)
@@ -1034,7 +1034,7 @@ void InsertSprite(int nZDepth, int nX1, int nY1, int nX2, int nY2, int nSprite, 
 	if (nZDepth >= phd_zfar)
 		return;
 
-	auto pSprite = phdsprinfo + nSprite;
+	auto pSprite = (PHDSPRITESTRUCT*)nSprite;
 
 	float fZDepth = (float)nZDepth,
 		  ooz = one / fZDepth,
@@ -1625,21 +1625,18 @@ void HWI_InsertAlphaSprite_Sorted(int nX1, int nY1, int nZ1, int nShade1,
 								  int nX2, int nY2, int nZ2, int nShade2,
 								  int nX3, int nY3, int nZ3, int nShade3,
 								  int nX4, int nY4, int nZ4, int nShade4,
-								  int nSprite, int type, int dbl)
+								  PHDSPRITESTRUCT* nSprite, int type, int dbl)
 {
 	temp_var<bool, false> blue_effect(g_blue_effect);
 
-	PHDSPRITESTRUCT* pSprite = 0;
-
 	float u1, v1, u2, v2;
 
-	if (nSprite != -1)
+	if (nSprite)
 	{
-		pSprite = phdsprinfo + nSprite;
-		u1 = (float)((pSprite->offset << 8) & 0xff00);
-		v1 = (float)(pSprite->offset & 0xff00);
-		u2 = u1 + pSprite->width;
-		v2 = v1 + pSprite->height;
+		u1 = (float)((nSprite->offset << 8) & 0xff00);
+		v1 = (float)(nSprite->offset & 0xff00);
+		u2 = u1 + nSprite->width;
+		v2 = v1 + nSprite->height;
 
 		u1 += App.nUVAdd;
 		u2 -= App.nUVAdd;
@@ -1675,7 +1672,7 @@ void HWI_InsertAlphaSprite_Sorted(int nX1, int nY1, int nZ1, int nShade1,
 	v_buffer[3].vg = GETG(nShade4);
 	v_buffer[3].vb = GETB(nShade4);
 
-	if (nSprite != -1)
+	if (nSprite)
 	{
 		if (dbl == 0)
 		{
@@ -1716,16 +1713,16 @@ void HWI_InsertAlphaSprite_Sorted(int nX1, int nY1, int nZ1, int nShade1,
 		phd_topfloat = (float)phd_winymin;
 		phd_bottomfloat = (float)(phd_winymin + phd_winheight);
 
-		nPoints = (nSprite == -1 ? XYGClipper(nPoints, v_buffer) : RoomXYGUVClipper(nPoints, v_buffer));
+		nPoints = (!nSprite ? XYGClipper(nPoints, v_buffer) : RoomXYGUVClipper(nPoints, v_buffer));
 	}
 
 	if (nPoints)
 	{
 		const float fZDepth = (float)((nZ1 + nZ2 + nZ3 + nZ4) >> 2);
 
-		if (nSprite == -1)
+		if (!nSprite)
 			HWI_InsertPoly_GouraudRGB(nPoints, fZDepth, type);
-		else HWI_InsertClippedPoly_Textured(nPoints, fZDepth, type, pSprite->tpage);
+		else HWI_InsertClippedPoly_Textured(nPoints, fZDepth, type, nSprite->tpage);
 	}
 }
 

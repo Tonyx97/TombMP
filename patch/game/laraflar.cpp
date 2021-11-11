@@ -95,7 +95,7 @@ void DrawFlareInAir(ITEM_INFO* item)
 	if (int clip = S_GetObjectBounds(frmptr[0]))
 	{
 		CalculateObjectLighting(item, frmptr[0]);
-		phd_PutPolygons(meshes[objects[FLARE_ITEM].mesh_ptr], clip);
+		phd_PutPolygons(*(objects[FLARE_ITEM].mesh_ptr), clip);
 
 		if ((int32_t)item->data & 0x8000)
 		{
@@ -336,12 +336,12 @@ void undraw_flare()
 
 void draw_flare_meshes()
 {
-	lara.mesh_ptrs[HAND_L] = meshes[objects[FLARE].mesh_ptr + HAND_L];
+	lara.mesh_ptrs[HAND_L] = *(objects[FLARE].mesh_ptr + HAND_L);
 }
 
 void undraw_flare_meshes()
 {
-	lara.mesh_ptrs[HAND_L] = meshes[objects[LARA].mesh_ptr + HAND_L];
+	lara.mesh_ptrs[HAND_L] = *(objects[LARA].mesh_ptr + HAND_L);
 }
 
 void ready_flare()

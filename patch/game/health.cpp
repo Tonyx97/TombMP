@@ -42,7 +42,7 @@ int FlashIt()
 	return flash_state;
 }
 
-void draw_game_info(int timed)
+void draw_game_info()
 {
 	DrawAmmoInfo();
 	DrawModeInfo();
@@ -53,7 +53,6 @@ void draw_game_info(int timed)
 
 		DrawHealthBar(flash_state);
 		DrawAirBar(flash_state);
-		DrawPickups(timed);
 
 		if (lara.dash < LARA_DASH_TIME)
 			S_DrawDashBar((lara.dash * 100) / LARA_DASH_TIME);
@@ -177,46 +176,6 @@ void InitialisePickUpDisplay()
 {
 	for (int i = 0; i < NUM_PU; ++i)
 		pickups[i].duration = 0;
-}
-
-void DrawPickups(int timed)
-{
-	static int old_game_timer;
-
-	int time = 10000 - old_game_timer;
-
-	old_game_timer = 10000;
-
-	if ((time <= 0) || (time >= 60))
-		return;
-
-	int w = phd_winwidth / 10,
-		x = phd_winwidth - w,
-		y = phd_winheight - w,
-		wa = w,
-		drawn = 0;
-
-	auto pu = pickups;
-
-	for (int i = 0; i < NUM_PU; ++i, ++pu, x -= wa)
-	{
-		if (timed)
-			pu->duration -= time;
-
-		if (pu->duration > 0)
-		{
-			if (drawn == 4 || drawn == 8)
-			{
-				y -= (wa * 2) / 3;
-				x = phd_winwidth - w;
-			}
-
-			S_DrawPickup(x, y + w, pu->sprnum);
-
-			++drawn;
-		}
-		else pu->duration = 0;
-	}
 }
 
 void AddDisplayPickup(int16_t objnum)

@@ -284,7 +284,7 @@ void ControlGhostGasEmitter(int16_t item_number)
 	}
 	else sptr->Flags = SP_SCALE | SP_DEF | SP_EXPDEF;
 
-	sptr->Def = uint8_t(objects[EXPLOSION1].mesh_ptr);
+	sptr->Def = (PHDSPRITESTRUCT*)objects[EXPLOSION1].mesh_ptr;
 	sptr->Scalar = 3;
 	sptr->Gravity = sptr->MaxYvel = 0;
 	sptr->Width = sptr->sWidth = size >> 1;

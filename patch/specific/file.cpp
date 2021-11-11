@@ -378,7 +378,7 @@ bool LoadObjects(HANDLE file)
 		MyReadFile(file, &obj->anim_index, sizeof(int16_t));
 
 		obj->frame_base = (int16_t*)((uintptr_t)frames + (uintptr_t)size);
-		obj->mesh_ptr = (int16_t*)(&meshes[(uint32_t)obj->mesh_ptr]);
+		obj->mesh_ptr = (int16_t**)(&meshes[(uint32_t)obj->mesh_ptr]);
 		obj->bone_ptr = (int32_t*)(&bones[(uint32_t)obj->bone_ptr]);
 		obj->loaded = 1;														// flag object as loaded
 	}
@@ -443,7 +443,7 @@ bool LoadSprites(HANDLE file)
 			MyReadFile(file, &obj->nmeshes, sizeof(int16_t));
 			MyReadFile(file, &obj->mesh_ptr, sizeof(int16_t));
 
-			obj->mesh_ptr = (int16_t*)(phdsprinfo + (uintptr_t)obj->mesh_ptr);
+			obj->mesh_ptr = (int16_t**)(phdsprinfo + (uintptr_t)obj->mesh_ptr);
 			obj->loaded = 1;
 		}
 		else
@@ -537,9 +537,9 @@ bool LoadItems(HANDLE file)
 		obj->shadow_size = 0;
 		obj->hit_points = DONT_TARGET;
 		obj->intelligent = obj->water_creature = 0;
-		obj->loaded = 0;	// we have to notify the server about this if we ever get this working
+		obj->loaded = 1;	// we have to notify the server about this if we ever get this working
 
-		create_custom_item(obj_id);
+		//create_custom_item(obj_id);
 	}
 
 	return true;

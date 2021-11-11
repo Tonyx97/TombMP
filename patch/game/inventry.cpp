@@ -648,7 +648,7 @@ void DrawInventoryItem(INVENTORY_ITEM* inv_item)
 	}
 
 	if (object->nmeshes < 0)
-		return S_DrawSprite(SPRITE_REL, 0, 0, 0, object->mesh_ptr, 0, 0);
+		return S_DrawSprite(SPRITE_REL, 0, 0, 0, (int16_t*)object->mesh_ptr, 0, 0);
 
 	if (auto isprite_list = inv_item->sprlist)
 	{
@@ -698,7 +698,7 @@ void DrawInventoryItem(INVENTORY_ITEM* inv_item)
 		int16_t mesh_num = 1;
 
 		if (mesh_num & inv_item->drawn_meshes)
-			phd_PutPolygons(meshes[mesh], clip);
+			phd_PutPolygons(*mesh, clip);
 
 		for (int i = object->nmeshes - 1; i > 0; --i, bone += 3)
 		{
@@ -729,7 +729,7 @@ void DrawInventoryItem(INVENTORY_ITEM* inv_item)
 			}
 
 			if (mesh_num & inv_item->drawn_meshes)
-				phd_PutPolygons(meshes[mesh], clip);
+				phd_PutPolygons(*mesh, clip);
 		}
 	}
 

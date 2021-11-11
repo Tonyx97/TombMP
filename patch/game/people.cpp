@@ -155,7 +155,7 @@ bool ShotLara(ITEM_INFO* item, AI_INFO* info, BITE_INFO* gun, int16_t extra_rota
 		fx->speed = 16 + (GetRandomControl() & 31);
 		fx->fallspeed = -48 - (GetRandomControl() & 7);
 		fx->object_number = GUNSHELL;
-		fx->frame_number = objects[GUNSHELL].mesh_ptr;
+		fx->frame_number = objects[GUNSHELL].mesh_ptr - meshes;
 		fx->shade = 0x4210;
 		fx->counter = 1;	// Number of bounces.
 		fx->flag1 = item->pos.y_rot - 0x4800 + (GetRandomControl() & 0xfff);

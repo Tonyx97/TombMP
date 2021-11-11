@@ -336,8 +336,7 @@ inline bool g_blue_effect = false;
 inline uint8_t G_GouraudPalette[256 * 4];
 
 /*** scalespr.cpp ***/
-void S_DrawSprite(uint32_t dwFlags, int32_t nX, int32_t nY, int32_t nZ, int16_t nSprite, int16_t nShade, int16_t nScale);
-void S_DrawPickup(int16_t x, int16_t y, int16_t object_num);
-void S_DrawScreenSprite2d(int32_t sx, int32_t sy, int32_t z, int32_t scaleH, int32_t scaleV, int16_t sprnum, int16_t shade, uint16_t flags);
+void S_DrawSprite(uint32_t dwFlags, int32_t nX, int32_t nY, int32_t nZ, int16_t* nSprite, int16_t nShade, int16_t nScale);
+void S_DrawScreenSprite2d(int32_t sx, int32_t sy, int32_t z, int32_t scaleH, int32_t scaleV, int16_t* sprnum, int16_t shade, uint16_t flags);
 void S_DrawScreenSprite(int32_t sx, int32_t sy, int32_t z, int32_t scaleH, int32_t scaleV, int16_t sprnum, int16_t shade, uint16_t flags);
 int16_t* ins_room_sprite(int16_t* objptr, int num);

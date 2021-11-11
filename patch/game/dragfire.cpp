@@ -116,7 +116,7 @@ void TriggerFlamethrowerHitFlame(long x, long y, long z)
 		sptr->MaxYvel = -(GetRandomControl() & 7) - 16;
 	}
 
-	sptr->Def = uint8_t(objects[EXPLOSION1].mesh_ptr);
+	sptr->Def = (PHDSPRITESTRUCT*)objects[EXPLOSION1].mesh_ptr;
 	sptr->Scalar = 2;
 	sptr->Width = sptr->sWidth = size;
 	sptr->Height = sptr->sHeight = size;
@@ -181,7 +181,7 @@ void TriggerFlamethrowerSmoke(long x, long y, long z, long uw)
 	sptr->Flags = SP_SCALE | SP_DEF | SP_ROTATE | SP_EXPDEF;
 	sptr->RotAng = GetRandomControl() & 4095;
 	sptr->RotAdd = ((GetRandomControl() & 1) ? -(GetRandomControl() & 15) - 16 : (GetRandomControl() & 15) + 16);
-	sptr->Def = uint8_t(objects[EXPLOSION1].mesh_ptr);
+	sptr->Def = (PHDSPRITESTRUCT*)objects[EXPLOSION1].mesh_ptr;
 	sptr->Scalar = 3;
 
 	if (uw)

@@ -1507,7 +1507,7 @@ void TriggerPendulumFlame(int16_t item_number)
 	sptr->NodeNumber = SPN_PENDULUMFLAME;
 	sptr->Gravity = -(GetRandomControl() & 31) - 16;
 	sptr->MaxYvel = -(GetRandomControl() & 7) - 16;
-	sptr->Def = uint8_t(objects[EXPLOSION1].mesh_ptr);
+	sptr->Def = (PHDSPRITESTRUCT*)objects[EXPLOSION1].mesh_ptr;
 	sptr->Scalar = 3;
 	sptr->Width = sptr->sWidth = (uint8_t)size;
 	sptr->Height = sptr->sHeight = (uint8_t)size;

@@ -130,7 +130,7 @@ void TriggerShivaSmoke(long x, long y, long z, long uw)
 	sptr->Flags = SP_SCALE | SP_DEF | SP_ROTATE | SP_EXPDEF;
 	sptr->RotAng = GetRandomControl() & 4095;
 	sptr->RotAdd = ((GetRandomControl() & 1) ? -(GetRandomControl() & 15) - 16 : (GetRandomControl() & 15) + 16);
-	sptr->Def = uint8_t(objects[EXPLOSION1].mesh_ptr);
+	sptr->Def = (PHDSPRITESTRUCT*)objects[EXPLOSION1].mesh_ptr;
 	sptr->Scalar = 3;
 
 	if (uw)
@@ -184,8 +184,8 @@ void DrawShiva(ITEM_INFO* item)
 		CalculateObjectLighting(item, frmptr[0]);
 
 		auto extra_rotation = (int16_t*)item->data;
-		auto meshpp = &meshes[objects[SHIVA].mesh_ptr],
-			 swappp = &meshes[objects[MESHSWAP1].mesh_ptr];
+		auto meshpp = objects[SHIVA].mesh_ptr,
+			 swappp = objects[MESHSWAP1].mesh_ptr;
 
 		auto bone = object->bone_ptr;
 

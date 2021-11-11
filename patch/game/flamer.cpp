@@ -428,7 +428,7 @@ void TriggerFlamethrowerFlame(long x, long y, long z, long xv, long yv, long zv,
 
 	sptr->FxObj = fxnum;
 	sptr->Gravity = sptr->MaxYvel = 0;
-	sptr->Def = uint8_t(objects[EXPLOSION1].mesh_ptr);
+	sptr->Def = (PHDSPRITESTRUCT*)objects[EXPLOSION1].mesh_ptr;
 
 	if (xv || yv || zv)
 	{
@@ -484,7 +484,7 @@ void TriggerPilotFlame(long itemnum)
 	sptr->Friction = 4;
 	sptr->Gravity = -(GetRandomControl() & 3) - 2;
 	sptr->MaxYvel = -(GetRandomControl() & 3) - 4;
-	sptr->Def = uint8_t(objects[EXPLOSION1].mesh_ptr);
+	sptr->Def = (PHDSPRITESTRUCT*)objects[EXPLOSION1].mesh_ptr;
 	sptr->Scalar = 0;
 	sptr->Width = sptr->sWidth = size >> 1;
 	sptr->Height = sptr->sHeight = size >> 1;

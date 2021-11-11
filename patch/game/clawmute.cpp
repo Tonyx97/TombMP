@@ -353,7 +353,7 @@ void TriggerPlasma(int16_t item_number)
 	sptr->MaxYvel = (GetRandomControl() & 7) + 16;
 	sptr->FxObj = item_number;
 	sptr->NodeNumber = SPN_CLAWMUTEPLASMA;
-	sptr->Def = uint8_t(objects[EXPLOSION1].mesh_ptr);
+	sptr->Def = (PHDSPRITESTRUCT*)objects[EXPLOSION1].mesh_ptr;
 	sptr->Scalar = 1;
 	sptr->Width = sptr->sWidth = size;
 	sptr->Height = sptr->sHeight = size;
@@ -404,7 +404,7 @@ void TriggerPlasmaBallFlame(int16_t fx_number, long type, long xv, long yv, long
 
 	sptr->FxObj = fx_number;
 
-	sptr->Def = uint8_t(objects[EXPLOSION1].mesh_ptr);
+	sptr->Def = (PHDSPRITESTRUCT*)objects[EXPLOSION1].mesh_ptr;
 	sptr->Scalar = 1;
 	sptr->Width = sptr->sWidth = size;
 	sptr->Height = sptr->sHeight = size;

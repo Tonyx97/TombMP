@@ -46,13 +46,13 @@ enum weapon_anim
 
 void draw_shotgun_meshes(int weapon_type)
 {
-	lara.mesh_ptrs[HAND_R] = meshes[objects[WeaponObject(weapon_type)].mesh_ptr + HAND_R];
+	lara.mesh_ptrs[HAND_R] = *(objects[WeaponObject(weapon_type)].mesh_ptr + HAND_R);
 	lara.back_gun = 0;
 }
 
 void undraw_shotgun_meshes(int weapon_type)
 {
-	lara.mesh_ptrs[HAND_R] = meshes[objects[LARA].mesh_ptr + HAND_R];
+	lara.mesh_ptrs[HAND_R] = *(objects[LARA].mesh_ptr + HAND_R);
 	lara.back_gun = WeaponObject(weapon_type);
 }
 

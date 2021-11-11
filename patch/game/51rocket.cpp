@@ -268,7 +268,7 @@ void Trigger51RocketSmoke(long x, long y, long z, long yv, long fire)
 	}
 	else sptr->Flags = SP_SCALE | SP_DEF | SP_EXPDEF;
 
-	sptr->Def = uint8_t(objects[EXPLOSION1].mesh_ptr);
+	sptr->Def = (PHDSPRITESTRUCT*)objects[EXPLOSION1].mesh_ptr;
 	sptr->Scalar = 3;
 	sptr->Gravity = sptr->MaxYvel = 0;
 	sptr->Width = sptr->sWidth = size >> 2;
@@ -330,7 +330,7 @@ void Trigger51BlastFire(long x, long y, long z, long smoke, long end)
 	sptr->Flags = SP_SCALE | SP_DEF | SP_ROTATE | SP_EXPDEF;
 	sptr->RotAng = GetRandomControl() & 4095;
 	sptr->RotAdd = ((GetRandomControl() & 1) ? -(GetRandomControl() & 15) - 16 : (GetRandomControl() & 15) + 16);
-	sptr->Def = uint8_t(objects[EXPLOSION1].mesh_ptr);
+	sptr->Def = (PHDSPRITESTRUCT*)objects[EXPLOSION1].mesh_ptr;
 	sptr->Scalar = 4;
 	sptr->Gravity = sptr->MaxYvel = 0;
 

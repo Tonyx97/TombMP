@@ -395,10 +395,9 @@ void GetRoomBounds()
 int32_t draw_phase_game()
 {
 	draw_rooms(camera.pos.room_number);
-	draw_game_info(1);
+	draw_game_info();
 	display_inventory(0);
 	output_polylist();
-
 	animate_textures(camera.number_frames = dump_screen());
 
 	return camera.number_frames;
@@ -466,7 +465,7 @@ void draw_rooms(int16_t current_room)
 				gar_RotYXZsuperpack(&frame, 0);
 
 				S_InitialisePolyList(SIPL_DONT_CLEAR_SCREEN);
-				S_InsertBackground(objects[HORIZON].mesh_ptr);
+				S_InsertBackground(*objects[HORIZON].mesh_ptr);
 			}
 			phd_PopMatrix();
 		}
@@ -668,7 +667,7 @@ void draw_rooms(int16_t current_room)
 
 				// draw player's flare light
 
-				if (lara.mesh_ptrs[HAND_L] == meshes[objects[FLARE].mesh_ptr + HAND_L] && lara.flare_age > 0 && lara.flare_age < FLARE_DEAD)
+				if (lara.mesh_ptrs[HAND_L] == *(objects[FLARE].mesh_ptr + HAND_L) && lara.flare_age > 0 && lara.flare_age < FLARE_DEAD)
 				{
 					PHD_VECTOR flare_pos;
 
@@ -875,12 +874,12 @@ void DrawEffect(int16_t fx_num)
 		return S_DrawSprite(
 			((uint16_t)fx->pos.x_rot) | (fx->pos.y_rot << 16),
 			fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos,
-			objects[GLOW].mesh_ptr,
+			(int16_t*)objects[GLOW].mesh_ptr,
 			fx->shade,
 			fx->frame_number);
 
 	if (object->nmeshes < 0)
-		S_DrawSprite(SPRITE_ABS | (object->semi_transparent ? SPRITE_SEMITRANS : 0) | SPRITE_SHADE, fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos, (int16_t)(object->mesh_ptr - fx->frame_number), fx->shade, 0);
+		S_DrawSprite(SPRITE_ABS | (object->semi_transparent ? SPRITE_SEMITRANS : 0) | SPRITE_SHADE, fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos, (int16_t*)(object->mesh_ptr - fx->frame_number), fx->shade, 0);
 	else
 	{
 		phd_PushMatrix();
@@ -894,7 +893,7 @@ void DrawEffect(int16_t fx_num)
 				if (object->nmeshes)
 				{
 					S_CalculateLight(fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos, fx->room_number, NULL);
-					phd_PutPolygons(meshes[object->mesh_ptr], -1);
+					phd_PutPolygons(*object->mesh_ptr, -1);
 				}
 				else
 				{
@@ -934,7 +933,7 @@ void DrawAnimatingItem(ITEM_INFO* item)
 		CalculateObjectLighting(item, frmptr[0]);
 
 		auto extra_rotation = (item->data ? (int16_t*)item->data : null_rotations);
-		auto meshpp = &meshes[object->mesh_ptr];
+		auto meshpp = object->mesh_ptr;
 		auto bone = object->bone_ptr;
 
 		uint32_t bit = 1;
@@ -984,11 +983,11 @@ void DrawAnimatingItem(ITEM_INFO* item)
 					phd_TranslateRel(bi->x, bi->y, bi->z);
 					phd_RotYXZ(0, item->object_number == ROBOT_SENTRY_GUN ? 180 * ONE_DEGREE : -90 * ONE_DEGREE, (int16_t)((rnd & 3) << 14) + (rnd >> 2) - 4096);
 
-					S_DrawSprite(SPRITE_REL | SPRITE_SEMITRANS | SPRITE_TRANS_ADD | SPRITE_TINT | SPRITE_COLOUR(0x3f, 0x38, 0x8) | SPRITE_SCALE, 0, 0, 0, objects[GLOW].mesh_ptr, 0, 0xc0);
+					S_DrawSprite(SPRITE_REL | SPRITE_SEMITRANS | SPRITE_TRANS_ADD | SPRITE_TINT | SPRITE_COLOUR(0x3f, 0x38, 0x8) | SPRITE_SCALE, 0, 0, 0, (int16_t*)objects[GLOW].mesh_ptr, 0, 0xc0);
 
 					S_CalculateStaticLight(24 | (18 << 5));
 
-					phd_PutPolygons(meshes[objects[(EnemyWeapon[object->bite_offset] & 1) ? M16_FLASH : GUN_FLASH].mesh_ptr], clip);
+					phd_PutPolygons(*objects[(EnemyWeapon[object->bite_offset] & 1) ? M16_FLASH : GUN_FLASH].mesh_ptr, clip);
 
 					phd_PopMatrix();
 
@@ -1073,9 +1072,9 @@ void DrawAnimatingItem(ITEM_INFO* item)
 					phd_RotYXZ_I(0, -90 * ONE_DEGREE, (int16_t)((rnd & 3) << 14) + (rnd >> 2) - 4096);
 					InterpolateMatrix();
 
-					S_DrawSprite(SPRITE_REL | SPRITE_SEMITRANS | SPRITE_TRANS_ADD | SPRITE_TINT | SPRITE_COLOUR(0x3f, 0x38, 0x8) | SPRITE_SCALE, 0, 0, 0, objects[GLOW].mesh_ptr, 0, 0xc0);
+					S_DrawSprite(SPRITE_REL | SPRITE_SEMITRANS | SPRITE_TRANS_ADD | SPRITE_TINT | SPRITE_COLOUR(0x3f, 0x38, 0x8) | SPRITE_SCALE, 0, 0, 0, (int16_t*)objects[GLOW].mesh_ptr, 0, 0xc0);
 					S_CalculateStaticLight(24 | (18 << 5));
-					phd_PutPolygons(meshes[objects[(EnemyWeapon[object->bite_offset] & 1) ? M16_FLASH : GUN_FLASH].mesh_ptr], clip);
+					phd_PutPolygons(*objects[(EnemyWeapon[object->bite_offset] & 1) ? M16_FLASH : GUN_FLASH].mesh_ptr, clip);
 
 					phd_PopMatrix_I();
 
@@ -1258,7 +1257,7 @@ void draw_lara(ITEM_INFO* item, vec3d* hair_data, short weapon_current_anim_stat
 			rotationw = objects[lara.back_gun].frame_base + 9;
 
 			gar_RotYXZsuperpack(&rotationw, 14);
-			phd_PutPolygons(meshes[objects[lara.back_gun].mesh_ptr + HEAD], clip);
+			phd_PutPolygons(*(objects[lara.back_gun].mesh_ptr + HEAD), clip);
 		}
 		phd_PopMatrix();
 	}
@@ -1659,7 +1658,7 @@ void draw_lara_interpolation(ITEM_INFO* item, vec3d* hair_data, int16_t* frame1,
 		rotationw1 = rotationw2 = objects[lara.back_gun].frame_base + 9;
 
 		gar_RotYXZsuperpack_I(&rotationw1, &rotationw2, 14);
-		phd_PutPolygons_I(meshes[objects[lara.back_gun].mesh_ptr + HEAD], clip);
+		phd_PutPolygons_I(*(objects[lara.back_gun].mesh_ptr + HEAD), clip);
 		phd_PopMatrix_I();
 	}
 
@@ -2178,9 +2177,9 @@ void DrawGunFlash(int weapon_type, int clip)
 
 		S_CalculateStaticLight(24 | (18 << 5));
 
-		phd_PutPolygons(meshes[objects[M16_FLASH].mesh_ptr], clip);
+		phd_PutPolygons(*objects[M16_FLASH].mesh_ptr, clip);
 
-		return S_DrawSprite(SPRITE_REL | SPRITE_SEMITRANS | SPRITE_TRANS_ADD | SPRITE_TINT | SPRITE_COLOUR(0x3f, 0x30, 0x08) | SPRITE_SCALE, 0, 0, -65, objects[GLOW].mesh_ptr, 0, 0xc0);
+		return S_DrawSprite(SPRITE_REL | SPRITE_SEMITRANS | SPRITE_TRANS_ADD | SPRITE_TINT | SPRITE_COLOUR(0x3f, 0x30, 0x08) | SPRITE_SCALE, 0, 0, -65, (int16_t*)objects[GLOW].mesh_ptr, 0, 0xc0);
 	}
 	case LG_SHOTGUN:
 
@@ -2197,9 +2196,9 @@ void DrawGunFlash(int weapon_type, int clip)
 
 	S_CalculateStaticLight(light);
 
-	phd_PutPolygons(meshes[objects[GUN_FLASH].mesh_ptr], clip);
+	phd_PutPolygons(*objects[GUN_FLASH].mesh_ptr, clip);
 
-	S_DrawSprite(SPRITE_REL | SPRITE_SEMITRANS | SPRITE_TRANS_ADD | SPRITE_TINT | SPRITE_COLOUR(0x3f, 0x38, 0x8) | SPRITE_SCALE, 0, 0, 0, objects[GLOW].mesh_ptr, 0, 0xc0);
+	S_DrawSprite(SPRITE_REL | SPRITE_SEMITRANS | SPRITE_TRANS_ADD | SPRITE_TINT | SPRITE_COLOUR(0x3f, 0x38, 0x8) | SPRITE_SCALE, 0, 0, 0, (int16_t*)objects[GLOW].mesh_ptr, 0, 0xc0);
 }
 
 void CalculateObjectLighting(ITEM_INFO* item, int16_t* frame)
