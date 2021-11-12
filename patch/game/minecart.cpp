@@ -45,7 +45,6 @@
 #define CART_FWD_GRAD			-128
 #define CART_BACK_GRAD			128
 #define CART_JUMP_VEL			0xfc00
-#define MAX_CART_YVEL			0x3f00
 #define TERMINAL_ANGLE			4096
 #define TARGET_DIST				(WALL_L * 2)
 
@@ -429,9 +428,6 @@ void MoveCart(ITEM_INFO* v, ITEM_INFO* l, CARTINFO* cart)
 		else
 		{
 			cart->YVel += GRAVITY * 171;
-
-			if (cart->YVel > MAX_CART_YVEL)
-				cart->YVel = MAX_CART_YVEL;
 
 			v->pos.y_pos += cart->YVel >> 8;
 		}

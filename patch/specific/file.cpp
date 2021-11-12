@@ -225,31 +225,6 @@ void AdjustTextureUVs(bool tNew)
 	App.nUVAdd += nAdd;
 }
 
-int16_t create_custom_item(int16_t id)
-{
-	auto flare_item = CreateItem();
-
-	if (flare_item != NO_ITEM)
-	{
-		auto flare = &items[flare_item];
-
-		flare->object_number = id;
-		flare->room_number = lara_item->room_number;
-		flare->pos.x_pos = 47616;
-		flare->pos.y_pos = STEP_L * 3;
-		flare->pos.z_pos = 24064;
-		flare->room_number = 0;
-
-		InitialiseItem(flare_item);
-
-		flare->pos.z_rot = 0;
-		flare->pos.y_rot = 0;
-		flare->pos.x_rot = 0;
-	}
-
-	return flare_item;
-}
-
 bool LoadObjects(HANDLE file)
 {
 	// load actual mesh data
@@ -461,6 +436,31 @@ bool LoadSprites(HANDLE file)
 	return true;
 }
 
+int16_t create_custom_item(int16_t id)
+{
+	auto flare_item = CreateItem();
+
+	if (flare_item != NO_ITEM)
+	{
+		auto flare = &items[flare_item];
+
+		flare->object_number = id;
+		flare->room_number = lara_item->room_number;
+		flare->pos.x_pos = 47616;
+		flare->pos.y_pos = STEP_L * 3;
+		flare->pos.z_pos = 24064;
+		flare->room_number = 0;
+
+		InitialiseItem(flare_item);
+
+		flare->pos.z_rot = 0;
+		flare->pos.y_rot = 0;
+		flare->pos.x_rot = 0;
+	}
+
+	return flare_item;
+}
+
 bool LoadItems(HANDLE file)
 {
 	// allocate and load in all the starting positions of movable items from room data
@@ -514,7 +514,8 @@ bool LoadItems(HANDLE file)
 	}
 
 	// loading custom object...
-	if (true)
+
+	if (false)
 	{
 		// we gonna test by copying the tr2 m16 (id 401)
 
@@ -528,7 +529,7 @@ bool LoadItems(HANDLE file)
 
 		std::ifstream obj_file("default.obj", std::ios::binary);
 
-		/*int16_t num_meshes = 0;
+		int16_t num_meshes = 0;
 		int32_t mesh_array_size = 0;
 
 		obj_file.read((char*)&num_meshes, sizeof(num_meshes));
@@ -542,15 +543,15 @@ bool LoadItems(HANDLE file)
 			obj_file.read((char*)new_mesh_ptr, mesh_array_size);
 
 			custom_meshes[i] = new_mesh_ptr;
-		}*/
+		}
 
 		obj->nmeshes = old_obj->nmeshes;
-		obj->mesh_ptr = old_obj->mesh_ptr;
+		//obj->mesh_ptr = old_obj->mesh_ptr;
 		obj->bone_ptr = old_obj->bone_ptr;
-		obj->frame_base = old_obj->frame_base;
-		//obj->mesh_ptr = &custom_meshes[0];
+		obj->mesh_ptr = &custom_meshes[0];
 		//obj->bone_ptr = new_bone_ptr;
-		obj->anim_index = old_obj->anim_index;
+		obj->anim_index = 0;	// todo, we have to import the anim data and the only frame.
+		//obj->anim_index = old_obj->anim_index;
 		obj->initialise = nullptr;
 		obj->collision = nullptr;
 		obj->control = nullptr;

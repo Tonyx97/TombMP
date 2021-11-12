@@ -7,6 +7,7 @@
 	· Fix boat sound.
 	· Fix compys.
 	· Fix the quadbike sound sync.
+	· Fix minecart sound.
 	· Because all objects have 1 animation with at least 1 frame we may tweak that at some point but for now we will just load the object because it will be used for meshswap.
 	
 - Ideas.
