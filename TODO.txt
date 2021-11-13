@@ -1,6 +1,5 @@
 - General bugs, issues and new features:
 	· Load/unload of audios when starting/stopping a resource that register them.
-	· Fix memory leak when loading a level? maybe the custom audio buffers?
 	· Fix the side flames.
 	· Detonator usage doesn't work.
 	· Fix rain maybe.
@@ -9,17 +8,22 @@
 	· Fix the quadbike sound sync.
 	· Fix minecart sound.
 	· Fix death animation not being played in minecart.
+	· Fix not dying in minecart properly.
+	· Fix crash when going to assault course.
+	· Fix vehicles not able to be entered if someone dies inside it.
+	· Fix harpoon.
+	· Fix zipline being stuck for some reason.
 	· Because all objects have 1 animation with at least 1 frame we may tweak that at some point but for now we will just load the object because it will be used for meshswap.
 	
 - Ideas.
 	· Gamemode where you spawn several rats in arena and players need to survive xd.
+	· Add prop hunt gamemode.
+	· Add enemies replace lara gamemode.
 
 - v1.0.6:
 	· Sometimes the AI death anim aren't fully synced and they get stuck in the middle.
 	
 - v1.1.x:
-
-
 
 
 IMPORTANT: testing code parts are marked with the comment "(TESTING)"
