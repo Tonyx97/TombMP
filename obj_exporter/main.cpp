@@ -4,9 +4,11 @@
 #include <vector>
 #include <string>
 #include <stdio.h>
+#include <unordered_set>
 
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
+#include "crc64.h"
 
 template <typename T> inline void swap(T& a, T& b) { a ^= b; b ^= a; a ^= b; };
 
@@ -394,9 +396,11 @@ int main(int argc, char** argv)
 
 		g_out_obj = std::ofstream("..\\patch\\" + obj_name, std::ios::binary | std::ios::trunc);
 
-		obj_id = 203;
+		obj_id = 232;
 
 		auto obj = &objects[obj_id];
+
+		std::unordered_set<uint64_t> tex_infos;
 
 		int curr_mesh = 0,
 			curr_texture = 0;
@@ -434,9 +438,12 @@ int main(int argc, char** argv)
 			return &page[offset];
 		};
 
-		auto fix_and_gen_texture_part = [&](int16_t* face, bool gt4 = true)
+		auto out_page = new int16_t[256*256]();
+
+		auto fix_and_gen_texture_part = [&](int16_t* face, bool gt4 = true, bool gs = false)
 		{
-			auto texture_info = text_info + face[gt4 ? 4 : 3];
+			auto face_texture_data = face[gt4 ? 4 : 3];
+			auto texture_info = text_info + (face_texture_data & 0x7fff);
 			auto page = get_texture_page(texture_info->tpage);
 
 			auto u1_off = texture_info->u1,
@@ -457,13 +464,7 @@ int main(int argc, char** argv)
 					u4 = (u4_off / 256),
 					v4 = (v4_off / 256);
 
-			bool swap_x = false,
-				 swap_y = false;
-
-			if (u1_off >= u2_off)	// CCW (by default it's CW)
-			{
-				swap_y = true;
-			}
+			bool swap_y = false;
 
 			std::cout << "page(" << texture_info->tpage << ") "
 					  << "u1(" << u1 << ") v1(" << v1 << ") | "
@@ -474,6 +475,15 @@ int main(int argc, char** argv)
 			int width = std::abs(u1 - u2),
 				height = std::abs(v2 - v3);
 
+			if (u1_off >= u2_off)	// CCW (by default it's CW)
+			{
+				swap_y = true;
+
+				u1 = u2;
+				v1 = v2;
+			}
+			else int x = 0;
+
 			std::cout << "width: " << width << " height: " << height << std::endl;
 
 			struct rgb
@@ -482,6 +492,7 @@ int main(int argc, char** argv)
 			};
 
 			std::vector<rgb> face_texture;
+			std::vector<uint8_t> raw_data;
 
 			{
 				for (int y = v1; y < v1 + height; ++y)
@@ -494,12 +505,23 @@ int main(int argc, char** argv)
 						uint8_t g = (*pixel >> 2) & 0xf8;
 						uint8_t b = (*pixel << 3) & 0xf8;
 
+						raw_data.insert(raw_data.end(), pixel, pixel + 1);
 						face_texture.push_back({ r, g, b });
 					}
 				}
 			}
 
-			stbi_write_png((char*)("mesh_" + std::to_string(curr_mesh) + "_" + std::to_string(curr_texture++) + ".bmp").c_str(), width, height, 3, face_texture.data(), width * 3);
+			auto hash = crc64(0, raw_data.data(), raw_data.size());
+
+			if (!tex_infos.contains(hash))
+			{
+				if (swap_y)
+					int x = 0;
+
+				stbi_write_png((char*)("mesh_" + std::to_string(curr_mesh) + "_" + std::to_string(curr_texture++) + ".bmp").c_str(), width, height, 3, face_texture.data(), width * 3);
+
+				tex_infos.insert(hash);
+			}
 
 			/*std::ofstream bin("page.bin", std::ios::binary);
 			bin.write((char*)page, 256*256*2);
@@ -523,19 +545,19 @@ int main(int argc, char** argv)
 
 			// reset faces texture info
 
-			for (auto face = gt4_faces; face < gt4_faces + gt4_faces_count * 5; face += 5)	fix_and_gen_texture_part(face);
-			for (auto face = gt3_faces; face < gt3_faces + gt3_faces_count * 4; face += 4)	fix_and_gen_texture_part(face, false);
-			for (auto face = g4_faces; face < g4_faces + g4_faces_count * 5; face += 5)		fix_and_gen_texture_part(face);
-			for (auto face = g3_faces; face < g3_faces + g3_faces_count * 4; face += 4)		fix_and_gen_texture_part(face, false);
+			for (auto face = gt4_faces; face < gt4_faces + gt4_faces_count * 5; face += 5)	fix_and_gen_texture_part(face, true, false);
+			for (auto face = gt3_faces; face < gt3_faces + gt3_faces_count * 4; face += 4)	fix_and_gen_texture_part(face, false, false);
+			for (auto face = g4_faces; face < g4_faces + g4_faces_count * 5; face += 5)		fix_and_gen_texture_part(face, true, true);
+			for (auto face = g3_faces; face < g3_faces + g3_faces_count * 4; face += 4)		fix_and_gen_texture_part(face, false, true);
 
 			auto size = *mesh_size = (curr_ptr - mesh_ptr) * sizeof(int16_t);
 			auto mesh_data = new uint8_t[size]();
 
-			//(void)generated_textures;
-
 			memcpy(mesh_data, mesh_ptr, size);
 
 			curr_texture = 0;
+
+			//tex_infos.clear();
 
 			++curr_mesh;
 
@@ -555,24 +577,6 @@ int main(int argc, char** argv)
 			write(&mesh_array_size, sizeof(mesh_array_size));
 			write(mesh_array, mesh_array_size);
 		}
-
-		/*auto obj_anim_index = objects[obj_id].anim_index;
-		auto target_obj_anim_index = objects[obj_target_id].anim_index;
-		auto anim = &animations[obj_anim_index + anim_id];
-		auto size_of_frame = int16_t(sizeof(ANIM_STRUCT) + (objects[obj_id].num_meshes * sizeof(int16_t) * 2) - sizeof(int16_t));
-		auto anim_len = int16_t((anim->frame_end - anim->frame_base) + 1);
-		auto next_command_index = anim_id == NumAnimations - 1 ? NumAnimCommands : animations[anim_id + 1].command_index;
-		auto commands_len = int16_t((next_command_index - animations[anim_id].command_index) + 1);
-
-		anim->jump_anim_num = target_obj_anim_index + (anim->jump_anim_num - obj_anim_index);
-		anim->jump_frame_num = objects[obj_target_id].frame_base + anim->jump_frame_num;
-
-		write(anim, sizeof(ANIM_STRUCT));							// write info
-		write(&size_of_frame, sizeof(size_of_frame));				// write size of frame
-		write(&anim_len, sizeof(anim_len));							// write anim length
-		write(&commands_len, sizeof(commands_len));					// write command length
-		write(anim->frame_ptr, anim_len * size_of_frame);			// write frame data
-		write(&commands[anim->command_index], commands_len);		// write command data*/
 
 		g_out_obj.close();
 
