@@ -47,6 +47,11 @@ void init_custom_animations_pools(int normal_anims_count)
 		g_free_custom_anims.insert(normal_anims_count + i);
 }
 
+bool is_valid_anim_frame(int16_t* frame)
+{
+	return (frame >= frames && frame < frames + number_anim_frames);
+}
+
 bool is_valid_anim(int16_t id)
 {
 	return (id >= 0 && id < number_anims + max_number_custom_anims);

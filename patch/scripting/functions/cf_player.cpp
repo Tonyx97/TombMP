@@ -73,7 +73,7 @@ void cf_player::register_functions(sol::state* vm)
 	vm->set_function("removeLocalPlayerFlags", [&](int32_t v) { game_level::LOCALPLAYER()->remove_entity_flags(v); });
 	vm->set_function("getLocalPlayerFlags", [&]()			  { return game_level::LOCALPLAYER()->get_entity_flags(); });
 
-	vm->set_function("getPlayerItem", [&](game_player* player) { return player->get_item(); });
+	vm->set_function("getPlayerItem", [&](game_player* player) { return player ? player->get_item() : nullptr; });
 
 	vm->set_function("warpPlayer", [&](int x, int y, int z, int room, bool reset_anims)
 	{
@@ -96,10 +96,10 @@ void cf_player::register_functions(sol::state* vm)
 		return g_level->get_player_by_item(item);
 	});
 
-	vm->set_function("getPlayerName",	[&](game_player* player) { return player->get_name(); });
-	vm->set_function("getPlayerPing",	[&](game_player* player) { return player->get_ping(); });
-	vm->set_function("getPlayerHealth", [&](game_player* player) { return player->get_health(); });
-	vm->set_function("isPlayerDead",	[&](game_player* player) { return player->get_health() <= 0; });
+	vm->set_function("getPlayerName",	[&](game_player* player) { return player ? player->get_name() : ""; });
+	vm->set_function("getPlayerPing",	[&](game_player* player) { return player ? player->get_ping() : -1; });
+	vm->set_function("getPlayerHealth", [&](game_player* player) { return player ? player->get_health() : -1; });
+	vm->set_function("isPlayerDead",	[&](game_player* player) { return player ? player->get_health() <= 0 : true; });
 
 	vm->set_function("getPlayerFromName", [&](const char* v, bool partial) -> game_player*
 	{
@@ -125,18 +125,27 @@ void cf_player::register_functions(sol::state* vm)
 
 	vm->set_function("getPlayerHeadRotation", [&](game_player* player) -> std::tuple<PHD_ANGLE, PHD_ANGLE, PHD_ANGLE>
 	{
+		if (!player)
+			return {};
+
 		const auto& rot = player->get_head_rotation();
 		return { rot.x, rot.y, rot.z };
 	});
 
 	vm->set_function("getPlayerTorsoRotation", [&](game_player* player) -> std::tuple<PHD_ANGLE, PHD_ANGLE, PHD_ANGLE>
 	{
+		if (!player)
+			return {};
+
 		const auto& rot = player->get_torso_rotation();
 		return { rot.x, rot.y, rot.z };
 	});
 
 	vm->set_function("getPlayerArmFrameNumber", [&](game_player* player, int arm)
 	{
+		if (!player)
+			return 0i16;
+
 		if (arm == 0)		return player->get_left_arm_info().frame;
 		else if (arm == 1)	return player->get_right_arm_info().frame;
 
@@ -145,7 +154,7 @@ void cf_player::register_functions(sol::state* vm)
 
 	vm->set_function("getPlayerID", [&](game_player* player)
 	{
-		return player->get_id();
+		return player ? player->get_id() : 0;
 	});
 
 	vm->set_function("addInventoryItem", [&](int id, int amount)

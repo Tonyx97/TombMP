@@ -141,6 +141,7 @@ inline int32_t number_anims = 0,
 
 void init_custom_animations_pools(int normal_anims_count);
 
+bool is_valid_anim_frame(int16_t* frame);
 bool is_valid_anim(int16_t id);
 bool unload_animation(int16_t id);
 bool is_custom_anim_loaded(int16_t id);

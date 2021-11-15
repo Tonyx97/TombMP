@@ -431,7 +431,7 @@ int main(int argc, char** argv)
 
 		g_out_obj = std::ofstream("..\\patch\\" + obj_name, std::ios::binary | std::ios::trunc);
 
-		obj_id = 181;	// 377
+		obj_id = 412;	// 377
 
 		auto obj = &objects[obj_id];
 

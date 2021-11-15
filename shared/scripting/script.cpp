@@ -65,6 +65,7 @@ void script::dispatch_error(const sol::error& err)
 
 void script::register_shared_globals()
 {
+	vm->set(scripting::globals::THIS_RESOURCE, owner);
 	vm->set(scripting::globals::RESOURCE_NAME, owner->get_folder());
 	vm->set(scripting::globals::SCRIPT_INSTANCE, (uintptr_t)this);
 }

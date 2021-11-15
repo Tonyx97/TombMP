@@ -186,6 +186,8 @@
 	- Improved custom animations and fixed a few issues with animation loading.
 	- Added new client and server scripting functions: unloadAnimation, isItemIntelligent, setItemIntelligent, getItemAI, g/setAIEnemy.
 	- Minecart is now affected properly by global gravity.
+	- Highly improved scripting stability by checking for invalid parameters (this avoids a lot of crashes).
+	- Fixed issue when loading animations from tr45 resource.
 	
 	
 	

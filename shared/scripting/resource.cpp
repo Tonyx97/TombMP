@@ -217,7 +217,7 @@ script_action_result resource::start()
 		}
 	}
 
-	g_resource->trigger_event(events::resource::ON_START);
+	g_resource->trigger_event(events::resource::ON_START, this);
 
 	status = RESOURCE_STATUS_STARTED;
 	running = true;
@@ -227,7 +227,7 @@ script_action_result resource::start()
 
 script_action_result resource::stop()
 {
-	g_resource->trigger_event(events::resource::ON_STOP);
+	g_resource->trigger_event(events::resource::ON_STOP, this);
 	g_resource->clear_resource(this, false);
 
 	for (const auto& [name, script] : scripts)

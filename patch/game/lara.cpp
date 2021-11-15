@@ -4719,7 +4719,7 @@ void get_lara_bone_pos(ITEM_INFO* item, PHD_VECTOR* vec, int bone_id)
 
 	auto object = &objects[item->object_number];
 
-	int16_t* frame;
+	int16_t* frame = nullptr;
 
 	if (lara.hit_direction >= 0)
 	{
@@ -4748,6 +4748,9 @@ void get_lara_bone_pos(ITEM_INFO* item, PHD_VECTOR* vec, int bone_id)
 		frame += (int)(lara.hit_frame * size);
 	}
 	else frame = frmptr[0];
+
+	if (!frame)
+		return;
 
 	phd_PushUnitMatrix();
 
