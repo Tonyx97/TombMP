@@ -9,7 +9,6 @@
 	· Fix minecart sound.
 	· Fix death animation not being played in minecart.
 	· Fix not dying in minecart properly.
-	· Fix crash when going to assault course.
 	· Fix vehicles not able to be entered if someone dies inside it.
 	· Fix harpoon.
 	· Fix zipline being stuck for some reason.
