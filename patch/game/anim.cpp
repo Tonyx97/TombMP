@@ -54,7 +54,7 @@ bool is_valid_anim_frame(int16_t* frame)
 
 bool is_valid_anim(int16_t id)
 {
-	return (id >= 0 && id < number_anims + max_number_custom_anims);
+	return (id >= 0 && id < number_anims) || (g_used_custom_anims.contains(id));
 }
 
 bool unload_animation(int16_t id)

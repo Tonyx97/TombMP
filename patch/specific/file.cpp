@@ -517,7 +517,7 @@ bool LoadItems(HANDLE file)
 
 	// loading custom object...
 
-	if (true)
+	if (false)
 	{
 		// we gonna test by copying the tr2 m16 (id 401)
 
