@@ -33,6 +33,8 @@ import prof;
 
 #include <main.h>
 
+#include <3dsystem/hwinsert.h>
+
 #define THIS_SCRIPT_VERSION 3
 
 uint8_t LabTextureUVFlag[MAX_TEXTURES];
@@ -515,13 +517,13 @@ bool LoadItems(HANDLE file)
 
 	// loading custom object...
 
-	if (false)
+	if (true)
 	{
 		// we gonna test by copying the tr2 m16 (id 401)
 
-		auto custom_meshes = (int16_t**)game_malloc(256 * sizeof(int16_t*));
+		auto custom_meshes = (int16_t**)game_malloc(1024 * sizeof(int16_t*));
 
-		auto old_obj_id = 353;
+		auto old_obj_id = 315;
 		auto old_obj = &objects[old_obj_id];
 
 		auto obj_id = NUMBER_OBJECTS + 100;
@@ -531,8 +533,11 @@ bool LoadItems(HANDLE file)
 
 		int16_t num_meshes = 0;
 		int32_t mesh_array_size = 0;
+		int32_t mesh_texs_info_size = 0;
 
 		obj_file.read((char*)&num_meshes, sizeof(num_meshes));
+
+		int tex_info_added = 0;
 
 		for (int i = 0; i < num_meshes; ++i)
 		{
@@ -543,15 +548,52 @@ bool LoadItems(HANDLE file)
 			obj_file.read((char*)new_mesh_ptr, mesh_array_size);
 
 			custom_meshes[i] = new_mesh_ptr;
+
+			{
+				auto curr_ptr = new_mesh_ptr;		curr_ptr += 5;
+
+				auto mesh_data_size = *curr_ptr;	curr_ptr += 1 + mesh_data_size * 3;
+				auto mesh_light_size = *curr_ptr;	curr_ptr += 1 + mesh_light_size * 3;
+				auto gt4_faces_count = *curr_ptr;
+				auto gt4_faces = curr_ptr + 1;		curr_ptr = gt4_faces + gt4_faces_count * 5;
+				auto gt3_faces_count = *curr_ptr;
+				auto gt3_faces = curr_ptr + 1;		curr_ptr = gt3_faces + gt3_faces_count * 4;
+				auto g4_faces_count = *curr_ptr;
+				auto g4_faces = curr_ptr + 1;		curr_ptr = g4_faces + g4_faces_count * 5;
+				auto g3_faces_count = *curr_ptr;
+				auto g3_faces = curr_ptr + 1;		curr_ptr = g3_faces + g3_faces_count * 4;
+
+				obj_file.read((char*)&mesh_texs_info_size, sizeof(mesh_texs_info_size));
+
+				auto texs_info = new PHDTEXTURESTRUCT[mesh_texs_info_size];
+				auto text_info_dst = phdtextinfo + texture_infos + tex_info_added;
+				auto text_info_base_index = texture_infos + tex_info_added;
+
+				obj_file.read((char*)texs_info, mesh_texs_info_size * sizeof(PHDTEXTURESTRUCT));
+
+				memcpy(text_info_dst, texs_info, mesh_texs_info_size * sizeof(PHDTEXTURESTRUCT));
+
+				for (int i = 0; i < mesh_texs_info_size; ++i)
+					text_info_dst[i].tpage += texture_pages_count;
+
+				// fix face texture indices
+
+				for (auto face = gt4_faces; face < gt4_faces + gt4_faces_count * 5; face += 5) face[4] += text_info_base_index;
+				for (auto face = gt3_faces; face < gt3_faces + gt3_faces_count * 4; face += 4) face[3] += text_info_base_index;
+				for (auto face = g4_faces; face < g4_faces + g4_faces_count * 5; face += 5) face[4] += text_info_base_index;
+				for (auto face = g3_faces; face < g3_faces + g3_faces_count * 4; face += 4) face[3] += text_info_base_index;
+
+				tex_info_added += mesh_texs_info_size;
+			}
 		}
 
-		obj->nmeshes = old_obj->nmeshes;
+		obj->nmeshes = num_meshes;
 		//obj->mesh_ptr = old_obj->mesh_ptr;
 		obj->bone_ptr = old_obj->bone_ptr;
 		obj->mesh_ptr = &custom_meshes[0];
 		//obj->bone_ptr = new_bone_ptr;
-		obj->anim_index = 0;	// todo, we have to import the anim data and the only frame.
-		//obj->anim_index = old_obj->anim_index;
+		//obj->anim_index = 0;	// todo, we have to import the anim data and the only frame.
+		obj->anim_index = old_obj->anim_index;
 		obj->initialise = nullptr;
 		obj->collision = nullptr;
 		obj->control = nullptr;
@@ -563,6 +605,42 @@ bool LoadItems(HANDLE file)
 		obj->hit_points = DONT_TARGET;
 		obj->intelligent = obj->water_creature = 0;
 		obj->loaded = 1;	// we have to notify the server about this if we ever get this working
+
+		{
+			std::ifstream tex_file("out_page.tex", std::ios::binary);
+
+			auto page_data = new uint16_t[256 * 256];
+
+			tex_file.read((char*)page_data, 256 * 256 * 2);
+
+			auto handle = DXTextureAdd(256, 256, page_data, DXTextureList, 555);
+			LanTextureHandle[texture_pages_count] = (handle >= 0 ? handle : -1);
+			HWR_GetAllTextureHandles();
+		}
+
+		{
+			std::ifstream tex_file("out_page2.tex", std::ios::binary);
+
+			auto page_data = new uint16_t[256 * 256];
+
+			tex_file.read((char*)page_data, 256 * 256 * 2);
+
+			auto handle = DXTextureAdd(256, 256, page_data, DXTextureList, 555);
+			LanTextureHandle[texture_pages_count + 1] = (handle >= 0 ? handle : -1);
+			HWR_GetAllTextureHandles();
+		}
+
+		{
+			std::ifstream tex_file("out_page3.tex", std::ios::binary);
+
+			auto page_data = new uint16_t[256 * 256];
+
+			tex_file.read((char*)page_data, 256 * 256 * 2);
+
+			auto handle = DXTextureAdd(256, 256, page_data, DXTextureList, 555);
+			LanTextureHandle[texture_pages_count + 2] = (handle >= 0 ? handle : -1);
+			HWR_GetAllTextureHandles();
+		}
 
 		create_custom_item(obj_id);
 	}

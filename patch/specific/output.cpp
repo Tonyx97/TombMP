@@ -131,14 +131,14 @@ void output_polylist()
 	{
 		PHD_VBUF v1, v2, v3, v4;
 		PHDTEXTURESTRUCT tex;
-		static int nTPage = 0;
+		static int nTPage = 39;
 		static bool tU = false, tI = false;
 
 		float fOOZ = one / f_znear;
-		v1.xs = 64.f;		v1.ys = 64.f;		v1.zv = f_znear;	v1.g = (int16_t)0xffff;	v1.ooz = fOOZ;	v1.clip = 0;
-		v2.xs = 320.f;	v2.ys = 64.f;		v2.zv = f_znear;	v2.g = (int16_t)0xffff;	v2.ooz = fOOZ;	v2.clip = 0;
-		v3.xs = 320.f;	v3.ys = 320.f;	v3.zv = f_znear;	v3.g = (int16_t)0xffff;	v3.ooz = fOOZ;	v3.clip = 0;
-		v4.xs = 64.f;		v4.ys = 320.f;	v4.zv = f_znear;	v4.g = (int16_t)0xfffff;	v4.ooz = fOOZ;	v4.clip = 0;
+		v1.xs = 64.f + 256.f;		v1.ys = 64.f;	v1.zv = f_znear;	v1.g = (int16_t)0xffff;	v1.ooz = fOOZ;	v1.clip = 0;
+		v2.xs = 320.f + 256.f;		v2.ys = 64.f;	v2.zv = f_znear;	v2.g = (int16_t)0xffff;	v2.ooz = fOOZ;	v2.clip = 0;
+		v3.xs = 320.f + 256.f;		v3.ys = 320.f;	v3.zv = f_znear;	v3.g = (int16_t)0xffff;	v3.ooz = fOOZ;	v3.clip = 0;
+		v4.xs = 64.f + 256.f;		v4.ys = 320.f;	v4.zv = f_znear;	v4.g = (int16_t)0xfffff;	v4.ooz = fOOZ;	v4.clip = 0;
 		tex.drawtype = 1;
 		tex.tpage = nTPage;
 		tex.u1 = 0;tex.v1 = 0;

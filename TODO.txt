@@ -16,6 +16,7 @@
 	· Because all objects have 1 animation with at least 1 frame we may tweak that at some point but for now we will just load the object because it will be used for meshswap.
 	
 - Ideas.
+	· Add more inventory scripting functions and events, so we can like press a key and drop an item etc.
 	· Gamemode where you spawn several rats in arena and players need to survive xd.
 	· Add prop hunt gamemode.
 	· Add enemies replace lara gamemode.

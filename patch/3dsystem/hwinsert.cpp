@@ -688,7 +688,6 @@ void InsertGT4(PHD_VBUF* pV1, PHD_VBUF* pV2, PHD_VBUF* pV3, PHD_VBUF* pV4, PHDTE
 			}
 			else
 			{
-
 				PHD_VBUF_To_TLVERT(pV1, &v.Vertex[v.cnt]);
 
 				v.Vertex[v.cnt].tu = UVTable[pTex->u3];//*UV_MUL;

@@ -33,7 +33,7 @@ private:
 		aspect_x = 4,
 		aspect_y = 3,
 		fov = 80,
-		filter = D3DFILTER_NEAREST,
+		filter = D3DFILTER_LINEAR,
 		shade_mode = D3DSHADE_GOURAUD,
 		fill_mode = D3DFILL_SOLID;
 

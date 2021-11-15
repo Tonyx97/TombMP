@@ -1,5 +1,7 @@
 #pragma once
 
+#include <specific/texture.h>
+
 #define VERTSPERBUCKET (1024 + 32)
 #define MAXBUCKETS		64
 
@@ -48,3 +50,9 @@ inline bool g_lighting_on = true;
 inline uint8_t g_forced_red = 0,
 			   g_forced_green = 0,
 			   g_forced_blue = 0;
+
+
+inline int LanTextureHandle[MAX_D3D_TEXTURES],
+		   texture_pages_count = 0,
+		   LnMaxPolys = 0,
+		   LnMaxVertices = 0;

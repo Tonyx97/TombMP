@@ -2,7 +2,6 @@
 
 #include "standard.h"
 #include "global.h"
-#include "texture.h"
 #include "drawprimitive.h"
 #include "hwrender.h"
 #include "input.h"
@@ -25,10 +24,6 @@
 #include <ui/ui.h>
 
 D3DTLVERTEX UnRollBuffer[MAX_TLVERTICES];
-
-int LanTextureHandle[MAX_D3D_TEXTURES],
-	LnMaxPolys = 0,
-	LnMaxVertices = 0;
 
 bool GtZBufferWriteEnabled,
 	 GtZBufferCompareEnabled;
@@ -470,6 +465,8 @@ void HWR_LoadTexturePages(int pages, char* img)
 {
 	HWR_FreeTexturePages();
 
+	texture_pages_count = pages;
+
 	for (int page = 0; page < pages; ++page, img += 0x20000)
 	{
 		int nHandle = DXTextureAdd(256, 256, (uint16_t*)img, DXTextureList, 555);
@@ -492,6 +489,8 @@ void HWR_FreeTexturePages()
 
 		GahTextureHandle[nPage] = 0;
 	}
+
+	texture_pages_count = 0;
 }
 
 void HWR_GetAllTextureHandles()
