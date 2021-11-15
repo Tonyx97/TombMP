@@ -11,7 +11,7 @@
 #define DPQ_END		40480 * 3
 #define DPQ_START	32288 * 3
 
-#define	MAX_VERTICES	1500 * 12				// maximum vertices at a go
+#define	MAX_VERTICES	65536 * 12				// maximum vertices at a go
 #define MAX_POLYGONS	4000 * 12       		// maximum number of polygons
 #define MAX_MATRICES	128 * 12				// maximum matrices in stack
 #define W2V_SHIFT 		14						// shift scale of view.frame to world.frame

@@ -431,7 +431,7 @@ int main(int argc, char** argv)
 
 		g_out_obj = std::ofstream("..\\patch\\" + obj_name, std::ios::binary | std::ios::trunc);
 
-		obj_id = 407;	// 165 mp5
+		obj_id = 407;	// 377
 
 		auto obj = &objects[obj_id];
 
@@ -446,11 +446,11 @@ int main(int argc, char** argv)
 
 		int curr_texture_index = 0;
 
-		auto out_page = new int16_t[256*256]();
-		auto out_page2 = new int16_t[256 * 256]();
-		auto out_page3 = new int16_t[256 * 256]();
+		// ffs what is this shit
 
-		auto curr_out_page = out_page;
+		std::vector<int16_t*> pages;
+
+		pages.push_back(new int16_t[256 * 256]);
 
 		auto fix_and_gen_texture_part = [&](int16_t* face, std::vector<PHDTEXTURESTRUCT>& texs_info, bool quads)
 		{
@@ -463,10 +463,10 @@ int main(int argc, char** argv)
 				 u3_off = texture_info->u3, v3_off = texture_info->v3,
 				 u4_off = texture_info->u4, v4_off = texture_info->v4;
 
-			int16_t u1 = (u1_off / 256) + 1, v1 = (v1_off / 256) + 1,
-					u2 = (u2_off / 256) + 1, v2 = (v2_off / 256) + 1,
-					u3 = (u3_off / 256) + 1, v3 = (v3_off / 256) + 1,
-					u4 = (u4_off / 256) + 1, v4 = (v4_off / 256) + 1;
+			int16_t u1 = (u1_off / 256), v1 = (v1_off / 256),
+					u2 = (u2_off / 256), v2 = (v2_off / 256),
+					u3 = (u3_off / 256), v3 = (v3_off / 256),
+					u4 = (u4_off / 256), v4 = (v4_off / 256);
 
 			rect dims12 { u1, v1, u2, v2 };
 			rect dims34 { u3, v3, u4, v4 };
@@ -497,11 +497,16 @@ int main(int argc, char** argv)
 			auto bottom_right_x = std::max(u1, std::max(u2, u3));
 			auto bottom_right_y = std::max(v1, std::max(v2, v3));
 
+			auto top_left_x_off = std::min(u1_off, std::min(u2_off, u3_off));
+			auto top_left_y_off = std::min(v1_off, std::min(v2_off, v3_off));
+			auto bottom_right_x_off = std::max(u1_off, std::max(u2_off, u3_off));
+			auto bottom_right_y_off = std::max(v1_off, std::max(v2_off, v3_off));
+
 			const int width = bottom_right_x - top_left_x,
 					  height = bottom_right_y - top_left_y;
 
 			if (width == 0 || height == 0)
-				return;
+				return;	// why does this happen...?
 
 			for (int y = top_left_y; y < bottom_right_y; ++y)
 				for (int x = top_left_x; x < bottom_right_x; ++x)
@@ -520,16 +525,16 @@ int main(int argc, char** argv)
 
 				bool can_place = false;
 
-				for (int y = 0; y < 256 - height && !can_place; ++y)
-					for (int x = 0; x < 256 - width && !can_place; ++x)
+				for (int y = 0; y < 255 - height && !can_place; ++y)
+					for (int x = 0; x < 255 - width && !can_place; ++x)
 					{
 						can_place = true;
 
 						for (const auto& r : occupied_space)
-							if (x < r.x + r.w &&
-								x + width > r.x &&
-								y < r.y + r.h &&
-								y + height > r.y)
+							if (x <= r.x + r.w &&
+								x + width >= r.x &&
+								y <= r.y + r.h &&
+								y + height >= r.y)
 							{
 								can_place = false;
 								break;
@@ -545,40 +550,19 @@ int main(int argc, char** argv)
 				if (!can_place)
 				{
 					occupied_space.clear();
-					if (curr_out_page == out_page)
-						curr_out_page = out_page2;
-					else if (curr_out_page == out_page2)
-						curr_out_page = out_page3;
-					MessageBoxA(nullptr, "rip", "rip", MB_OK);
+					pages.push_back(new int16_t[256 * 256]);
+
+					memset(pages.back(), 255, 256*256*2);
 					goto retry_allocation;
 				}
 
 				occupied_space.emplace_back(px, py, width, height);
 
-				if (cw)
-				{
-					for (int y = py, i = 0; y < py + height; ++y)
-						for (int x = px; x < px + width; ++x, ++i)
-							curr_out_page[x + y * 256] = sprite[i];
-				}
-				else
-				{
-					if (quads)
-					{
-						for (int y = py + height - 1, i = 0; y >= py; --y)
-							for (int x = px + width - 1; x >= px; --x, ++i)
-								curr_out_page[x + y * 256] = sprite[i];
-					}
-					else
-					{
-						for (int y = py, i = 0; y < py + height; ++y)
-							for (int x = px; x < px + width; ++x, ++i)
-								curr_out_page[x + y * 256] = sprite[i];
-					}
-				}
+				auto out_page = pages.back();
 
-				// if we have no more space in current page we need to create a new one
-				// and increase the current page index
+				for (int y = py, i = 0; y < py + height; ++y)
+					for (int x = px; x < px + width; ++x, ++i)
+						out_page[x + y * 256] = sprite[i];
 
 				if (width > 0 && height > 0)
 					stbi_write_png((char*)("meshes\\mesh_" + std::to_string(curr_mesh) + "_" + std::to_string(curr_texture++) + ".bmp").c_str(), width, height, 4, out_texture.data(), width * 4);
@@ -586,70 +570,23 @@ int main(int argc, char** argv)
 				PHDTEXTURESTRUCT new_tex_info;
 
 				new_tex_info.drawtype = texture_info->drawtype;
-				new_tex_info.tpage = curr_out_page == out_page ? 0 : (curr_out_page == out_page2 ? 1 : 2);
+				new_tex_info.tpage = pages.size() - 1;
 
-				if (cw)
+				new_tex_info.u1 = (px * 256 + u1_off - top_left_x_off);
+				new_tex_info.v1 = (py * 256 + v1_off - top_left_y_off);
+
+				new_tex_info.u2 = (px * 256 + u2_off - top_left_x_off);
+				new_tex_info.v2 = (py * 256 + v2_off - top_left_y_off);
+
+				new_tex_info.u3 = (px * 256 + u3_off - top_left_x_off);
+				new_tex_info.v3 = (py * 256 + v3_off - top_left_y_off);
+
+				if (quads)
 				{
-					// everything here is correct
-
-					if (quads)
-					{
-						new_tex_info.u1 = TO_PAGE_SIZE(px + u1 - top_left_x);
-						new_tex_info.v1 = TO_PAGE_SIZE(py + v1 - top_left_y);
-
-						new_tex_info.u2 = TO_PAGE_SIZE(px + u2 - top_left_x);
-						new_tex_info.v2 = TO_PAGE_SIZE(py + v2 - top_left_y);
-
-						new_tex_info.u3 = TO_PAGE_SIZE(px + u3 - top_left_x);
-						new_tex_info.v3 = TO_PAGE_SIZE(py + v3 - top_left_y);
-
-						new_tex_info.u4 = TO_PAGE_SIZE(px + u4 - top_left_x);
-						new_tex_info.v4 = TO_PAGE_SIZE(py + v4 - top_left_y);
-					}
-					else
-					{
-						new_tex_info.u1 = TO_PAGE_SIZE(px + u1 - top_left_x);
-						new_tex_info.v1 = TO_PAGE_SIZE(py + v1 - top_left_y);
-
-						new_tex_info.u2 = TO_PAGE_SIZE(px + u2 - top_left_x);
-						new_tex_info.v2 = TO_PAGE_SIZE(py + v2 - top_left_y);
-
-						new_tex_info.u3 = TO_PAGE_SIZE(px + u3 - top_left_x);
-						new_tex_info.v3 = TO_PAGE_SIZE(py + v3 - top_left_y);
-
-						new_tex_info.u4 = new_tex_info.v4 = 0;
-					}
+					new_tex_info.u4 = (px * 256 + u4_off - top_left_x_off);
+					new_tex_info.v4 = (py * 256 + v4_off - top_left_y_off);
 				}
-				else
-				{
-					if (quads)
-					{
-						new_tex_info.u1 = TO_PAGE_SIZE(px + u3 - top_left_x);
-						new_tex_info.v1 = TO_PAGE_SIZE(py + v3 - top_left_y);
-
-						new_tex_info.u2 = TO_PAGE_SIZE(px + u4 - top_left_x);
-						new_tex_info.v2 = TO_PAGE_SIZE(py + v4 - top_left_y);
-
-						new_tex_info.u3 = TO_PAGE_SIZE(px + u1 - top_left_x);
-						new_tex_info.v3 = TO_PAGE_SIZE(py + v1 - top_left_y);
-
-						new_tex_info.u4 = TO_PAGE_SIZE(px + u2 - top_left_x);
-						new_tex_info.v4 = TO_PAGE_SIZE(py + v2 - top_left_y);
-					}
-					else
-					{
-						new_tex_info.u1 = TO_PAGE_SIZE(px + u1 - top_left_x);
-						new_tex_info.v1 = TO_PAGE_SIZE(py + v1 - top_left_y);
-
-						new_tex_info.u2 = TO_PAGE_SIZE(px + u2 - top_left_x);
-						new_tex_info.v2 = TO_PAGE_SIZE(py + v2 - top_left_y);
-
-						new_tex_info.u3 = TO_PAGE_SIZE(px + u3 - top_left_x);
-						new_tex_info.v3 = TO_PAGE_SIZE(py + v3 - top_left_y);
-
-						new_tex_info.u4 = new_tex_info.v4 = 0;
-					}
-				}
+				else new_tex_info.u4 = new_tex_info.v4 = 0;
 
 				//tex_infos.insert({ hash, { new_tex_info, *face_texture_index = curr_texture_index++ } });
 				tex_infos.insert({ hash, { new_tex_info, *face_texture_index = int16_t(texs_info.size()) } });
@@ -723,28 +660,27 @@ int main(int argc, char** argv)
 			write((char*)texs_info.data(), texs_info_len * sizeof(texs_info[0]));
 		}
 
-		std::ofstream bin("..\\patch\\out_page.tex", std::ios::binary | std::ios::trunc);
-		bin.write((char*)out_page, 256 * 256 * 2);
-		bin.close();
+		auto pages_len = int32_t(pages.size());
 
-		std::ofstream bin2("..\\patch\\out_page2.tex", std::ios::binary | std::ios::trunc);
-		bin2.write((char*)out_page2, 256 * 256 * 2);
-		bin2.close();
+		write((char*)&pages_len, sizeof(pages_len));
 
-		std::ofstream bin3("..\\patch\\out_page3.tex", std::ios::binary | std::ios::trunc);
-		bin3.write((char*)out_page3, 256 * 256 * 2);
-		bin3.close();
+		int i = 0;
 
-		delete[] out_page;
-		delete[] out_page2;
-		delete[] out_page3;
+		for (auto page : pages)
+		{
+			std::ofstream bin("..\\patch\\out_page" + std::to_string(i++) + ".tex", std::ios::binary | std::ios::trunc);
+			bin.write((char*)page, 256 * 256 * 2);
+			bin.close();
+
+			delete[] page;
+		}
 
 		g_out_obj.close();
 
 		std::cout << "Object " << obj_id << " exported to file " << obj_name << std::endl;
 		std::cout << "Export more? (y/n)" << std::endl;
 
-		std::cin >> option;
+		//std::cin >> option;
 
 		break;
 	}

@@ -448,9 +448,9 @@ int16_t create_custom_item(int16_t id)
 
 		flare->object_number = id;
 		flare->room_number = lara_item->room_number;
-		flare->pos.x_pos = 47616;
-		flare->pos.y_pos = STEP_L * 3;
-		flare->pos.z_pos = 24064;
+		flare->pos.x_pos = 48055;
+		flare->pos.y_pos = 1024;
+		flare->pos.z_pos = 23912;
 		flare->room_number = 0;
 
 		InitialiseItem(flare_item);
@@ -523,7 +523,7 @@ bool LoadItems(HANDLE file)
 
 		auto custom_meshes = (int16_t**)game_malloc(1024 * sizeof(int16_t*));
 
-		auto old_obj_id = 315;
+		auto old_obj_id = 407;
 		auto old_obj = &objects[old_obj_id];
 
 		auto obj_id = NUMBER_OBJECTS + 100;
@@ -534,6 +534,7 @@ bool LoadItems(HANDLE file)
 		int16_t num_meshes = 0;
 		int32_t mesh_array_size = 0;
 		int32_t mesh_texs_info_size = 0;
+		int32_t pages_len = 0;
 
 		obj_file.read((char*)&num_meshes, sizeof(num_meshes));
 
@@ -606,41 +607,23 @@ bool LoadItems(HANDLE file)
 		obj->intelligent = obj->water_creature = 0;
 		obj->loaded = 1;	// we have to notify the server about this if we ever get this working
 
+		obj_file.read((char*)&pages_len, sizeof(pages_len));
+
+		for (int i = 0; i < pages_len; ++i)
 		{
-			std::ifstream tex_file("out_page.tex", std::ios::binary);
+			std::ifstream tex_file("out_page" + std::to_string(i) + ".tex", std::ios::binary);
 
 			auto page_data = new uint16_t[256 * 256];
 
 			tex_file.read((char*)page_data, 256 * 256 * 2);
 
 			auto handle = DXTextureAdd(256, 256, page_data, DXTextureList, 555);
-			LanTextureHandle[texture_pages_count] = (handle >= 0 ? handle : -1);
-			HWR_GetAllTextureHandles();
+			LanTextureHandle[texture_pages_count + i] = (handle >= 0 ? handle : -1);
+
+			delete[] page_data;
 		}
 
-		{
-			std::ifstream tex_file("out_page2.tex", std::ios::binary);
-
-			auto page_data = new uint16_t[256 * 256];
-
-			tex_file.read((char*)page_data, 256 * 256 * 2);
-
-			auto handle = DXTextureAdd(256, 256, page_data, DXTextureList, 555);
-			LanTextureHandle[texture_pages_count + 1] = (handle >= 0 ? handle : -1);
-			HWR_GetAllTextureHandles();
-		}
-
-		{
-			std::ifstream tex_file("out_page3.tex", std::ios::binary);
-
-			auto page_data = new uint16_t[256 * 256];
-
-			tex_file.read((char*)page_data, 256 * 256 * 2);
-
-			auto handle = DXTextureAdd(256, 256, page_data, DXTextureList, 555);
-			LanTextureHandle[texture_pages_count + 2] = (handle >= 0 ? handle : -1);
-			HWR_GetAllTextureHandles();
-		}
+		HWR_GetAllTextureHandles();
 
 		create_custom_item(obj_id);
 	}

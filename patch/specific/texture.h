@@ -1,6 +1,6 @@
 #pragma once
 
-#define MAX_D3D_TEXTURES 128
+#define MAX_D3D_TEXTURES 1024
 #define TX_FLAG_SLOTUSED 1
 
 struct DXTEXTURE
