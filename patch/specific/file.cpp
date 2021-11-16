@@ -523,7 +523,7 @@ bool LoadItems(HANDLE file)
 
 		auto custom_meshes = (int16_t**)game_malloc(1024 * sizeof(int16_t*));
 
-		auto old_obj_id = 412;
+		auto old_obj_id = 411;
 		auto old_obj = &objects[old_obj_id];
 
 		auto obj_id = NUMBER_OBJECTS + 100;

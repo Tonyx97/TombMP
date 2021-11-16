@@ -1397,6 +1397,7 @@ void lara_col_duck(ITEM_INFO* item, COLL_INFO* coll)
 	lara.keep_ducked = (coll->mid_ceiling >= -LARA_HITE + LARA_DUCK_HEIGHT);
 
 	ShiftItem(item, coll);
+
 	item->pos.y_pos += coll->mid_floor;
 
 	if ((!(input & IN_DUCK) || lara.water_status == LARA_WADE) && !lara.keep_ducked && item->anim_number == DUCKBREATHE_A)
