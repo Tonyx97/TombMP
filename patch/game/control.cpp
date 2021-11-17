@@ -164,6 +164,12 @@ int32_t ControlPhase(int32_t nframes)
 	{
 		g_client->send_packet(ID_PLAYER_DEATH);
 
+		// release the vehicle ownership
+
+		if (lara.skidoo != NO_ITEM)
+			if (auto entity = g_level->get_entity_by_item(&items[lara.skidoo]))
+				g_level->request_entity_ownership(entity, false);
+
 		lara.dead = true;
 	}
 	else if (lara_item->hit_points > 0 && lara.dead)
