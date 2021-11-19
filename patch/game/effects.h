@@ -3,7 +3,7 @@
 #include "items.h"
 #include "anim.h"
 
-#define NUM_EFFECTS 64
+#define NUM_EFFECTS 256
 
 struct FX_INFO
 {

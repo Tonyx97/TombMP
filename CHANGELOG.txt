@@ -190,6 +190,7 @@
 	- Fixed crash when entering the assault course.
 	- Fixed vehicles not being able to be entered if someone dies inside it.
 	- Fixed zipline being stuck due to sync, the sync for zipline is removed, it doesn't make much sense to sync it anyways.
+	- Increased max effects to 256 (previously at 64).
 	- Added new client and server scripting functions: unloadAnimation, isItemIntelligent, setItemIntelligent, getItemAI, g/setAIEnemy.
 	
 	
