@@ -368,6 +368,7 @@ void LaraGetNewTarget(WEAPON_INFO* winfo);
 void AimWeapon(WEAPON_INFO* winfo, LARA_ARM* arm);
 void SmashItem(int16_t item_number, int weapon_type);
 void DoProperDetection(short item_number, long x, long y, long z, long xv, long yv, long zv);
+void DoProperDetectionFx(short effect_number, long x, long y, long z, long xv, long yv, long zv);
 
 bool HitTarget(ITEM_INFO* item, GAME_VECTOR* hitpos, int damage, bool is_player = false);
 
