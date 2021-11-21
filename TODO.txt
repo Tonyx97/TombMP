@@ -4,7 +4,6 @@
 	· Detonator usage doesn't work.
 	· Fix rain maybe.
 	· Fix boat sound.
-	· Fix compys.
 	· Fix the quadbike sound sync.
 	· Fix minecart sound.
 	· Fix death animation not being played in minecart.
