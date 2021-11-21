@@ -194,6 +194,7 @@
 	- Improved boat sound.
 	- Added quadbike sound sync.
 	- Added minecart sound sync.
+	- Added "emotes" script to use certain lara original speeches.
 	- Added new client and server scripting functions: unloadAnimation, isItemIntelligent, setItemIntelligent, getItemAI, g/setAIEnemy, setLocalPlayerHairEnabled, isLocalPlayerHairEnabled.
 	
 	

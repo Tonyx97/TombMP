@@ -517,19 +517,19 @@ bool LoadItems(HANDLE file)
 
 	// loading custom object...
 
-	if (false)
+	if (true)
 	{
 		// we gonna test by copying the tr2 m16 (id 401)
 
 		auto custom_meshes = (int16_t**)game_malloc(1024 * sizeof(int16_t*));
 
-		auto old_obj_id = 411;
+		auto old_obj_id = 62;
 		auto old_obj = &objects[old_obj_id];
 
 		auto obj_id = NUMBER_OBJECTS + 100;
 		auto obj = &objects[obj_id];
 
-		std::ifstream obj_file("default.obj", std::ios::binary);
+		std::ifstream obj_file("banana.obj", std::ios::binary);
 
 		int16_t num_meshes = 0;
 		int32_t mesh_array_size = 0;
@@ -588,13 +588,29 @@ bool LoadItems(HANDLE file)
 			}
 		}
 
+		obj_file.read((char*)&pages_len, sizeof(pages_len));
+
+		for (int i = 0; i < pages_len; ++i)
+		{
+			auto page_data = new uint16_t[256 * 256]();
+
+			obj_file.read((char*)page_data, 256 * 256 * 2);
+
+			auto handle = DXTextureAdd(256, 256, page_data, DXTextureList, 555);
+			LanTextureHandle[texture_pages_count + i] = (handle >= 0 ? handle : -1);
+
+			delete[] page_data;
+		}
+
+		HWR_GetAllTextureHandles();
+
 		obj->nmeshes = num_meshes;
 		//obj->mesh_ptr = old_obj->mesh_ptr;
 		obj->bone_ptr = old_obj->bone_ptr;
 		obj->mesh_ptr = &custom_meshes[0];
 		//obj->bone_ptr = new_bone_ptr;
-		//obj->anim_index = 0;	// todo, we have to import the anim data and the only frame.
-		obj->anim_index = old_obj->anim_index;
+		obj->anim_index = 0;	// todo, we have to import the anim data and the only frame.
+		//obj->anim_index = old_obj->anim_index;
 		obj->initialise = nullptr;
 		obj->collision = nullptr;
 		obj->control = nullptr;
@@ -606,24 +622,6 @@ bool LoadItems(HANDLE file)
 		obj->hit_points = DONT_TARGET;
 		obj->intelligent = obj->water_creature = 0;
 		obj->loaded = 1;	// we have to notify the server about this if we ever get this working
-
-		obj_file.read((char*)&pages_len, sizeof(pages_len));
-
-		for (int i = 0; i < pages_len; ++i)
-		{
-			std::ifstream tex_file("out_page" + std::to_string(i) + ".tex", std::ios::binary);
-
-			auto page_data = new uint16_t[256 * 256];
-
-			tex_file.read((char*)page_data, 256 * 256 * 2);
-
-			auto handle = DXTextureAdd(256, 256, page_data, DXTextureList, 555);
-			LanTextureHandle[texture_pages_count + i] = (handle >= 0 ? handle : -1);
-
-			delete[] page_data;
-		}
-
-		HWR_GetAllTextureHandles();
 
 		create_custom_item(obj_id);
 	}

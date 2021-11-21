@@ -103,11 +103,11 @@ struct OBJECT_INFO
 struct PHDTEXTURESTRUCT
 {
 	uint16_t drawtype,
-			 tpage,
-			 u1, v1,
-			 u2, v2,
-			 u3, v3,
-			 u4, v4;
+		tpage,
+		u1, v1,
+		u2, v2,
+		u3, v3,
+		u4, v4;
 };
 
 std::ifstream g_level;
@@ -226,7 +226,7 @@ int main(int argc, char** argv)
 	// MESH POINTERS
 
 	auto NumMeshPointers = read<int32_t>();
-	auto meshes = new int16_t*[NumMeshPointers]();
+	auto meshes = new int16_t * [NumMeshPointers]();
 
 	read<int16_t*>(meshes, NumMeshPointers);
 
@@ -431,7 +431,7 @@ int main(int argc, char** argv)
 
 		g_out_obj = std::ofstream("..\\patch\\" + obj_name, std::ios::binary | std::ios::trunc);
 
-		obj_id = 411;	// 377
+		obj_id = 407;
 
 		auto obj = &objects[obj_id];
 
@@ -459,14 +459,14 @@ int main(int argc, char** argv)
 			auto page = (int16_t*)texture_pages + (texture_info->tpage * 256 * 256);
 
 			auto u1_off = texture_info->u1, v1_off = texture_info->v1,
-				 u2_off = texture_info->u2, v2_off = texture_info->v2,
-				 u3_off = texture_info->u3, v3_off = texture_info->v3,
-				 u4_off = texture_info->u4, v4_off = texture_info->v4;
+				u2_off = texture_info->u2, v2_off = texture_info->v2,
+				u3_off = texture_info->u3, v3_off = texture_info->v3,
+				u4_off = texture_info->u4, v4_off = texture_info->v4;
 
 			int16_t u1 = (u1_off / 256), v1 = (v1_off / 256),
-					u2 = (u2_off / 256), v2 = (v2_off / 256),
-					u3 = (u3_off / 256), v3 = (v3_off / 256),
-					u4 = (u4_off / 256), v4 = (v4_off / 256);
+				u2 = (u2_off / 256), v2 = (v2_off / 256),
+				u3 = (u3_off / 256), v3 = (v3_off / 256),
+				u4 = (u4_off / 256), v4 = (v4_off / 256);
 
 			struct rgb { uint8_t r, g, b, a; };
 
@@ -496,11 +496,16 @@ int main(int argc, char** argv)
 			auto bottom_right_x_off = std::max(u1_off, std::max(u2_off, u3_off));
 			auto bottom_right_y_off = std::max(v1_off, std::max(v2_off, v3_off));
 
-			const int width = bottom_right_x - top_left_x,
-					  height = bottom_right_y - top_left_y;
+			int width = bottom_right_x - top_left_x,
+				height = bottom_right_y - top_left_y;
 
 			if (width == 0 || height == 0)
+			{
+				static int aa = 0;
+				printf_s("wtf %i\n", ++aa);
+				MessageBoxA(nullptr, "NO", "NO", MB_OK);
 				return;	// why does this happen...?
+			}
 
 			for (int y = top_left_y; y < bottom_right_y; ++y)
 				for (int x = top_left_x; x < bottom_right_x; ++x)
@@ -512,7 +517,7 @@ int main(int argc, char** argv)
 
 			int px = 0,
 				py = 0;
-			
+
 			//if (auto it = tex_infos.find(hash); it == tex_infos.end())
 			{
 			retry_allocation:
@@ -525,9 +530,9 @@ int main(int argc, char** argv)
 						can_place = true;
 
 						for (const auto& r : occupied_space)
-							if (x <= r.x + r.w &&
+							if (x < r.x + r.w &&
 								x + width >= r.x &&
-								y <= r.y + r.h &&
+								y < r.y + r.h &&
 								y + height >= r.y)
 							{
 								can_place = false;
@@ -546,7 +551,7 @@ int main(int argc, char** argv)
 					occupied_space.clear();
 					pages.push_back(new int16_t[256 * 256]);
 
-					memset(pages.back(), 255, 256*256*2);
+					memset(pages.back(), 255, 256 * 256 * 2);
 					goto retry_allocation;
 				}
 
@@ -606,7 +611,7 @@ int main(int argc, char** argv)
 			auto tmp_g3_faces = curr_ptr + 1;	curr_ptr = tmp_g3_faces + g3_faces_count * 4;
 
 			if (g4_faces_count != 0 || g3_faces_count != 0)
-				MessageBoxA(nullptr, "wtf", "wtf", MB_OK);
+				MessageBoxA(nullptr, "NO", "NO", MB_OK);
 
 			auto size = *mesh_size = (curr_ptr - mesh_ptr) * sizeof(int16_t);
 			auto mesh_data = new int16_t[size / sizeof(int16_t)]();
@@ -619,7 +624,7 @@ int main(int argc, char** argv)
 			auto g3_faces = mesh_data + (tmp_g3_faces - mesh_ptr);
 
 			// reset faces texture info
-			
+
 			std::vector<PHDTEXTURESTRUCT> texs_info;
 
 			for (auto face = gt4_faces; face < gt4_faces + gt4_faces_count * 5; face += 5)	fix_and_gen_texture_part(face, texs_info, true);
@@ -637,8 +642,8 @@ int main(int argc, char** argv)
 		};
 
 		write(&obj->nmeshes, sizeof(obj->nmeshes));
-		
-		auto mesh_array = new int16_t*[obj->nmeshes]();
+
+		auto mesh_array = new int16_t * [obj->nmeshes]();
 
 		for (int i = 0; i < obj->nmeshes; ++i)
 		{
@@ -658,13 +663,9 @@ int main(int argc, char** argv)
 
 		write((char*)&pages_len, sizeof(pages_len));
 
-		int i = 0;
-
 		for (auto page : pages)
 		{
-			std::ofstream bin("..\\patch\\out_page" + std::to_string(i++) + ".tex", std::ios::binary | std::ios::trunc);
-			bin.write((char*)page, 256 * 256 * 2);
-			bin.close();
+			write((char*)page, 256 * 256 * 2);
 
 			delete[] page;
 		}
@@ -674,12 +675,8 @@ int main(int argc, char** argv)
 		std::cout << "Object " << obj_id << " exported to file " << obj_name << std::endl;
 		std::cout << "Export more? (y/n)" << std::endl;
 
-		//std::cin >> option;
-
-		break;
+		std::cin >> option;
 	}
-
-	//ShellExecuteA(nullptr, nullptr, "mesh_2.bmp", nullptr, nullptr, SW_HIDE);
 
 	// gl to free all the pools :risitas: (let windows kernel do its job)
 
