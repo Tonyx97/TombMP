@@ -839,6 +839,18 @@ int MineCartControl()
 
 	DoUserInput(v, l, cart);
 
+	if (lara_item->hit_points <= 0)
+	{
+		cart->Flags |= CF_DEAD;
+		cart->Flags &= ~CF_CONTROL;
+
+		g_audio->stop_sound(209);
+		g_audio->stop_sound(220);
+		g_audio->stop_sound(202);
+		g_audio->stop_sound(210);
+		g_audio->stop_sound(211);
+	}
+
 	if (cart->Flags & CF_CONTROL)
 		MoveCart(v, l, cart);
 
