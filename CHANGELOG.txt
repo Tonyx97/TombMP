@@ -193,6 +193,7 @@
 	- Increased max effects to 256 (previously at 64).
 	- Improved boat sound.
 	- Added quadbike sound sync.
+	- Added minecart sound sync.
 	- Added new client and server scripting functions: unloadAnimation, isItemIntelligent, setItemIntelligent, getItemAI, g/setAIEnemy, setLocalPlayerHairEnabled, isLocalPlayerHairEnabled.
 	
 	

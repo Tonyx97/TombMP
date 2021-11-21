@@ -1,9 +1,7 @@
 - General bugs, issues and new features:
-	· Load/unload of audios when starting/stopping a resource that register them.
 	· Fix the side flames.
 	· Detonator usage doesn't work.
 	· Fix rain maybe.
-	· Fix the quadbike sound sync.
 	· Fix minecart sound.
 	· Fix death animation not being played in minecart.
 	· Fix not dying in minecart properly.
