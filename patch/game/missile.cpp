@@ -171,8 +171,8 @@ int ExplodingDeath(int16_t item_number, int32_t mesh_bits, int16_t damage)
 					item->object_number == SMASH_OBJECT3 ||
 					item->object_number == MUTANT2 ||
 					item->object_number == QUADBIKE)
-					fx->counter = 90;
-				else fx->counter = 90;
+					fx->counter = 30 * 10;
+				else fx->counter = 30 * 10;
 
 				fx->frame_number = object->mesh_ptr - meshes;
 				fx->object_number = BODY_PART;
@@ -221,11 +221,11 @@ int ExplodingDeath(int16_t item_number, int32_t mesh_bits, int16_t damage)
 					item->object_number == SMASH_OBJECT3 ||
 					item->object_number == MUTANT2 ||
 					item->object_number == QUADBIKE)
-					fx->counter = 0;
+					fx->counter = 30 * 10;
 				else
 				{
 					fx->flag3 = 1;
-					fx->counter = 90;
+					fx->counter = 30 * 10;
 				}
 
 				fx->frame_number = (object->mesh_ptr - meshes) + i;
@@ -254,6 +254,8 @@ void ControlBodyPart(int16_t fx_number)
 
 	auto room_number = fx->room_number;
 
+	const bool is_alive = fx->flag3;
+
 	/*if (fx->pos.y_pos < ceiling)
 	{
 		fx->fallspeed = -fx->fallspeed;
@@ -273,10 +275,15 @@ void ControlBodyPart(int16_t fx_number)
 
 	if (fx->pos.y_pos >= height)
 	{
-		/*if (is_alive && (fx->counter & 3))
+		if (is_alive)
+		{
 			g_audio->play_sound(AUDIO_FOOTSTEPS_MUD, { fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos });
 
-		KillEffect(fx_number);*/
+			fx->flag3 = 0;
+		}
+
+		if (fx->counter-- <= 0)
+			KillEffect(fx_number);
 
 		if (ABS(fx->pos.x_pos - lara_item->pos.x_pos) < 256 &&
 			ABS(fx->pos.z_pos - lara_item->pos.z_pos) < 256)
@@ -287,8 +294,6 @@ void ControlBodyPart(int16_t fx_number)
 
 		return;
 	}
-
-	const bool is_alive = fx->flag3;
 
 	if (is_alive)
 		DoBloodSplatEx(fx->pos.x_pos, fx->pos.y_pos, fx->pos.z_pos, fx->speed, fx->pos.y_rot, room_number, 1);
