@@ -301,6 +301,18 @@ bool audio_system::play_sound(audio_id hash, const int_vec3& pos, float pitch, b
 
 		existing_audio->set_position(pos);
 		existing_audio->set_pitch(pitch);
+
+		if (sync && ai->sync)
+		{
+			gns::audio::play info
+			{
+				.pos = pos,
+				.hash = hash,
+				.pitch = pitch
+			};
+
+			g_client->send_packet(ID_AUDIO_PLAY, info);
+		}
 		
 		return true;
 	}

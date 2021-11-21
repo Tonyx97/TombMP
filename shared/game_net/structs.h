@@ -305,7 +305,8 @@ namespace gns
 				 electric,
 				 respawn,
 				 flare_in_hand,
-				 collidable;
+				 collidable,
+				 hair_enabled;
 		};
 	}
 

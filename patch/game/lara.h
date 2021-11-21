@@ -82,7 +82,8 @@ struct LARA_INFO
 		 respawned = false,
 		 underwater = false,
 		 dead = false,
-		 frozen = false;
+		 frozen = false,
+		 hair_enabled = true;
 };
 
 inline LARA_INFO lara {};

@@ -144,6 +144,7 @@ void player_handlers::on_player_info()
 		player->set_fire_color(info.fire_r, info.fire_g, info.fire_b);
 		player->set_ping(info.ping);
 		player->set_collidable(info.collidable);
+		player->set_hair_enabled(info.hair_enabled);
 
 		if (info.vehicle != 0)
 		{

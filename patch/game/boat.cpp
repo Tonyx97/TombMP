@@ -788,7 +788,7 @@ void BoatAnimation(ITEM_INFO* boat, int collide)
 		}
 	}
 }
-
+import prof;
 void BoatControl(int16_t item_number)
 {
 	auto boat = &items[item_number];
@@ -908,8 +908,11 @@ void BoatControl(int16_t item_number)
 
 	binfo->pitch += (pitch - binfo->pitch) >> 2;
 
-	if (boat->speed > 8) g_audio->play_sound(197, { boat->pos.x_pos, boat->pos.y_pos, boat->pos.z_pos });
-	else if (drive)		 g_audio->play_sound(195, { boat->pos.x_pos, boat->pos.y_pos, boat->pos.z_pos });
+	prof::print(RED, "{}", binfo->pitch);
+	if (boat->speed > 8)
+		g_audio->play_sound(197, { boat->pos.x_pos, boat->pos.y_pos, boat->pos.z_pos }, 0.25f + (float(binfo->pitch) / 200.f));
+	else if (drive)
+		g_audio->play_sound(195, { boat->pos.x_pos, boat->pos.y_pos, boat->pos.z_pos }, 0.25f + (float(binfo->pitch) / 200.f));
 
 	if (lara.skidoo != item_number)
 		return;

@@ -61,7 +61,8 @@ private:
 		 underwater = false,
 		 burning = false,
 		 electric = false,
-		 flare_in_hand = false;
+		 flare_in_hand = false,
+		 hair_enabled = false;
 
 	PLAYER_ID id;
 
@@ -101,6 +102,7 @@ public:
 	void set_burning(bool v)									{ burning = v; }
 	void set_electric(bool v)									{ electric = v; }
 	void set_flare_in_hand(bool v)								{ flare_in_hand = v; }
+	void set_hair_enabled(bool v)								{ hair_enabled = v; }
 	void set_weapon_item_current_anim_state(int16_t v)			{ weapon_item_current_anim_state = v; }
 	void set_water_status(int16_t v)							{ water_status = v; }
 	void set_meshes_offsets(uint32_t* v)						{ memcpy(meshes_offsets, v, sizeof(meshes_offsets)); }
@@ -111,6 +113,7 @@ public:
 	bool is_burning() const										{ return burning; }
 	bool is_electric() const									{ return electric; }
 	bool is_flare_in_hand() const								{ return flare_in_hand; }
+	bool is_hair_enabled() const								{ return hair_enabled; }
 	
 	int16_t get_back_gun() const								{ return back_gun; }
 	int16_t get_hit_direction() const							{ return hit_direction; }

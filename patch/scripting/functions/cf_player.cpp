@@ -73,6 +73,9 @@ void cf_player::register_functions(sol::state* vm)
 	vm->set_function("removeLocalPlayerFlags", [&](int32_t v) { game_level::LOCALPLAYER()->remove_entity_flags(v); });
 	vm->set_function("getLocalPlayerFlags", [&]()			  { return game_level::LOCALPLAYER()->get_entity_flags(); });
 
+	vm->set_function("setLocalPlayerHairEnabled", [&](bool v)	{ lara.hair_enabled = v; });
+	vm->set_function("isLocalPlayerHairEnabled", [&]()			{ return lara.hair_enabled; });
+
 	vm->set_function("getPlayerItem", [&](game_player* player) { return player ? player->get_item() : nullptr; });
 
 	vm->set_function("warpPlayer", [&](int x, int y, int z, int room, bool reset_anims)

@@ -331,6 +331,9 @@ void HairControl(ITEM_INFO* item, vec3d* data, int_vec3* hair_vel)
 
 void DrawHair(vec3d* data)
 {
+	if (!lara.hair_enabled)
+		return;
+
 	auto object = &objects[HAIR];
 	auto mesh = object->mesh_ptr;
 

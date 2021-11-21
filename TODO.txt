@@ -3,7 +3,6 @@
 	· Fix the side flames.
 	· Detonator usage doesn't work.
 	· Fix rain maybe.
-	· Fix boat sound.
 	· Fix the quadbike sound sync.
 	· Fix minecart sound.
 	· Fix death animation not being played in minecart.
@@ -17,7 +16,6 @@
 	· Add enemies replace lara gamemode (suggested by member in last event).
 	· Add ability to disable lara's hair.
 	· Add a pet :o.
-	· Experiment with physics in limbs.
 
 - v1.0.6:
 	· Sometimes the AI death anim aren't fully synced and they get stuck in the middle.
