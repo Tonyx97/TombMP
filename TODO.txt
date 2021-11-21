@@ -2,8 +2,6 @@
 	· Fix the side flames.
 	· Detonator usage doesn't work.
 	· Fix rain maybe.
-	· Fix death animation not being played in minecart.
-	· Fix not dying in minecart properly.
 	· Because all objects need 1 animation with at least 1 frame to be properly rendered we may tweak that at some point but for now we will just load the object because it will be used for meshswap.
 	
 - Ideas.
