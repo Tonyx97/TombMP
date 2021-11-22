@@ -51,8 +51,6 @@ inline uint8_t g_forced_red = 0,
 			   g_forced_green = 0,
 			   g_forced_blue = 0;
 
-
 inline int LanTextureHandle[MAX_D3D_TEXTURES],
 		   texture_pages_count = 0,
-		   LnMaxPolys = 0,
-		   LnMaxVertices = 0;
+		   texture_info_count = 0;

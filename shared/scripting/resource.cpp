@@ -182,7 +182,7 @@ resource_refresh resource::refresh()
 	}
 
 	for (const std::string& file : files)
-		if (verify_file_name(file) && !add_client_file(file))
+		if (!verify_path_file_name(file) || !add_client_file(file))
 			return set_error("Resource has an invalid file list", RESOURCE_REFRESH_INVALID_FILE);
 
 	for (const auto& exp : exports)
@@ -327,4 +327,12 @@ bool resource::verify_resource_name(const std::string& name)
 bool resource::verify_file_name(const std::string& name)
 {
 	return std::regex_match(name, std::regex("[a-zA-Z0-9\\_]+\\.[a-zA-Z0-9\\_]+"));
+}
+
+bool resource::verify_path_file_name(const std::string& name)
+{
+	if (auto last_blackslash = name.find_last_of('\\'); last_blackslash != std::string::npos)
+		return verify_file_name(name.substr(last_blackslash + 1));
+
+	return verify_file_name(name);
 }

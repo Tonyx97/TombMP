@@ -1,4 +1,6 @@
 #include <shared/defs.h>
+#include <shared/scripting/resource_system.h>
+#include <shared/scripting/globals.h>
 
 #include <sol/sol.hpp>
 
@@ -144,5 +146,15 @@ void cf_item::register_functions(sol::state* vm)
 
 		ai->enemy = enemy;
 		ai->hurt_by_lara = 1;	// fix me
+	});
+
+	vm->set_function("loadObject", [&](sol::this_state s, const char* filename)
+	{
+		return load_obj(resource_system::RESOURCES_PATH + script::get_global_string(s, scripting::globals::RESOURCE_NAME) + '\\' + filename);
+	});
+
+	vm->set_function("unloadObject", [&](int16_t id)
+	{
+		return unload_obj(id);
 	});
 }

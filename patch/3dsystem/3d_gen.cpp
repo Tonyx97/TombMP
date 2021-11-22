@@ -28,7 +28,7 @@ void phd_InitBuffers()
 	matrix_stack = new int32_t[MAX_MATRICES * 12]();
 	vbuf = new PHD_VBUF[MAX_VERTICES]();
 	phdtextinfo = new PHDTEXTURESTRUCT[MAX_TEXTURES]();
-	info3d_bufferbf = new int16_t[MAX_POLYGONS * 30]();
+	info3d_bufferbf = new int16_t[MAX_POLYGONS * 256]();
 }
 
 void phd_DestroyBuffers()

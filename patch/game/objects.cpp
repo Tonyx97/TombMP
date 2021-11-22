@@ -3,6 +3,9 @@
 #include <specific/input.h>
 #include <specific/init.h>
 #include <specific/fn_stubs.h>
+#include <specific/hwrender.h>
+
+#include <3dsystem/hwinsert.h>
 
 #include "objects.h"
 #include "laraanim.h"
@@ -837,4 +840,261 @@ void PoleCollision(int16_t item_num, ITEM_INFO* l, COLL_INFO* coll)
 	}
 	else if ((l->current_anim_state < AS_POLESTAT || l->current_anim_state > AS_POLEDOWN) && l->current_anim_state != AS_BACKJUMP)
 		ObjectCollision(item_num, l, coll);
+}
+
+std::set<int16_t> g_free_custom_objs,
+				  g_used_custom_objs;
+
+std::set<int16_t> g_free_custom_tex_pages,
+				  g_used_custom_tex_pages;
+
+std::map<int16_t, std::vector<std::pair<int, int>>> g_used_mesh_data;
+std::map<int16_t, std::vector<std::pair<int, int>>> g_used_tex_info;
+
+int g_normal_mesh_data_size = 0;
+int max_number_custom_tex_infos = 0;
+int max_number_custom_tex_pages = 1024;
+
+void init_custom_objects_pools(int mesh_data_size, int normal_objs_count)
+{
+	max_number_custom_objs = 1024;
+	max_number_custom_mesh_data = 1024 * 1024 * 5;
+	max_number_custom_tex_infos = 1024 * 1024;
+	g_normal_mesh_data_size = mesh_data_size;
+
+	g_free_custom_objs.clear();
+	g_used_custom_objs.clear();
+	g_free_custom_tex_pages.clear();
+	g_used_custom_tex_pages.clear();
+	g_used_mesh_data.clear();
+	g_used_tex_info.clear();
+
+	for (int i = 0; i < max_number_custom_objs; ++i)
+		g_free_custom_objs.insert(normal_objs_count + i);
+
+	for (int i = 0; i < max_number_custom_tex_pages; ++i)
+		g_free_custom_tex_pages.insert(texture_pages_count + i);
+}
+
+bool unload_obj(int16_t id)
+{
+	if (g_used_custom_objs.empty())
+		return false;
+
+	if (!g_used_custom_objs.contains(id))
+		return false;
+
+	if (auto it = g_used_mesh_data.find(id); it != g_used_mesh_data.end())
+		g_used_mesh_data.erase(id);
+	else return false;
+
+	memset(&objects[id], 0, sizeof(*objects));
+
+	g_used_custom_objs.erase(id);
+	g_free_custom_objs.insert(id);
+
+	return true;
+}
+
+// insane ghetto
+//
+int find_space_to_allocate_mesh(int16_t id, int mesh_data_size)
+{
+	for (int i = 0; i < max_number_custom_mesh_data; ++i)
+	{
+		bool available = true;
+
+		for (const auto& [id, infos] : g_used_mesh_data)
+		{
+			for (const auto& info : infos)
+			{
+				const auto& [start, end] = info;
+
+				if (i >= start && i < end)
+				{
+					available = false;
+					break;
+				}
+			}
+		}
+
+		if (available)
+		{
+			if (auto it = g_used_mesh_data.find(id); it != g_used_mesh_data.end())
+				it->second.push_back({ i, i + mesh_data_size });
+			else g_used_mesh_data.insert({ id, { { i, i + mesh_data_size } } });
+
+			return i;
+		}
+	}
+
+	return -1;
+}
+
+// insane ghetto
+//
+int find_space_to_allocate_tex_info(int16_t id, int count)
+{
+	for (int i = 0; i < max_number_custom_tex_infos; ++i)
+	{
+		bool available = true;
+
+		for (const auto& [id, infos] : g_used_tex_info)
+		{
+			for (const auto& info : infos)
+			{
+				const auto& [start, end] = info;
+
+				if (i >= start && i < end)
+				{
+					available = false;
+					break;
+				}
+			}
+		}
+
+		if (available)
+		{
+			if (auto it = g_used_tex_info.find(id); it != g_used_tex_info.end())
+				it->second.push_back({ i, i + count });
+			else g_used_tex_info.insert({ id, { { i, i + count } } });
+
+			return i;
+		}
+	}
+
+	return -1;
+}
+
+int16_t load_obj(const std::string& filename)
+{
+	static constexpr auto MAX_MESHES_PER_OBJ = 32;
+
+	if (g_free_custom_objs.empty())
+		return -1;
+
+	// find mesh data space
+
+	int required_size = 0;
+
+	// we gonna test by copying the tr2 m16 (id 401)
+
+	auto obj_id = *g_free_custom_objs.begin();
+	auto obj = &objects[obj_id];
+
+	auto obj_file = std::ifstream(filename, std::ios::binary);
+	if (!obj_file)
+		return -1;
+
+	int16_t num_meshes = 0;
+	int32_t mesh_array_size = 0;
+	int32_t mesh_texs_info_size = 0;
+	int32_t pages_len = 0;
+
+	obj_file.read((char*)&num_meshes, sizeof(num_meshes));
+
+	auto custom_mesh_base = (int16_t**)game_malloc(MAX_MESHES_PER_OBJ * sizeof(int16_t*));
+
+	std::vector<int> pages_slots;
+
+	static int custom_pages_count = texture_pages_count;
+
+	for (int i = 0; i < num_meshes; ++i)
+	{
+		obj_file.read((char*)&mesh_array_size, sizeof(mesh_array_size));
+
+		auto mesh_data_offset = find_space_to_allocate_mesh(obj_id, mesh_array_size);
+		if (mesh_data_offset == -1)
+			return -1;
+
+		auto curr_mesh_data_ptr = meshes_base + g_normal_mesh_data_size + mesh_data_offset;
+
+		obj_file.read((char*)curr_mesh_data_ptr, mesh_array_size);
+
+		custom_mesh_base[i] = curr_mesh_data_ptr;
+
+		auto curr_ptr = curr_mesh_data_ptr;	curr_ptr += 5;
+
+		auto mesh_data_size = *curr_ptr;	curr_ptr += 1 + mesh_data_size * 3;
+		auto mesh_light_size = *curr_ptr;	curr_ptr += 1 + mesh_light_size * 3;
+		auto gt4_faces_count = *curr_ptr;
+		auto gt4_faces = curr_ptr + 1;		curr_ptr = gt4_faces + gt4_faces_count * 5;
+		auto gt3_faces_count = *curr_ptr;
+		auto gt3_faces = curr_ptr + 1;		curr_ptr = gt3_faces + gt3_faces_count * 4;
+		auto g4_faces_count = *curr_ptr;
+		auto g4_faces = curr_ptr + 1;		curr_ptr = g4_faces + g4_faces_count * 5;
+		auto g3_faces_count = *curr_ptr;
+		auto g3_faces = curr_ptr + 1;		curr_ptr = g3_faces + g3_faces_count * 4;
+
+		obj_file.read((char*)&mesh_texs_info_size, sizeof(mesh_texs_info_size));
+
+		auto texs_info = new PHDTEXTURESTRUCT[mesh_texs_info_size];
+
+		auto tex_offset = find_space_to_allocate_tex_info(obj_id, mesh_texs_info_size);
+		if (tex_offset == -1)
+			return -1;
+
+		auto text_info_dst = phdtextinfo + texture_info_count + tex_offset;
+		auto text_info_base_index = texture_info_count + tex_offset;
+
+		obj_file.read((char*)texs_info, mesh_texs_info_size * sizeof(PHDTEXTURESTRUCT));
+
+		memcpy(text_info_dst, texs_info, mesh_texs_info_size * sizeof(PHDTEXTURESTRUCT));
+
+		delete[] texs_info;
+
+		if (g_free_custom_tex_pages.empty())
+			return -1;
+
+		auto tex_page = *g_free_custom_tex_pages.begin();
+
+		for (int i = 0; i < mesh_texs_info_size; ++i)
+			text_info_dst[i].tpage += custom_pages_count;
+
+		// fix face texture indices
+
+		for (auto face = gt4_faces; face < gt4_faces + gt4_faces_count * 5; face += 5)	face[4] += text_info_base_index;
+		for (auto face = gt3_faces; face < gt3_faces + gt3_faces_count * 4; face += 4)	face[3] += text_info_base_index;
+		for (auto face = g4_faces; face < g4_faces + g4_faces_count * 5; face += 5)		face[4] += text_info_base_index;
+		for (auto face = g3_faces; face < g3_faces + g3_faces_count * 4; face += 4)		face[3] += text_info_base_index;
+	}
+
+	obj_file.read((char*)&pages_len, sizeof(pages_len));
+
+	for (int i = 0; i < pages_len; ++i)
+	{
+		auto page_data = new uint16_t[256 * 256]();
+
+		obj_file.read((char*)page_data, 256 * 256 * 2);
+
+		auto handle = DXTextureAdd(256, 256, page_data, DXTextureList, 555);
+		LanTextureHandle[custom_pages_count++] = (handle >= 0 ? handle : -1);
+
+		delete[] page_data;
+	}
+
+	HWR_GetAllTextureHandles();
+
+	obj_file.close();
+
+	obj->nmeshes = num_meshes;
+	obj->bone_ptr = nullptr;
+	obj->mesh_ptr = &custom_mesh_base[0];
+	obj->anim_index = 0;
+	obj->initialise = nullptr;
+	obj->collision = nullptr;
+	obj->control = nullptr;
+	obj->draw_routine = DrawAnimatingItem;
+	obj->floor = obj->ceiling = nullptr;
+	obj->pivot_length = 0;
+	obj->radius = 100;
+	obj->shadow_size = 0;
+	obj->hit_points = DONT_TARGET;
+	obj->intelligent = obj->water_creature = 0;
+	obj->loaded = 1;	// we have to notify the server about this (when we implement spawnable entities lmao)
+
+	g_free_custom_objs.erase(obj_id);
+	g_used_custom_objs.insert(obj_id);
+
+	return obj_id;
 }

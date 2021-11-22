@@ -145,6 +145,7 @@ void player_handlers::on_player_info()
 		player->set_ping(info.ping);
 		player->set_collidable(info.collidable);
 		player->set_hair_enabled(info.hair_enabled);
+		player->set_skin(info.skin);
 
 		if (info.vehicle != 0)
 		{

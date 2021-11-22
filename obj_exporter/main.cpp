@@ -103,11 +103,11 @@ struct OBJECT_INFO
 struct PHDTEXTURESTRUCT
 {
 	uint16_t drawtype,
-		tpage,
-		u1, v1,
-		u2, v2,
-		u3, v3,
-		u4, v4;
+			 tpage,
+			 u1, v1,
+			 u2, v2,
+			 u3, v3,
+			 u4, v4;
 };
 
 std::ifstream g_level;
@@ -405,6 +405,11 @@ int main(int argc, char** argv)
 		}*/
 	}
 
+	float UVTable[65536];
+
+	for (int i = 0; i < 65536; ++i)
+		UVTable[i] = (float)(i + 1) * (1.f / 65536.f);
+
 	char option = 'y';
 
 	while (option == 'y')
@@ -413,25 +418,25 @@ int main(int argc, char** argv)
 
 		std::cout << "Object ID: ";
 
-		//std::cin >> obj_id;
+		std::cin >> obj_id;
 
-		//if (obj_id == -1)
-		//	return 0;
+		if (obj_id == -1)
+			return 0;
 
 		std::cout << "Output File Name: ";
 
 		std::string obj_name;
 
-		//std::cin >> obj_name;
+		std::cin >> obj_name;
 
 		if (obj_name.empty())
 			obj_name = "default";
 
 		obj_name += ".obj";
 
-		g_out_obj = std::ofstream("..\\patch\\" + obj_name, std::ios::binary | std::ios::trunc);
+		g_out_obj = std::ofstream(obj_name, std::ios::binary | std::ios::trunc);
 
-		obj_id = 407;
+		//obj_id = 405;
 
 		auto obj = &objects[obj_id];
 
@@ -446,8 +451,6 @@ int main(int argc, char** argv)
 
 		int curr_texture_index = 0;
 
-		// ffs what is this shit
-
 		std::vector<int16_t*> pages;
 
 		pages.push_back(new int16_t[256 * 256]);
@@ -459,14 +462,14 @@ int main(int argc, char** argv)
 			auto page = (int16_t*)texture_pages + (texture_info->tpage * 256 * 256);
 
 			auto u1_off = texture_info->u1, v1_off = texture_info->v1,
-				u2_off = texture_info->u2, v2_off = texture_info->v2,
-				u3_off = texture_info->u3, v3_off = texture_info->v3,
-				u4_off = texture_info->u4, v4_off = texture_info->v4;
+				 u2_off = texture_info->u2, v2_off = texture_info->v2,
+				 u3_off = texture_info->u3, v3_off = texture_info->v3,
+				 u4_off = texture_info->u4, v4_off = texture_info->v4;
 
 			int16_t u1 = (u1_off / 256), v1 = (v1_off / 256),
-				u2 = (u2_off / 256), v2 = (v2_off / 256),
-				u3 = (u3_off / 256), v3 = (v3_off / 256),
-				u4 = (u4_off / 256), v4 = (v4_off / 256);
+					u2 = (u2_off / 256), v2 = (v2_off / 256),
+					u3 = (u3_off / 256), v3 = (v3_off / 256),
+					u4 = (u4_off / 256), v4 = (v4_off / 256);
 
 			struct rgb { uint8_t r, g, b, a; };
 
@@ -491,25 +494,37 @@ int main(int argc, char** argv)
 			auto bottom_right_x = std::max(u1, std::max(u2, u3));
 			auto bottom_right_y = std::max(v1, std::max(v2, v3));
 
-			auto top_left_x_off = std::min(u1_off, std::min(u2_off, u3_off));
-			auto top_left_y_off = std::min(v1_off, std::min(v2_off, v3_off));
-			auto bottom_right_x_off = std::max(u1_off, std::max(u2_off, u3_off));
-			auto bottom_right_y_off = std::max(v1_off, std::max(v2_off, v3_off));
-
 			int width = bottom_right_x - top_left_x,
 				height = bottom_right_y - top_left_y;
 
-			if (width == 0 || height == 0)
-			{
-				static int aa = 0;
-				printf_s("wtf %i\n", ++aa);
-				MessageBoxA(nullptr, "NO", "NO", MB_OK);
-				return;	// why does this happen...?
-			}
+			bool single_pixel = width == 0 || height == 0;
 
-			for (int y = top_left_y; y < bottom_right_y; ++y)
-				for (int x = top_left_x; x < bottom_right_x; ++x)
-					save_pixel(x, y);
+			if (single_pixel)
+			{
+				if (width == 0)
+				{
+					++width;
+					++bottom_right_x;
+				}
+
+				if (height == 0)
+				{
+					++height;
+					++bottom_right_y;
+				}
+
+				for (int y = top_left_y; y < bottom_right_y; ++y)
+					for (int x = top_left_x; x < bottom_right_x; ++x)
+						save_pixel(x, y);
+
+				//save_pixel(top_left_x, top_left_y);
+			}
+			else
+			{
+				for (int y = top_left_y; y < bottom_right_y; ++y)
+					for (int x = top_left_x; x < bottom_right_x; ++x)
+						save_pixel(x, y);
+			}
 
 			auto hash = crc64(0, (unsigned char*)sprite.data(), sprite.size() * 2);
 
@@ -524,8 +539,8 @@ int main(int argc, char** argv)
 
 				bool can_place = false;
 
-				for (int y = 0; y < 255 - height && !can_place; ++y)
-					for (int x = 0; x < 255 - width && !can_place; ++x)
+				for (int y = 0; y < 256 - height && !can_place; ++y)
+					for (int x = 0; x < 256 - width && !can_place; ++x)
 					{
 						can_place = true;
 
@@ -555,16 +570,33 @@ int main(int argc, char** argv)
 					goto retry_allocation;
 				}
 
-				occupied_space.emplace_back(px, py, width, height);
-
 				auto out_page = pages.back();
 
-				for (int y = py, i = 0; y < py + height; ++y)
-					for (int x = px; x < px + width; ++x, ++i)
-						out_page[x + y * 256] = sprite[i];
+				if (single_pixel)
+				{
+					occupied_space.emplace_back(px, py, width, height);
+
+					for (int y = py, i = 0; y < py + height; ++y)
+						for (int x = px; x < px + width; ++x, ++i)
+							out_page[x + y * 256] = sprite[i];
+				}
+				else
+				{
+					occupied_space.emplace_back(px, py, width, height);
+
+					for (int y = py, i = 0; y < py + height; ++y)
+						for (int x = px; x < px + width; ++x, ++i)
+							out_page[x + y * 256] = sprite[i];
+				}
 
 				if (width > 0 && height > 0)
 					stbi_write_png((char*)("meshes\\mesh_" + std::to_string(curr_mesh) + "_" + std::to_string(curr_texture++) + ".bmp").c_str(), width, height, 4, out_texture.data(), width * 4);
+				else stbi_write_png((char*)("meshes\\mesh_" + std::to_string(curr_mesh) + "_" + std::to_string(curr_texture++) + ".bmp").c_str(), 1, 1, 4, out_texture.data(), 1 * 4);
+
+				auto top_left_x_off = std::min(u1_off, std::min(u2_off, u3_off));
+				auto top_left_y_off = std::min(v1_off, std::min(v2_off, v3_off));
+				auto bottom_right_x_off = std::max(u1_off, std::max(u2_off, u3_off));
+				auto bottom_right_y_off = std::max(v1_off, std::max(v2_off, v3_off));
 
 				PHDTEXTURESTRUCT new_tex_info;
 

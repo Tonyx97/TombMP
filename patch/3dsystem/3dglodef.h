@@ -16,7 +16,7 @@
 #define MAX_MATRICES	128 * 12				// maximum matrices in stack
 #define W2V_SHIFT 		14						// shift scale of view.frame to world.frame
 #define	W2V_SCALE 		(1 << W2V_SHIFT)		// scale of view frame to world frame
-#define	MAX_TEXTURES	8192			
+#define	MAX_TEXTURES	65536			
 #define MAX_SPRITES		512
 
 #define SPRITE_REL				0x00000000

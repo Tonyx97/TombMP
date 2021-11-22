@@ -9,59 +9,6 @@ import prof;
 
 #include <specific/fn_stubs.h>
 
-const char* game_malloc_strings[NUM_MALLOC_TYPES] =
-{
-	"Temp Alloc",
-	"Texture Pages",
-	"Mesh Pointers",
-	"Meshes",
-	"Anims",
-	"Structs",
-	"Ranges",
-	"Commands",
-	"Bones",
-	"Frames",
-	"Room Textures",
-	"Room Infos",
-	"Room Mesh",
-	"Room Door",
-	"Room Floor",
-	"Room Lights",
-	"Room Static Mesh Infos",
-	"Floor Data",
-	"ITEMS!!",
-	"Cameras",
-	"Sound FX",
-	"Boxes",
-	"Overlaps",
-	"GroundZone",
-	"FlyZone",
-	"Animating Texture Ranges",
-	"Cinematic Frames",
-	"LoadDemo Buffer",
-	"SaveDemo Buffer",
-	"Cinematic Effects",
-	"Mummy Head Turn",
-	"Extra Door stuff",
-	"Effects_Array",
-	"Creature Data",
-	"Creature LOT",
-	"Sample Infos",
-	"Samples",
-	"Sample Offsets",
-	"Rolling Ball Stuff",
-	"Skidoo Stuff",
-	"Load Piccy Buffer",
-	"FMV Buffers",
-	"Polygon Buffers",
-	"Order Tables",
-	"CLUTs",
-	"Texture Infos",
-	"Sprite Infos"
-};
-
-int LanGameMallocTotals[NUM_MALLOC_TYPES];
-
 std::unordered_set<void*> g_game_mem;
 
 unsigned short GetRandom(WATERTAB* w, int n)

@@ -37,11 +37,9 @@ import prof;
 
 #define THIS_SCRIPT_VERSION 3
 
-uint8_t LabTextureUVFlag[MAX_TEXTURES];
+uint8_t LabTextureUVFlag[1]; // (TESTING)
 
 int16_t LGF_offsets[200];
-
-int texture_infos;
 
 BOOL MyReadFile(HANDLE hFile, void* pBuffer, DWORD nNumberOfBytesToRead, DWORD* pNumberOfBytesRead = nullptr, OVERLAPPED* pOverlapped = nullptr)
 {
@@ -207,7 +205,7 @@ void AdjustTextureUVs(bool tNew)
 	auto pTS = phdtextinfo;
 	auto pUVF = LabTextureUVFlag;
 
-	int nTI = texture_infos,
+	int nTI = texture_info_count,
 		nAdd = 128 - App.nUVAdd;
 
 	for (; --nTI; ++pTS)
@@ -234,7 +232,10 @@ bool LoadObjects(HANDLE file)
 	int32_t mesh_base_size = 0;
 
 	MyReadFile(file, &mesh_base_size, sizeof(int32_t));
-	meshes_base = (int16_t*)game_malloc(mesh_base_size * sizeof(int16_t), MESHES);
+
+	init_custom_objects_pools(mesh_base_size, NUMBER_OBJECTS);
+
+	meshes_base = (int16_t*)game_malloc((mesh_base_size + max_number_custom_mesh_data) * sizeof(int16_t), MESHES);
 	MyReadFile(file, meshes_base, sizeof(int16_t) * mesh_base_size);
 
 	// load meshes (offset pointers first)
@@ -334,7 +335,7 @@ bool LoadObjects(HANDLE file)
 
 	MyReadFile(file, &objects_count, sizeof(int32_t));
 
-	objects = (OBJECT_INFO*)game_malloc((NUMBER_OBJECTS + 128) * sizeof(OBJECT_INFO), OBJECTS);
+	objects = (OBJECT_INFO*)game_malloc((NUMBER_OBJECTS + max_number_custom_objs) * sizeof(OBJECT_INFO), OBJECTS);
 
 	for (int i = 0; i < objects_count; ++i)
 	{
@@ -438,7 +439,7 @@ bool LoadSprites(HANDLE file)
 	return true;
 }
 
-int16_t create_custom_item(int16_t id)
+int16_t create_custom_item(int16_t id)	// (TESTING)
 {
 	auto flare_item = CreateItem();
 
@@ -513,117 +514,6 @@ bool LoadItems(HANDLE file)
 		// NOTE: any extra memory allocation for item is done via InitialiseItem now
 
 		InitialiseItem(i);
-	}
-
-	// loading custom object...
-
-	if (true)
-	{
-		// we gonna test by copying the tr2 m16 (id 401)
-
-		auto custom_meshes = (int16_t**)game_malloc(1024 * sizeof(int16_t*));
-
-		auto old_obj_id = 62;
-		auto old_obj = &objects[old_obj_id];
-
-		auto obj_id = NUMBER_OBJECTS + 100;
-		auto obj = &objects[obj_id];
-
-		std::ifstream obj_file("banana.obj", std::ios::binary);
-
-		int16_t num_meshes = 0;
-		int32_t mesh_array_size = 0;
-		int32_t mesh_texs_info_size = 0;
-		int32_t pages_len = 0;
-
-		obj_file.read((char*)&num_meshes, sizeof(num_meshes));
-
-		int tex_info_added = 0;
-
-		for (int i = 0; i < num_meshes; ++i)
-		{
-			obj_file.read((char*)&mesh_array_size, sizeof(mesh_array_size));
-
-			auto new_mesh_ptr = (int16_t*)game_malloc(mesh_array_size);
-
-			obj_file.read((char*)new_mesh_ptr, mesh_array_size);
-
-			custom_meshes[i] = new_mesh_ptr;
-
-			{
-				auto curr_ptr = new_mesh_ptr;		curr_ptr += 5;
-
-				auto mesh_data_size = *curr_ptr;	curr_ptr += 1 + mesh_data_size * 3;
-				auto mesh_light_size = *curr_ptr;	curr_ptr += 1 + mesh_light_size * 3;
-				auto gt4_faces_count = *curr_ptr;
-				auto gt4_faces = curr_ptr + 1;		curr_ptr = gt4_faces + gt4_faces_count * 5;
-				auto gt3_faces_count = *curr_ptr;
-				auto gt3_faces = curr_ptr + 1;		curr_ptr = gt3_faces + gt3_faces_count * 4;
-				auto g4_faces_count = *curr_ptr;
-				auto g4_faces = curr_ptr + 1;		curr_ptr = g4_faces + g4_faces_count * 5;
-				auto g3_faces_count = *curr_ptr;
-				auto g3_faces = curr_ptr + 1;		curr_ptr = g3_faces + g3_faces_count * 4;
-
-				obj_file.read((char*)&mesh_texs_info_size, sizeof(mesh_texs_info_size));
-
-				auto texs_info = new PHDTEXTURESTRUCT[mesh_texs_info_size];
-				auto text_info_dst = phdtextinfo + texture_infos + tex_info_added;
-				auto text_info_base_index = texture_infos + tex_info_added;
-
-				obj_file.read((char*)texs_info, mesh_texs_info_size * sizeof(PHDTEXTURESTRUCT));
-
-				memcpy(text_info_dst, texs_info, mesh_texs_info_size * sizeof(PHDTEXTURESTRUCT));
-
-				for (int i = 0; i < mesh_texs_info_size; ++i)
-					text_info_dst[i].tpage += texture_pages_count;
-
-				// fix face texture indices
-
-				for (auto face = gt4_faces; face < gt4_faces + gt4_faces_count * 5; face += 5) face[4] += text_info_base_index;
-				for (auto face = gt3_faces; face < gt3_faces + gt3_faces_count * 4; face += 4) face[3] += text_info_base_index;
-				for (auto face = g4_faces; face < g4_faces + g4_faces_count * 5; face += 5) face[4] += text_info_base_index;
-				for (auto face = g3_faces; face < g3_faces + g3_faces_count * 4; face += 4) face[3] += text_info_base_index;
-
-				tex_info_added += mesh_texs_info_size;
-			}
-		}
-
-		obj_file.read((char*)&pages_len, sizeof(pages_len));
-
-		for (int i = 0; i < pages_len; ++i)
-		{
-			auto page_data = new uint16_t[256 * 256]();
-
-			obj_file.read((char*)page_data, 256 * 256 * 2);
-
-			auto handle = DXTextureAdd(256, 256, page_data, DXTextureList, 555);
-			LanTextureHandle[texture_pages_count + i] = (handle >= 0 ? handle : -1);
-
-			delete[] page_data;
-		}
-
-		HWR_GetAllTextureHandles();
-
-		obj->nmeshes = num_meshes;
-		//obj->mesh_ptr = old_obj->mesh_ptr;
-		obj->bone_ptr = old_obj->bone_ptr;
-		obj->mesh_ptr = &custom_meshes[0];
-		//obj->bone_ptr = new_bone_ptr;
-		obj->anim_index = 0;	// todo, we have to import the anim data and the only frame.
-		//obj->anim_index = old_obj->anim_index;
-		obj->initialise = nullptr;
-		obj->collision = nullptr;
-		obj->control = nullptr;
-		obj->draw_routine = DrawAnimatingItem;
-		obj->floor = obj->ceiling = nullptr;
-		obj->pivot_length = 0;
-		obj->radius = 100;
-		obj->shadow_size = 0;
-		obj->hit_points = DONT_TARGET;
-		obj->intelligent = obj->water_creature = 0;
-		obj->loaded = 1;	// we have to notify the server about this if we ever get this working
-
-		create_custom_item(obj_id);
 	}
 
 	return true;
@@ -777,14 +667,14 @@ bool LoadAnimatedTextures(HANDLE file)
 
 bool LoadObjectsTextures(HANDLE file)
 {
-	MyReadFile(file, &texture_infos, sizeof(int32_t));
-	MyReadFile(file, phdtextinfo, sizeof(PHDTEXTURESTRUCT) * texture_infos);
+	MyReadFile(file, &texture_info_count, sizeof(int32_t));
+	MyReadFile(file, phdtextinfo, sizeof(PHDTEXTURESTRUCT) * texture_info_count);
 
 	return true;
 
 	// (TESTING) I think the code from below is just useless xd
 
-	for (int i = 0; i < texture_infos; ++i)
+	for (int i = 0; i < texture_info_count; ++i)
 	{
 		auto pUV = (uint16_t*)&(phdtextinfo[i].u1);
 
@@ -974,7 +864,7 @@ void unload_level()
 
 	HWR_FreeTexturePages();
 
-	texture_infos = 0;
+	texture_info_count = 0;
 	number_custom_anims = 0;
 
 	g_attachments.clear();

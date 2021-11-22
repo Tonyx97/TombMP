@@ -78,12 +78,15 @@ struct LARA_INFO
 	int32_t corner_x;
 	int32_t corner_z;
 
+	int16_t skin = -1;
+
 	bool spawned = false,
 		 respawned = false,
 		 underwater = false,
 		 dead = false,
 		 frozen = false,
-		 hair_enabled = true;
+		 hair_enabled = true,
+		 angry_face = true;
 };
 
 inline LARA_INFO lara {};

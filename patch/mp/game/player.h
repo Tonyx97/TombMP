@@ -50,7 +50,8 @@ private:
 			gun_type = 0,
 			flare_age = 0,
 			weapon_item_current_anim_state = -1,
-			water_status = 0;
+			water_status = 0,
+			skin = -1;
 
 	uint8_t fire_r = 0,
 			fire_g = 0,
@@ -96,6 +97,7 @@ public:
 	void set_gun_status(int16_t v)								{ gun_status = v; }
 	void set_gun_type(int16_t v)								{ gun_type = v; }
 	void set_flare_age(int16_t v)								{ flare_age = v; }
+	void set_skin(int16_t v)									{ skin = v; }
 	void set_fire_color(uint8_t r, uint8_t g, uint8_t b)		{ fire_r = r; fire_g = g; fire_b = b; }
 	void set_ducked(bool v)										{ ducked = v; }
 	void set_underwater(bool v)									{ underwater = v; }
@@ -123,6 +125,7 @@ public:
 	int16_t get_flare_age() const								{ return flare_age; }
 	int16_t get_weapon_item_current_anim_state() const			{ return weapon_item_current_anim_state; }
 	int16_t get_water_status() const							{ return water_status; }
+	int16_t get_skin() const									{ return skin; }
 
 	int get_ping() const										{ return ping; }
 	int get_smoke_weapon() const								{ return smoke_weapon; }

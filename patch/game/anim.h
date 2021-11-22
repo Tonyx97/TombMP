@@ -121,7 +121,6 @@ inline ANIM_STRUCT* anims;
 inline RANGE_STRUCT* ranges;
 inline CHANGE_STRUCT* changes;
 inline int16_t** meshes,
-			  ** custom_meshes,
 			   * meshes_base,
 			   * commands,
 			   * frames;

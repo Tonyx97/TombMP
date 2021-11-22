@@ -21,6 +21,22 @@ import prof;
 
 void cf_player::register_functions(sol::state* vm)
 {
+	vm->set_function("setLocalPlayerSkin", [&](int16_t id)
+	{
+		if (id >= 0 && id < max_number_custom_objs && objects[id].loaded)
+		{
+			lara.skin = id;
+
+			for (int i = 0; i < MAX_LARA_MESHES; ++i)
+				lara.mesh_ptrs[i] = objects[LARA].mesh_ptr[i] = objects[id].mesh_ptr[i];
+		}
+	});
+
+	vm->set_function("getLocalPlayerSkin", [&]() { return lara.skin; });
+
+	vm->set_function("setLaraAngryFaceEnabled", [&](bool v) { lara.angry_face = v; });
+	vm->set_function("isLaraAngryFaceEnabled", [&]()		{ return lara.angry_face; });
+
 	vm->set_function("setLocalPlayerOnFire", [&](bool v)
 	{
 		if (v)

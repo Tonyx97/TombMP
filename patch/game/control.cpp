@@ -282,6 +282,7 @@ int32_t ControlPhase(int32_t nframes)
 	info.flare_age = lara.flare_age;
 	info.weapon_item_current_anim_state = lara.weapon_item != NO_ITEM ? items[lara.weapon_item].current_anim_state : -1;
 	info.water_status = lara.water_status;
+	info.skin = lara.skin;
 
 	lara.respawned = false;
 

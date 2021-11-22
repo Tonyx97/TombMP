@@ -202,7 +202,8 @@ void LaraGun()
 		break;
 	case LG_READY:
 	{
-		lara.mesh_ptrs[HEAD] = (lara.pistols.ammo && (input & IN_ACTION) ? objects[UZI].mesh_ptr[HEAD] : objects[LARA].mesh_ptr[HEAD]);
+		if (lara.angry_face)
+			lara.mesh_ptrs[HEAD] = (lara.pistols.ammo && (input & IN_ACTION) ? objects[UZI].mesh_ptr[HEAD] : objects[LARA].mesh_ptr[HEAD]);
 
 		if (camera.type != CINEMATIC_CAMERA && camera.type != LOOK_CAMERA)
 			camera.type = COMBAT_CAMERA;

@@ -510,6 +510,11 @@ void draw_rooms(int16_t current_room)
 
 		g_level->for_each_player([&](game_player* player)
 		{
+			const auto skin = player->get_skin();
+
+			if (skin < 0 || skin > NUMBER_OBJECTS + max_number_custom_objs || !objects[skin].loaded)
+				return;
+
 			auto player_item = player->get_item();
 
 			if (player->is_spawned() &&
@@ -557,7 +562,8 @@ void draw_rooms(int16_t current_room)
 
 				for (int i = 0; i < MAX_LARA_MESHES; ++i)
 					lara.mesh_ptrs[i] = meshes_base + meshes_offsets[i];
-				
+
+				lara.skin = skin;
 				lara.flare_age = player->get_flare_age();
 				lara.flare_control_left = player->is_flare_in_hand();
 				lara.back_gun = player->get_back_gun();

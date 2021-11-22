@@ -118,6 +118,7 @@ public:
 
 	static bool verify_resource_name(const std::string& name);
 	static bool verify_file_name(const std::string& name);
+	static bool verify_path_file_name(const std::string& name);
 
 	static std::string get_lookup(const std::string& folder, const std::string& name)	{ return folder + '\\' + name; }
 };

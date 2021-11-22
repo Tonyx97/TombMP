@@ -293,7 +293,8 @@ namespace gns
 					gun_type,
 					flare_age,
 					weapon_item_current_anim_state,
-					water_status;
+					water_status,
+					skin;
 
 			uint8_t fire_r,
 					fire_g,
