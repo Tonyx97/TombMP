@@ -86,7 +86,8 @@ struct LARA_INFO
 		 dead = false,
 		 frozen = false,
 		 hair_enabled = true,
-		 angry_face = true;
+		 angry_face = true,
+		 holster_enabled = true;
 };
 
 inline LARA_INFO lara {};

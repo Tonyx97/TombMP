@@ -569,8 +569,11 @@ void draw_right_gun(ITEM_INFO* item)
 {
 	auto temp = lara.mesh_ptrs[THIGH_R];
 
-	lara.mesh_ptrs[THIGH_R] = objects[PISTOLS].mesh_ptr[THIGH_R];
-	objects[PISTOLS].mesh_ptr[THIGH_R] = temp;
+	if (lara.holster_enabled)
+	{
+		lara.mesh_ptrs[THIGH_R] = objects[PISTOLS].mesh_ptr[THIGH_R];
+		objects[PISTOLS].mesh_ptr[THIGH_R] = temp;
+	}
 
 	temp = lara.mesh_ptrs[HAND_R];
 
@@ -582,8 +585,11 @@ void draw_left_gun(ITEM_INFO* item)
 {
 	auto temp = lara.mesh_ptrs[THIGH_L];
 
-	lara.mesh_ptrs[THIGH_L] = objects[PISTOLS].mesh_ptr[THIGH_L];
-	objects[PISTOLS].mesh_ptr[THIGH_L] = temp;
+	if (lara.holster_enabled)
+	{
+		lara.mesh_ptrs[THIGH_L] = objects[PISTOLS].mesh_ptr[THIGH_L];
+		objects[PISTOLS].mesh_ptr[THIGH_L] = temp;
+	}
 
 	temp = lara.mesh_ptrs[HAND_L];
 

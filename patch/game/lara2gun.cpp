@@ -157,12 +157,16 @@ void draw_pistol_meshes(int weapon_type)
 	int obj = WeaponObject(weapon_type);
 
 	lara.mesh_ptrs[HAND_R] = objects[obj].mesh_ptr[HAND_R];
-	lara.mesh_ptrs[THIGH_R] = objects[LARA].mesh_ptr[THIGH_R];
+
+	if (lara.holster_enabled)
+		lara.mesh_ptrs[THIGH_R] = objects[LARA].mesh_ptr[THIGH_R];
 
 	if (weapon_type != LG_MAGNUMS)
 	{
 		lara.mesh_ptrs[HAND_L] = objects[obj].mesh_ptr[HAND_L];
-		lara.mesh_ptrs[THIGH_L] = objects[LARA].mesh_ptr[THIGH_L];
+
+		if (lara.holster_enabled)
+			lara.mesh_ptrs[THIGH_L] = objects[LARA].mesh_ptr[THIGH_L];
 	}
 }
 
@@ -172,7 +176,9 @@ void undraw_pistol_mesh_left(int weapon_type)
 	{
 		int obj = WeaponObject(weapon_type);
 
-		lara.mesh_ptrs[THIGH_L] = objects[obj].mesh_ptr[THIGH_L];
+		if (lara.holster_enabled)
+			lara.mesh_ptrs[THIGH_L] = objects[obj].mesh_ptr[THIGH_L];
+
 		lara.mesh_ptrs[HAND_L] = objects[LARA].mesh_ptr[HAND_L];
 	}
 }
@@ -181,7 +187,9 @@ void undraw_pistol_mesh_right(int weapon_type)
 {
 	int obj = WeaponObject(weapon_type);
 
-	lara.mesh_ptrs[THIGH_R] = objects[obj].mesh_ptr[THIGH_R];
+	if (lara.holster_enabled)
+		lara.mesh_ptrs[THIGH_R] = objects[obj].mesh_ptr[THIGH_R];
+
 	lara.mesh_ptrs[HAND_R] = objects[LARA].mesh_ptr[HAND_R];
 }
 

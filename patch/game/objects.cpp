@@ -853,13 +853,14 @@ std::map<int16_t, std::vector<std::pair<int, int>>> g_used_tex_info;
 
 int g_normal_mesh_data_size = 0;
 int max_number_custom_tex_infos = 0;
-int max_number_custom_tex_pages = 1024;
+int max_number_custom_tex_pages = 0;
 
 void init_custom_objects_pools(int mesh_data_size, int normal_objs_count)
 {
 	max_number_custom_objs = 1024;
 	max_number_custom_mesh_data = 1024 * 1024 * 5;
 	max_number_custom_tex_infos = 1024 * 1024;
+	max_number_custom_tex_pages = 1024;
 	g_normal_mesh_data_size = mesh_data_size;
 
 	g_free_custom_objs.clear();

@@ -37,6 +37,9 @@ void cf_player::register_functions(sol::state* vm)
 	vm->set_function("setLaraAngryFaceEnabled", [&](bool v) { lara.angry_face = v; });
 	vm->set_function("isLaraAngryFaceEnabled", [&]()		{ return lara.angry_face; });
 
+	vm->set_function("setLaraHolstersEnabled", [&](bool v)	{ lara.holster_enabled = v; });
+	vm->set_function("areLaraHolstersEnabled", [&]()		{ return lara.holster_enabled; });
+
 	vm->set_function("setLocalPlayerOnFire", [&](bool v)
 	{
 		if (v)
