@@ -195,6 +195,7 @@
 	- Added quadbike sound sync.
 	- Added minecart sound sync.
 	- Added "emotes" script to use certain lara original speeches.
+	- Added scripting functions to load objects.
 	- Added new client and server scripting functions: unloadAnimation, isItemIntelligent, setItemIntelligent, getItemAI, g/setAIEnemy, setLocalPlayerHairEnabled, isLocalPlayerHairEnabled, setLaraAngryFaceEnabled, isLaraAngryFaceEnabled, loadObject, unloadObject,
 	get/setLocalPlayerSkin.
 	
