@@ -908,12 +908,15 @@ int find_space_to_allocate_mesh(int16_t id, int mesh_data_size)
 		{
 			for (const auto& info : infos)
 			{
+				if (i >= max_number_custom_mesh_data - 1)
+					return -1;
+
 				const auto& [start, end] = info;
 
-				if (i >= start && i < end)
+				if (i >= start && i < start + end)
 				{
 					available = false;
-					break;
+					i += end - 1;
 				}
 			}
 		}
@@ -921,8 +924,8 @@ int find_space_to_allocate_mesh(int16_t id, int mesh_data_size)
 		if (available)
 		{
 			if (auto it = g_used_mesh_data.find(id); it != g_used_mesh_data.end())
-				it->second.push_back({ i, i + mesh_data_size });
-			else g_used_mesh_data.insert({ id, { { i, i + mesh_data_size } } });
+				it->second.push_back({ i, mesh_data_size });
+			else g_used_mesh_data.insert({ id, { { i, mesh_data_size } } });
 
 			return i;
 		}
@@ -943,12 +946,15 @@ int find_space_to_allocate_tex_info(int16_t id, int count)
 		{
 			for (const auto& info : infos)
 			{
+				if (i >= max_number_custom_tex_infos - 1)
+					return -1;
+
 				const auto& [start, end] = info;
 
-				if (i >= start && i < end)
+				if (i >= start && i < start + end)
 				{
 					available = false;
-					break;
+					i += end - 1;
 				}
 			}
 		}
@@ -956,8 +962,8 @@ int find_space_to_allocate_tex_info(int16_t id, int count)
 		if (available)
 		{
 			if (auto it = g_used_tex_info.find(id); it != g_used_tex_info.end())
-				it->second.push_back({ i, i + count });
-			else g_used_tex_info.insert({ id, { { i, i + count } } });
+				it->second.push_back({ i, count });
+			else g_used_tex_info.insert({ id, { { i, count } } });
 
 			return i;
 		}
