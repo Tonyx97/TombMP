@@ -182,7 +182,7 @@
 		· setEngineExtendedVehicleAnimIDs.
 		· setAnimNextAnim.
 	
-- v1.1.6 (xx-11-21):
+- v1.1.6 (25-12-21):
 	- Improved custom animations and fixed a few issues with animation loading.
 	- Minecart is now affected properly by global gravity.
 	- Highly improved scripting stability by checking for invalid parameters (this avoids a lot of crashes).

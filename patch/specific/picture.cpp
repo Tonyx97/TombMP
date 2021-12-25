@@ -223,7 +223,7 @@ void FadePictureUp(int pic)
 
 		HWR_BeginScene();
 		{
-			DrawPicture();
+			DrawPicture(pic);
 
 			HWR_SetCurrentTexture(0);
 
