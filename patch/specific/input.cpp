@@ -430,6 +430,7 @@ bool update_input(bool inventory)
 			input = 0;
 		else if (!lara.frozen)
 			input = get_general_input();
+		else input = 0;
 
 		if (bool escaped = g_keycode->is_key_pressed(KEY_ESCAPE); escaped || g_keycode->is_key_pressed(KEY_ENTER))
 			g_chat->end_typing(!escaped);

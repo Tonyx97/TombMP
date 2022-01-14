@@ -1,3 +1,5 @@
+import prof;
+
 #include <specific/standard.h>
 #include <specific/input.h>
 
@@ -21,6 +23,11 @@
 #include "physics.h"
 #include "game.h"
 #include "lara2gun.h"
+
+#include <shared/scripting/resource.h>
+#include <shared/scripting/resource_system.h>
+
+#include <scripting/events.h>
 
 #define CAM_A_HANG 				0
 #define CAM_E_HANG 				-60 * ONE_DEGREE
@@ -1282,6 +1289,8 @@ void LaraAboveWater(ITEM_INFO* item, COLL_INFO* coll)
 		LookLeftRight();
 	else ResetLook();
 
+	auto old_vehicle = lara.skidoo;
+
 	lara.look = 1;
 
 	if (lara.skidoo != NO_ITEM)
@@ -1335,6 +1344,9 @@ void LaraAboveWater(ITEM_INFO* item, COLL_INFO* coll)
 		if (lara.skidoo == NO_ITEM)
 			reinterpret_cast<void(__cdecl*)(ITEM_INFO*, COLL_INFO*)>(*lara_collision_routines[item->current_anim_state])(item, coll);
 	}
+
+	if (old_vehicle == NO_ITEM && lara.skidoo != NO_ITEM)
+		g_resource->trigger_event(events::vehicle::ON_VEHICLE_ENTER);
 
 	UpdateLaraRoom(item, -LARA_HITE / 2);
 	LaraGun();

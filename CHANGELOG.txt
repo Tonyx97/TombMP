@@ -199,8 +199,9 @@
 	- Added new client and server scripting functions: unloadAnimation, isItemIntelligent, setItemIntelligent, getItemAI, g/setAIEnemy, setLocalPlayerHairEnabled, isLocalPlayerHairEnabled, setLaraAngryFaceEnabled, isLaraAngryFaceEnabled, loadObject, unloadObject,
 	get/setLocalPlayerSkin, setLaraHolstersEnabled, areLaraHolstersEnabled.
 	
-	
-	
+- v1.1.7 (14-01-22):
+	- Added onVehicleEnter event.
+	- Fixed some misc issues.
 	
 	
 	
