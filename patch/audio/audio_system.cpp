@@ -358,10 +358,6 @@ bool audio_system::play_sound(audio_id hash, const int_vec3& pos, float pitch, b
 bool audio_system::play_sound(int id, const int_vec3& pos, float pitch, bool sync)
 {
 	auto it = audio_ids.find(id);
-
-	if (id == 247)	// 282 - 247
-		prof::print(BLUE, "{}", id);
-
 	return (it != audio_ids.end() ? play_sound(it->second, pos, pitch, sync) : false);
 }
 
