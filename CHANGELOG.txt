@@ -202,6 +202,7 @@
 - v1.1.7 (14-01-22):
 	- Added onVehicleEnter event.
 	- Fixed some misc issues.
+	- Fixed boat sounds in Alex's race map.
 	
 	
 	

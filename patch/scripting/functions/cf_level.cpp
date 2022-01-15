@@ -13,6 +13,7 @@
 
 void cf_level::register_functions(sol::state* vm)
 {
+	vm->set_function("resetLevelFinished",				[&]()			  { level_complete = false; });
 	vm->set_function("setLavaDeathType",				[&](int type)	  { lava_type = type; });
 	vm->set_function("enableLaraBreath",				[&](bool enabled) { enable_lara_breath = enabled; });
 	vm->set_function("enableColdExposure",				[&](bool enabled) { enable_cold_exposure = enabled; });

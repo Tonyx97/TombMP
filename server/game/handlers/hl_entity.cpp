@@ -38,7 +38,7 @@ void entity_handlers::on_entity_hit_damage(net_player* n_player)
 
 		g_server->send_packet_broadcast_ex(ID_ENTITY_HIT_DAMAGE, n_player->get_sys_address(), true, info);
 
-		if (old_hp > 0)
+		if (old_hp > 0 && old_hp <= 1000)
 			g_resource->trigger_event(events::entity::ON_ENTITY_DAMAGE, g_level->get_entity_by_sid(info.attacker_sid), entity, info.damage, info.weapon);
 	}
 }

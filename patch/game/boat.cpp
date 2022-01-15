@@ -754,6 +754,12 @@ void BoatAnimation(ITEM_INFO* boat, int collide)
 				{
 					if ((input & IN_TURNR) && CanGetOff(boat->pos.y_rot + 0x4000))	  lara_item->goal_anim_state = BOAT_JUMPR;
 					else if (input & IN_TURNL && CanGetOff(boat->pos.y_rot - 0x4000)) lara_item->goal_anim_state = BOAT_JUMPL;
+
+					if (lara_item->goal_anim_state == BOAT_JUMPL || lara_item->goal_anim_state == BOAT_JUMPR)
+					{
+						g_audio->stop_sound(195);
+						g_audio->stop_sound(197);
+					}
 				}
 			}
 
@@ -908,7 +914,6 @@ void BoatControl(int16_t item_number)
 
 	binfo->pitch += (pitch - binfo->pitch) >> 2;
 
-	prof::print(RED, "{}", binfo->pitch);
 	if (boat->speed > 8)
 		g_audio->play_sound(197, { boat->pos.x_pos, boat->pos.y_pos, boat->pos.z_pos }, 0.25f + (float(binfo->pitch) / 200.f));
 	else if (drive)
