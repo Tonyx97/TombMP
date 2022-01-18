@@ -45,9 +45,9 @@
 #define SF_SURFACE			2
 #define SF_DIVE				4
 #define SF_DEAD				8
-#define ACCELERATION		0x40000
+#define ACCELERATION		0x60000
 #define FRICTION			0x18000
-#define MAX_SPEED			0x400000
+#define MAX_SPEED			0x800000
 #define ROT_ACCELERATION	0x400000
 #define ROT_SLOWACCEL		0x200000
 #define ROT_FRICTION 		0x100000
@@ -893,15 +893,21 @@ int SubControl()
 
 	TestTriggers(trigger_index, 0);
 
+	if (lara.skidoo != NO_ITEM)
+		SubEffects(lara.skidoo);
+
 	if (lara.skidoo != NO_ITEM && !(sub->Flags & SF_DEAD))
 	{
 		DoCurrent(v);
 
 		if ((input & IN_ACTION) && (sub->Flags & SF_CONTROL) && !sub->WeaponTimer)
 		{
-			FireSubHarpoon(v);
+			if (lara.harpoon.ammo > 0)
+			{
+				FireSubHarpoon(v);
 
-			sub->WeaponTimer = HARPOON_RELOAD;
+				sub->WeaponTimer = HARPOON_RELOAD;
+			}
 		}
 
 		if (room_number != v->room_number)
@@ -965,8 +971,7 @@ void SubEffects(int16_t item_number)
 	{
 		if (!sub->Vel)
 			sub->FanRot += (ONE_DEGREE * 2);
-		else
-			sub->FanRot += sub->Vel >> 12;
+		else sub->FanRot += sub->Vel >> 12;
 
 		if (sub->Vel)
 		{
