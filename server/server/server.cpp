@@ -426,6 +426,8 @@ void server::dispatch_packets()
 
 		std::for_each(net_players.begin(), net_players.end(), [&](const std::pair<PLAYER_ID, net_player*>& p) { players_list += p.second->get_name() + ";"; });
 
+		//prof::printt(GREEN, "Public IP {}", info.ip);
+
 		ms->send_info(info.ip, info.name, info.gamemode, g_level->get_name(), players_list, static_cast<int>(net_players.size()), MAX_PLAYERS());
 
 		send_packet_broadcast(ID_SYNC_REQUEST_STREAM_INFO);

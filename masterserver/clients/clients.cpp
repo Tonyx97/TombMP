@@ -120,7 +120,7 @@ server_sv::~server_sv()
 
 void server_sv::dispatcher()
 {
-	prof::print(YELLOW, "------------ (SERVER IN) {:#x} ------------", si.s);
+	prof::print(YELLOW, "------------ (SERVER IN) {:#x} {} ------------", si.s, ip);
 
 	net_result last_net_result = NETR_OK;
 
@@ -144,6 +144,8 @@ void server_sv::dispatcher()
 					running = false;
 				}
 				else net::send_packet(si, PID_OK);
+
+				prof::print(CYAN, "Server version: {}", version);
 				
 				break;
 			}
@@ -154,7 +156,12 @@ void server_sv::dispatcher()
 					lock();
 
 					if (std::string new_ip = *data->ip; new_ip.find("none") == -1)
+					{
 						public_ip = *data->ip;
+
+						prof::print(YELLOW, "------------ PUBLIC IP {} ------------", public_ip);
+					}
+					else prof::print(YELLOW, "------------ PUBLIC IP {} ------------", new_ip);
 
 					name = *data->name;
 					gamemode = *data->gamemode;
@@ -166,6 +173,7 @@ void server_sv::dispatcher()
 
 					unlock();
 				}
+				else prof::print(RED, "Error receiving server info");
 
 				break;
 			}
