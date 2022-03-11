@@ -7,6 +7,8 @@ import prof;
 #include <shared/timer_system/timer_system.h>
 #include <shared/bug_ripper/bug_ripper.h>
 
+#include <scripting/events.h>
+
 #include <specific/standard.h>
 #include <specific/global.h>
 #include <specific/directx.h>
@@ -262,6 +264,8 @@ bool game_main()
 			ok = false;
 		}
 	}
+
+	g_resource->trigger_event(events::player::ON_DISCONNECT);
 
 	return true;
 }

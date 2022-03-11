@@ -32,6 +32,11 @@ namespace events
 		static inline std::string ON_PLAYER_RENDER = "onPlayerRender";
 	}
 
+	namespace player
+	{
+		static inline std::string ON_DISCONNECT = "onLocalPlayerDisconnect";
+	}
+
 	namespace ui
 	{
 		static inline std::string ON_UI = "onUI";

@@ -62,5 +62,6 @@ inline int16_t item_data = 0;
 
 extern SG_COL inv_colours[];
 
+void CloseInventory();
 int32_t display_inventory(int32_t inventory_mode);
 bool init_inventory(int inventory_mode);

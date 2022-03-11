@@ -562,6 +562,8 @@ extern TEXTSTRING* Inv_upArrow2;
 extern TEXTSTRING* Inv_downArrow1;
 extern TEXTSTRING* Inv_downArrow2;
 
+inline INVENTORY_ITEM* inv_item = nullptr;
+
 void Inv_InsertItem(INVENTORY_ITEM* inv_item);
 void RingIsOpen(RING_INFO* ring);
 void RingIsNotOpen(RING_INFO* ring);

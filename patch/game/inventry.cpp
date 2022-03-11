@@ -34,8 +34,6 @@ void DrawInventoryItem(INVENTORY_ITEM* inv_item);
 IMOTION_INFO imo = { 0 };
 RING_INFO ring = { 0 };
 
-INVENTORY_ITEM* inv_item = nullptr;
-
 int busy = 0,
 	inv_nframes = 2;
 
@@ -106,10 +104,12 @@ int32_t display_inventory(int32_t inventory_mode)
 
 	for (int i = 0, angle = 0; i < ring.number_of_objects; ++i)
 	{
-		inv_item = *(ring.list + i);
+		auto i_item = *(ring.list + i);
 
 		if (i == ring.current_object)
 		{
+			inv_item = i_item;
+
 			for (int frm = 0; frm < inv_nframes; ++frm)
 			{
 				if (ring.rotating)
@@ -146,8 +146,8 @@ int32_t display_inventory(int32_t inventory_mode)
 		else
 		{
 			for (int frm = 0; frm < inv_nframes; ++frm)
-				if (inv_item->y_rot != 0)
-					inv_item->y_rot = (inv_item->y_rot < 0 ? 0x100 : -0x100);
+				if (i_item->y_rot != 0)
+					i_item->y_rot = (i_item->y_rot < 0 ? 0x100 : -0x100);
 		}
 
 		if (imo.status == RNG_OPEN || imo.status == RNG_SELECTING ||
@@ -170,9 +170,9 @@ int32_t display_inventory(int32_t inventory_mode)
 		{
 			phd_RotYXZ(angle, 0, 0);
 			phd_TranslateRel(ring.radius, 0, 0);
-			phd_RotYXZ(0x4000, (int16_t)(ITEM_TILT + inv_item->pt_xrot), 0);
+			phd_RotYXZ(0x4000, (int16_t)(ITEM_TILT + i_item->pt_xrot), 0);
 
-			DrawInventoryItem(inv_item);
+			DrawInventoryItem(i_item);
 		}
 		phd_PopMatrix();
 
@@ -204,18 +204,7 @@ int32_t display_inventory(int32_t inventory_mode)
 
 			if (inv_input & EXIT_INVENTORY)
 			{
-				g_audio->play_sound(112);
-
-				Inventory_Chosen = -1;
-
-				if (ring.type == MAIN_RING)
-					inv_main_current = ring.current_object;
-				else inv_option_current = ring.current_object;
-
-				Inv_RingMotionSetup(&ring, RNG_CLOSING, RNG_DONE, CLOSE_FRAMES);
-				Inv_RingMotionRadius(&ring, 0);
-				Inv_RingMotionCameraPos(&ring, CAMERA_STARTHEIGHT);
-				Inv_RingMotionRotation(&ring, CLOSE_ROTATION, (int16_t)(ring.ringpos.y_rot - CLOSE_ROTATION));
+				CloseInventory();
 
 				inv_input = 0;
 			}
@@ -734,6 +723,22 @@ void DrawInventoryItem(INVENTORY_ITEM* inv_item)
 	}
 
 	phd_PopMatrix();
+}
+
+void CloseInventory()
+{
+	g_audio->play_sound(112);
+
+	Inventory_Chosen = -1;
+
+	if (ring.type == MAIN_RING)
+		inv_main_current = ring.current_object;
+	else inv_option_current = ring.current_object;
+
+	Inv_RingMotionSetup(&ring, RNG_CLOSING, RNG_DONE, CLOSE_FRAMES);
+	Inv_RingMotionRadius(&ring, 0);
+	Inv_RingMotionCameraPos(&ring, CAMERA_STARTHEIGHT);
+	Inv_RingMotionRotation(&ring, CLOSE_ROTATION, (int16_t)(ring.ringpos.y_rot - CLOSE_ROTATION));
 }
 
 void DoInventoryBackground()

@@ -206,4 +206,19 @@ void cf_player::register_functions(sol::state* vm)
 	{
 		Inv_RemoveAllItems();
 	});
+
+	vm->set_function("isInventoryOpen", [&]() -> bool
+	{
+		return !!Inventory_Displaying;
+	});
+
+	vm->set_function("getInventoryItemID", [&]()
+	{
+		return inv_item ? inv_item->object_number : -1;
+	});
+
+	vm->set_function("closeInventory", [&]()
+	{
+		return CloseInventory();
+	});
 }
