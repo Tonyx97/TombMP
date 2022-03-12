@@ -41,7 +41,6 @@ import prof;
 #define SIGN_BIT		0x80000000
 #define RETURN_TARGET	{ target->x = x; target->y = y; target->z = z; target->room_number = last_room;   return 0; }
 #define RETURN_TARGET2	{ target->x = x; target->y = y; target->z = z; target->room_number = room_number; return -1; }
-#define TRIG_BITS(T)	((T & 0x3fff) >> 10)
 
 long CheckNoColCeilingTriangle(FLOOR_INFO* floor, long x, long z);
 long CheckNoColFloorTriangle(FLOOR_INFO* floor, long x, long z);

@@ -95,12 +95,12 @@ void sf_player::register_functions(sol::state* vm)
 		return g_level->get_player_by_id(id);
 	});
 
-	vm->set_function("isPlayerSpawned", [&](game_player* player) { return player->is_spawned(); });
-	vm->set_function("getPlayerName", [&](game_player* player) { return player->get_name(); });
-	vm->set_function("getPlayerPing", [&](game_player* player) { return player->get_ping(); });
-	vm->set_function("getPlayerHealth", [&](game_player* player) { return player->get_health(); });
-	vm->set_function("getPlayerRoom", [&](game_player* player) { return player->get_room(); });
-	vm->set_function("isPlayerDead", [&](game_player* player) { return player->get_health() <= 0; });
+	vm->set_function("isPlayerSpawned", [&](game_player* player) { return player ? player->is_spawned() : false; });
+	vm->set_function("getPlayerName", [&](game_player* player) { return player ? player->get_name() : ""; });
+	vm->set_function("getPlayerPing", [&](game_player* player) { return player ? player->get_ping() : -1; });
+	vm->set_function("getPlayerHealth", [&](game_player* player) { return player ? player->get_health() : -1; });
+	vm->set_function("getPlayerRoom", [&](game_player* player) { return player ? player->get_room() : 255; });
+	vm->set_function("isPlayerDead", [&](game_player* player) { return player ? player->get_health() <= 0 : -1; });
 
 	vm->set_function("getPlayerFromName", [&](const char* v, bool partial) -> game_player*
 	{

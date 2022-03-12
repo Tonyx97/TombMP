@@ -5,6 +5,8 @@
 #include "room.h"
 #include "collide.h"
 
+#define TRIG_BITS(T)	((T & 0x3fff) >> 10)
+
 inline int compy_scared_timer;
 inline int compys_attack_lara;
 inline int16_t carcass_item;
