@@ -31,4 +31,9 @@ void cf_level::register_functions(sol::state* vm)
 	vm->set_function("enableFootprints",				[&](bool enabled) { enable_footprints = enabled; });
 	vm->set_function("enableEngineExtendedFeatures",	[&](bool enabled) { enable_engine_extended_features = enabled; });
 	vm->set_function("setMinecartTurnModifier",			[&](int v)		  { minecart_turn_extra_blocks = v; });
+	vm->set_function("getFloor",						[&](int x, int y, int z, int16_t room)
+																		{
+																			auto floor = GetFloor(x, y, z, &room);
+																			return floor ? floor->floor : 0;
+																		});
 }
