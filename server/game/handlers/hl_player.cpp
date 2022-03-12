@@ -63,6 +63,8 @@ void player_handlers::on_player_info(net_player* n_player)
 
 	player->set_ping(info.ping);
 	player->set_health(info.health);
+	player->set_position(info.position);
+	player->set_room(info.room);
 
 	g_server->send_packet_broadcast_ex(ID_PLAYER_INFO, n_player->get_sys_address(), true, info);
 }

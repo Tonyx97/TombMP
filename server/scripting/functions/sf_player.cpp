@@ -99,6 +99,7 @@ void sf_player::register_functions(sol::state* vm)
 	vm->set_function("getPlayerName", [&](game_player* player) { return player->get_name(); });
 	vm->set_function("getPlayerPing", [&](game_player* player) { return player->get_ping(); });
 	vm->set_function("getPlayerHealth", [&](game_player* player) { return player->get_health(); });
+	vm->set_function("getPlayerRoom", [&](game_player* player) { return player->get_room(); });
 	vm->set_function("isPlayerDead", [&](game_player* player) { return player->get_health() <= 0; });
 
 	vm->set_function("getPlayerFromName", [&](const char* v, bool partial) -> game_player*
@@ -131,5 +132,15 @@ void sf_player::register_functions(sol::state* vm)
 	vm->set_function("isPlayer", [&](game_player* player)
 	{
 		return g_level->has_player(player);
+	});
+
+	vm->set_function("getPlayerPosition", [&](game_player* player) -> std::tuple<int, int, int>
+	{
+		if (!g_level->has_player(player))
+			return { 0, 0, 0 };
+
+		const auto& p = player->get_position();
+
+		return { p.x, p.y, p.z };
 	});
 }
