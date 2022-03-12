@@ -205,10 +205,15 @@
 	- Fixed boat sounds in Alex's race map.
 	
 - v1.1.8 (12-03-22):
-	- 
-	
-	
-	
+	- Added a new "level" resource that handles progression through the a level, supports randomizer secrets too.
+	- Added client event onPickup that triggers when the localplayer picks up an item.
+	- Added new client and server scripting functions:
+		· getPlayerRoom (server).
+		· getPlayerPosition (server).
+		· getFloor (client).
+		· getFloorIndex (client).
+		· getFloorIndex (client).
+		· isFloorSecretTrigger (client).
 	
 	
 	
