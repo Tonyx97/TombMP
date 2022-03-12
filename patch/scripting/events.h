@@ -46,6 +46,7 @@ namespace events
 	{
 		static inline std::string ON_SAVECRYSTAL_PICKUP = "onSavecrystalPickup";
 		static inline std::string ON_PICKUP_COLLISION = "onPickupCollision";
+		static inline std::string ON_PICKUP = "onPickup";
 	}
 
 	namespace vehicle

@@ -143,6 +143,9 @@ void PickUpCollision(int16_t item_num, ITEM_INFO* laraitem, COLL_INFO* coll)
 		{
 			if ((laraitem->frame_number == PICKUP_F || laraitem->frame_number == DUCKPICKUP_F || laraitem->frame_number == ALL4SPICKUP_F) && item->object_number != FLARE_ITEM)
 			{
+				if (!g_resource->trigger_event(events::pickup::ON_PICKUP, item))
+					return;
+
 				AddDisplayPickup(item->object_number);
 				Inv_AddItem(item->object_number);
 
