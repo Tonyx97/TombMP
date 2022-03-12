@@ -204,6 +204,8 @@
 	- Fixed some misc issues.
 	- Fixed boat sounds in Alex's race map.
 	
+- v1.1.8 (12-03-22):
+	- 
 	
 	
 	
