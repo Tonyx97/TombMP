@@ -66,8 +66,6 @@ int __stdcall WinMain(HINSTANCE instance, HINSTANCE prev_instance, char* _cmd_li
 	if (cmd_line.empty())
 		cmd_line = "-ip 127.0.0.1 -pass pass -nickname Tonyx97 ";
 #elif defined(_LD)
-	if (cmd_line.empty())
-		cmd_line = "-ip 217.182.174.42 -pass pass -nickname Tonyx97 ";
 #elif defined(LEVEL_EDITOR)
 	cmd_line = "-ip 127.0.0.1 -pass pass -nickname player0 ";
 #endif
