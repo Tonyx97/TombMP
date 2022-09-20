@@ -6,6 +6,9 @@ export module prof;
 
 import utils;
 
+#define FORMAT(t, a) std::vformat(t, std::make_format_args(a...))
+#define FORMATV(t, ...) std::vformat(t, std::make_format_args(__VA_ARGS__))
+
 export
 {
 	enum eColor : unsigned short
@@ -135,37 +138,37 @@ export
 		template <typename... A>
 		void print(bool nl, eColor color, const char* text, A... args)
 		{
-			print_internal(nl, false, color, std::format(text, args...));
+			print_internal(nl, false, color, FORMAT(text, args));
 		}
 
 		template <typename... A>
 		void print(eColor color, const char* text, A... args)
 		{
-			print_internal(true, false, color, std::format(text, std::forward<A>(args)...));
+			print_internal(true, false, color, FORMAT(text, args));
 		}
 
 		template <typename... A>
 		void printt(eColor color, const char* text, A... args)
 		{
-			print_internal(true, true, color, std::format(text, std::forward<A>(args)...));
+			print_internal(true, true, color, FORMAT(text, args));
 		}
 
 		template <typename... A>
 		void print_nl(eColor color, const char* text, A... args)
 		{
-			print_internal(false, false, color, std::format(text, args...));
+			print_internal(false, false, color, FORMAT(text, args));
 		}
 
 		template <typename... A>
 		void print_info(bool nl, const char* filename, int line, eColor color, const char* text, A... args)
 		{
-			print_info_internal(nl, filename, line, color, std::format(text, args...));
+			print_info_internal(nl, filename, line, color, FORMAT(text, args));
 		}
 
 		template <typename... A>
 		void critical_error(const char* text, A... args)
 		{
-			critical_error_internal(std::format(text, args...));
+			critical_error_internal(FORMAT(text, args));
 		}
 #else
 		void open_console(const char* name) {}
