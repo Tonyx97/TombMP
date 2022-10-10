@@ -17,6 +17,34 @@
 
 void cf_dx::register_functions(sol::state* vm)
 {
+	/*class PlayerT {
+	public:
+		int get_hp() const {
+			return hp;
+		}
+
+		void set_hp(int value) {
+			hp = value;
+		}
+
+		int get_max_hp() const {
+			return hp;
+		}
+
+		void set_max_hp(int value) {
+			maxhp = value;
+		}
+
+	private:
+		int hp = 50;
+		int maxhp = 50;
+	};
+
+	vm->new_usertype<PlayerT>("Player",
+		"hp", sol::property(&PlayerT::get_hp, &PlayerT::set_hp),
+		"maxHp", sol::property(&PlayerT::get_max_hp, &PlayerT::set_max_hp)
+		);*/
+
 	vm->set_function("dxWorldToScreen", [&](int x, int y, int z) -> std::tuple<int, int, bool>
 	{
 		int ox = 0, oy = 0;
