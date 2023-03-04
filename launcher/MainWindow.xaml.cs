@@ -459,7 +459,7 @@ namespace launcher
 #if DEBUG
             if (!Net.connect("127.0.0.1"))
 #else
-			if (!Net.connect("217.182.174.42"))
+			if (!Net.connect("51.77.201.205"))
 #endif
             {
                 display_error("Could not connect to the MasterServer.");

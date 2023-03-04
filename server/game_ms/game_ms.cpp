@@ -24,7 +24,7 @@ bool game_ms::connect()
 #ifdef _DEBUG
 	if (!net::client::connect("127.0.0.1", net::MASTER_SERVER_PORT))
 #else
-	if (!net::client::connect("217.182.174.42", net::MASTER_SERVER_PORT))
+	if (!net::client::connect("51.77.201.205", net::MASTER_SERVER_PORT))
 #endif
 	{
 		prof::printt(RED, "Can't establish connection with the MasterServer");
