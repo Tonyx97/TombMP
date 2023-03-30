@@ -101,7 +101,7 @@ server_sv::server_sv(ms* sv, SOCKET s, const std::string& ip)
 
 #ifndef _DEBUG
 	if (!ip.compare("127.0.0.1"))
-		public_ip = "51.77.201.205";
+		public_ip = "65.20.98.86";
 	else public_ip = ip;
 #else
 	public_ip = ip;
